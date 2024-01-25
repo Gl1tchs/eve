@@ -1,8 +1,8 @@
 #ifndef CORE_MINIMAL_H
 #define CORE_MINIMAL_H
 
-#include "core/buffer.h"
 #include "core/assert.h"
+#include "core/buffer.h"
 #include "core/memory.h"
 
 #if __linux__

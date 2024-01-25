@@ -1,24 +1,24 @@
 #include "core/transform.h"
 
-glm::vec3 Transform::position() const {
+glm::vec3 Transform::get_position() const {
 	if (parent) {
-		return local_position + parent->position();
+		return local_position + parent->get_position();
 	} else {
 		return local_position;
 	}
 }
 
-glm::vec3 Transform::rotation() const {
+glm::vec3 Transform::get_rotation() const {
 	if (parent) {
-		return local_rotation + parent->rotation();
+		return local_rotation + parent->get_rotation();
 	} else {
 		return local_rotation;
 	}
 }
 
-glm::vec3 Transform::scale() const {
+glm::vec3 Transform::get_scale() const {
 	if (parent) {
-		return local_scale * parent->scale();
+		return local_scale * parent->get_scale();
 	} else {
 		return local_scale;
 	}
@@ -32,7 +32,7 @@ void Transform::rotate(const float angle, const glm::vec3 axis) {
 	local_rotation += angle * axis;
 }
 
-void Transform::look_at(const glm::vec3 &target) {
+void Transform::look_at(const glm::vec3& target) {
 	glm::vec3 direction = glm::normalize(target - local_position);
 
 	// Compute pitch and yaw angles using trigonometry
@@ -42,22 +42,22 @@ void Transform::look_at(const glm::vec3 &target) {
 	local_rotation = glm::vec3(pitch, yaw, 0.0f);
 }
 
-glm::vec3 Transform::forward() const {
+glm::vec3 Transform::get_forward() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_FORWARD);
 }
 
-glm::vec3 Transform::right() const {
+glm::vec3 Transform::get_right() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_RIGHT);
 }
 
-glm::vec3 Transform::up() const {
+glm::vec3 Transform::get_up() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_UP);
 }
 
-glm::mat4 Transform::transform_matrix() const {
+glm::mat4 Transform::get_transform_matrix() const {
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), local_position);
 	transform =
 			glm::rotate(transform, glm::radians(local_rotation.x), VEC3_RIGHT);
@@ -67,13 +67,13 @@ glm::mat4 Transform::transform_matrix() const {
 	transform = glm::scale(transform, local_scale);
 
 	if (parent) {
-		transform = parent->transform_matrix() * transform;
+		transform = parent->get_transform_matrix() * transform;
 	}
 
 	return transform;
 }
 
-glm::vec3 Transform::direction() const {
+glm::vec3 Transform::get_direction() const {
 	glm::vec3 direction(cos(local_rotation.x) * cos(local_rotation.y),
 			sin(local_rotation.x),
 			cos(local_rotation.x) * sin(local_rotation.y));

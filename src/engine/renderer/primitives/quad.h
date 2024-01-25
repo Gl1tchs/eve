@@ -55,21 +55,21 @@ public:
 			const Color& color = { 1, 1, 1, 1 },
 			const glm::vec2& tex_tiling = { 1, 1 });
 
-	[[nodiscard]] float find_texture_index(const Ref<Texture2D>& texture);
+	float find_texture_index(const Ref<Texture2D>& texture);
 
 private:
-	Ref<VertexArray> _vertex_array;
-	Ref<VertexBuffer> _vertex_buffer;
-	Ref<Shader> _shader;
+	Ref<VertexArray> vertex_array;
+	Ref<VertexBuffer> vertex_buffer;
+	Ref<Shader> shader;
 
 	// render data
-	BufferArray<QuadVertex> _vertices;
-	uint32_t _index_count = 0;
+	BufferArray<QuadVertex> vertices;
+	uint32_t index_count = 0;
 
 	// textures
-	Ref<Texture2D> _white_texture;
-	std::array<Ref<Texture2D>, QUAD_MAX_TEXTURE_COUNT> _texture_slots;
-	uint32_t _texture_slot_index = 0;
+	Ref<Texture2D> white_texture;
+	std::array<Ref<Texture2D>, QUAD_MAX_TEXTURE_COUNT> texture_slots;
+	uint32_t texture_slot_index = 0;
 };
 
 #endif

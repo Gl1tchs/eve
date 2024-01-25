@@ -8,6 +8,7 @@ target_include_directories(eve2d
 PUBLIC
     ${ENGINE_DIR}
     ${VENDOR_DIR}/glm
+    ${VENDOR_DIR}/entt/src
 PRIVATE
     ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
@@ -17,7 +18,8 @@ PRIVATE
 
 target_link_libraries(eve2d
 PUBLIC
-    glm
+    glm::glm-header-only
+    EnTT
 PRIVATE
     glad
     glfw

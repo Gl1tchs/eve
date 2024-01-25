@@ -4,6 +4,8 @@
 #include "core/application.h"
 
 #include "renderer/camera.h"
+#include "scene/editor_camera.h"
+#include "scene/scene_renderer.h"
 
 class EditorApplication : public Application {
 public:
@@ -11,23 +13,15 @@ public:
 	~EditorApplication();
 
 protected:
-	void on_start() override;
+	void _on_start() override;
 
-	void on_update(float dt) override;
+	void _on_update(float dt) override;
 
-	void on_destroy() override;
-
-private:
-	void on_render();
+	void _on_destroy() override;
 
 private:
-	OrthographicCamera _camera;
-	Transform _camera_transform;
-
-	glm::vec2 _mouse_pos;
-
-	glm::vec2 _scroll_offset;
-	const float _scroll_sensitivity = 40.0f;
+	Ref<SceneRenderer> scene_renderer;
+	Ref<EditorCamera> editor_camera;
 };
 
 #endif

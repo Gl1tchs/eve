@@ -21,14 +21,14 @@ protected:
 	Ref<Window> window;
 	Ref<Renderer> renderer;
 
-	inline virtual void on_start() {}
+	inline virtual void _on_start() {}
 
-	inline virtual void on_update(float dt) {}
+	inline virtual void _on_update(float dt) {}
 
-	inline virtual void on_destroy() {}
+	inline virtual void _on_destroy() {}
 
 private:
-	bool _running = true;
+	bool running = true;
 };
 
 #endif

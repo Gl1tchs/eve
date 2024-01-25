@@ -12,18 +12,18 @@ public:
 	void bind() const;
 	void unbind() const;
 
-	[[nodiscard]] const std::vector<Ref<VertexBuffer>> &
-	vertex_buffers() const;
-	void add_vertex_buffer(const Ref<VertexBuffer> &vertex_buffer);
+	const std::vector<Ref<VertexBuffer>>&
+	get_vertex_buffers() const;
+	void add_vertex_buffer(const Ref<VertexBuffer>& vertex_buffer);
 
-	[[nodiscard]] const Ref<IndexBuffer> &index_buffer() const;
-	void set_index_buffer(const Ref<IndexBuffer> &index_buffer);
+	const Ref<IndexBuffer>& get_index_buffer() const;
+	void set_index_buffer(const Ref<IndexBuffer>& r_index_buffer);
 
 private:
-	uint32_t _vao;
-	uint32_t _vertex_buffer_index = 0;
-	std::vector<Ref<VertexBuffer>> _vertex_buffers;
-	Ref<IndexBuffer> _index_buffer;
+	uint32_t vao;
+	uint32_t vertex_buffer_index = 0;
+	std::vector<Ref<VertexBuffer>> vertex_buffers;
+	Ref<IndexBuffer> index_buffer;
 };
 
 #endif

@@ -33,53 +33,53 @@ static GLenum shader_data_type_to_opengl(ShaderDataType type) {
 }
 
 VertexArray::VertexArray() {
-	glCreateVertexArrays(1, &_vao);
+	glCreateVertexArrays(1, &vao);
 }
 
 VertexArray::~VertexArray() {
-	glDeleteVertexArrays(1, &_vao);
+	glDeleteVertexArrays(1, &vao);
 }
 
 void VertexArray::bind() const {
-	glBindVertexArray(_vao);
+	glBindVertexArray(vao);
 }
 
 void VertexArray::unbind() const {
 	glBindVertexArray(0);
 }
 
-const std::vector<Ref<VertexBuffer>> &
-VertexArray::vertex_buffers() const {
-	return _vertex_buffers;
+const std::vector<Ref<VertexBuffer>>&
+VertexArray::get_vertex_buffers() const {
+	return vertex_buffers;
 }
 
 void VertexArray::add_vertex_buffer(
-		const Ref<VertexBuffer> &vertex_buffer) {
-	EVE_ASSERT(vertex_buffer->layout().elements().size(),
+		const Ref<VertexBuffer>& vertex_buffer) {
+	EVE_ASSERT(vertex_buffer->get_layout().get_elements().size(),
 			"Vertex Buffer has no layout!");
 
-	glBindVertexArray(_vao);
+	glBindVertexArray(vao);
 
 	vertex_buffer->bind();
 
-	const auto layout = vertex_buffer->layout();
-	for (const auto &element : layout) {
+	const auto layout = vertex_buffer->get_layout();
+	for (const auto& element : layout) {
 		switch (element.type) {
 			case ShaderDataType::FLOAT:
 			case ShaderDataType::FLOAT2:
 			case ShaderDataType::FLOAT3:
 			case ShaderDataType::FLOAT4: {
-				glEnableVertexAttribArray(_vertex_buffer_index);
+				glEnableVertexAttribArray(vertex_buffer_index);
 				glVertexAttribPointer(
-						_vertex_buffer_index, element.component_count(),
+						vertex_buffer_index, element.get_component_count(),
 						shader_data_type_to_opengl(element.type),
-						element.normalized ? GL_TRUE : GL_FALSE, layout.stride(),
-						(const void *)element.offset);
+						element.normalized ? GL_TRUE : GL_FALSE, layout.get_stride(),
+						(const void*)element.offset);
 				if (element.divisor) {
-					glVertexAttribDivisor(_vertex_buffer_index,
+					glVertexAttribDivisor(vertex_buffer_index,
 							element.divisor);
 				}
-				_vertex_buffer_index++;
+				vertex_buffer_index++;
 				break;
 			}
 			case ShaderDataType::INT:
@@ -87,35 +87,35 @@ void VertexArray::add_vertex_buffer(
 			case ShaderDataType::INT3:
 			case ShaderDataType::INT4:
 			case ShaderDataType::BOOL: {
-				glEnableVertexAttribArray(_vertex_buffer_index);
+				glEnableVertexAttribArray(vertex_buffer_index);
 				glVertexAttribIPointer(
-						_vertex_buffer_index, element.component_count(),
-						shader_data_type_to_opengl(element.type), layout.stride(),
-						(const void *)element.offset);
+						vertex_buffer_index, element.get_component_count(),
+						shader_data_type_to_opengl(element.type), layout.get_stride(),
+						(const void*)element.offset);
 				if (element.divisor) {
-					glVertexAttribDivisor(_vertex_buffer_index,
+					glVertexAttribDivisor(vertex_buffer_index,
 							element.divisor);
 				}
-				_vertex_buffer_index++;
+				vertex_buffer_index++;
 				break;
 			}
 			case ShaderDataType::MAT3:
 			case ShaderDataType::MAT4: {
-				int count = element.component_count();
+				int count = element.get_component_count();
 				for (int i = 0; i < count; i++) {
-					glEnableVertexAttribArray(_vertex_buffer_index);
+					glEnableVertexAttribArray(vertex_buffer_index);
 					glVertexAttribPointer(
-							_vertex_buffer_index, count,
+							vertex_buffer_index, count,
 							shader_data_type_to_opengl(element.type),
 							element.normalized ? GL_TRUE : GL_FALSE,
-							layout.stride(),
-							(const void *)(element.offset +
+							layout.get_stride(),
+							(const void*)(element.offset +
 									sizeof(float) * count * i));
 					if (element.divisor) {
-						glVertexAttribDivisor(_vertex_buffer_index,
+						glVertexAttribDivisor(vertex_buffer_index,
 								element.divisor);
 					}
-					_vertex_buffer_index++;
+					vertex_buffer_index++;
 				}
 				break;
 			}
@@ -124,17 +124,17 @@ void VertexArray::add_vertex_buffer(
 		}
 	}
 
-	_vertex_buffers.push_back(vertex_buffer);
+	vertex_buffers.push_back(vertex_buffer);
 }
 
-const Ref<IndexBuffer> &VertexArray::index_buffer() const {
-	return _index_buffer;
+const Ref<IndexBuffer>& VertexArray::get_index_buffer() const {
+	return index_buffer;
 }
 
 void VertexArray::set_index_buffer(
-		const Ref<IndexBuffer> &index_buffer) {
-	glBindVertexArray(_vao);
-	index_buffer->bind();
+		const Ref<IndexBuffer>& r_index_buffer) {
+	index_buffer = r_index_buffer;
 
-	_index_buffer = index_buffer;
+	glBindVertexArray(vao);
+	index_buffer->bind();
 }

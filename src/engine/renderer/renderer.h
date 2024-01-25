@@ -27,15 +27,15 @@ public:
 			const glm::vec2& tex_tiling = { 1, 1 });
 
 private:
-	void begin_batch();
+	void _begin_batch();
 
-	void flush();
+	void _flush();
 
-	void next_batch();
+	void _next_batch();
 
 private:
-	Scope<QuadPrimitive> _quad_primitive;
-	Ref<UniformBuffer> _camera_buffer;
+	Scope<QuadPrimitive> quad_primitive;
+	Ref<UniformBuffer> camera_buffer;
 };
 
 #endif

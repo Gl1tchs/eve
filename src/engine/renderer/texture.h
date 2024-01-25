@@ -35,28 +35,28 @@ struct TextureMetadata final {
 
 class Texture2D final {
 public:
-	Texture2D(const char *path, bool flip_on_load = false);
-	Texture2D(const TextureMetadata &metadata, const void *pixels = nullptr);
+	Texture2D(const char* path, bool flip_on_load = false);
+	Texture2D(const TextureMetadata& metadata, const void* pixels = nullptr);
 	~Texture2D();
 
 	// TODO update metadata
 
-	const TextureMetadata &metadata() const;
+	const TextureMetadata& get_metadata() const;
 
-	uint32_t renderer_id() const;
+	uint32_t get_renderer_id() const;
 
-	void set_data(void *data, uint32_t size);
+	void set_data(void* data, uint32_t size);
 
 	void bind(uint16_t slot = 0) const;
 
-	bool operator==(const Texture2D &other) const;
+	bool operator==(const Texture2D& other) const;
 
 private:
-	void gen_texture(const TextureMetadata &metadata, const void *pixels = nullptr);
+	void _gen_texture(const TextureMetadata& metadata, const void* pixels = nullptr);
 
 private:
-	TextureMetadata _metadata;
-	uint32_t _renderer_id;
+	TextureMetadata metadata;
+	uint32_t renderer_id;
 };
 
 #endif

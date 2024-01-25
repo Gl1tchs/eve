@@ -20,14 +20,14 @@ public:
 
 	bool is_open() const;
 
-	[[nodiscard]] glm::ivec2 size() const;
+	glm::ivec2 get_size() const;
 
-	[[nodiscard]] float aspect_ratio() const;
+	float get_aspect_ratio() const;
 
-	void* native_window();
+	void* get_native_window();
 
 private:
-	void assign_event_delegates();
+	void _assign_event_delegates();
 
 private:
 	GLFWwindow* _window;

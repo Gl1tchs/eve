@@ -4,13 +4,13 @@
 #include "core/assert.h"
 
 struct Buffer {
-	uint8_t *data = nullptr;
+	uint8_t* data = nullptr;
 	uint64_t size = 0;
 
 	Buffer() = default;
 	Buffer(uint64_t size);
-	Buffer(const void *data, uint64_t size);
-	Buffer(const Buffer &) = default;
+	Buffer(const void* data, uint64_t size);
+	Buffer(const Buffer&) = default;
 
 	static Buffer copy(Buffer other);
 
@@ -19,8 +19,8 @@ struct Buffer {
 	void release();
 
 	template <typename T>
-	T *as() {
-		return (T *)data;
+	inline T* as() {
+		return (T*)data;
 	}
 
 	operator bool() const { return (bool)data; }
@@ -31,11 +31,11 @@ struct ScopedBuffer {
 	ScopedBuffer(uint64_t size);
 	~ScopedBuffer();
 
-	[[nodiscard]] uint8_t *data();
-	[[nodiscard]] const uint64_t &size() const;
+	uint8_t* get_data();
+	const uint64_t& get_size() const;
 
 	template <typename T>
-	T *as() {
+	inline T* as() {
 		return buffer.as<T>();
 	}
 
@@ -48,58 +48,60 @@ private:
 template <typename T>
 struct BufferArray {
 	BufferArray() = default;
-	BufferArray(const uint64_t max_elements) :
-			_buffer(max_elements * sizeof(T)), _max_elements(max_elements) {}
+	BufferArray(const uint64_t p_max_elements) :
+			buffer(p_max_elements * sizeof(T)), max_elements(p_max_elements) {}
 
 	~BufferArray() {
-		if (_buffer) {
-			_buffer.release();
+		if (buffer) {
+			buffer.release();
 		}
 	}
 
-	[[nodiscard]] uint8_t *data() { return _buffer.data; }
-	[[nodiscard]] const uint64_t &size() const { return _buffer.size; }
-	[[nodiscard]] const uint32_t &count() const { return _count; }
+	inline uint8_t* get_data() { return buffer.data; }
 
-	void allocate(const uint64_t max_elements) {
-		_max_elements = max_elements;
-		_buffer.allocate(_max_elements * sizeof(T));
+	inline const uint64_t& get_size() const { return buffer.size; }
+
+	inline const uint32_t& get_count() const { return count; }
+
+	inline void allocate(const uint64_t p_max_elements) {
+		max_elements = p_max_elements;
+		buffer.allocate(max_elements * sizeof(T));
 	}
 
-	void release() {
-		_count = 0;
-		_max_elements = 0;
-		_buffer.release();
+	inline void release() {
+		count = 0;
+		max_elements = 0;
+		buffer.release();
 	}
 
-	void add(const T &value) {
+	inline void add(const T& value) {
 		// prevent memory leaks
-		EVE_ASSERT(_buffer && _count < _max_elements);
-		_buffer.as<T>()[_count++] = value;
+		EVE_ASSERT(buffer && count < max_elements);
+		buffer.as<T>()[count++] = value;
 	}
 
-	[[nodiscard]] T &at(const uint32_t idx) {
-		EVE_ASSERT(_buffer && idx < _max_elements);
-		return _buffer.as<T>()[idx];
+	inline T& at(const uint32_t idx) {
+		EVE_ASSERT(buffer && idx < max_elements);
+		return buffer.as<T>()[idx];
 	}
 
-	void clear() {
-		EVE_ASSERT(_buffer);
-		int64_t max_elements_copy = _max_elements;
+	inline void clear() {
+		EVE_ASSERT(buffer);
+		int64_t max_elements_copy = max_elements;
 		release();
 		allocate(max_elements_copy);
 	}
 
-	void reset_index() { _count = 0; }
+	inline void reset_index() { count = 0; }
 
-	T &operator[](const uint32_t idx) { return at(idx); }
+	inline T& operator[](const uint32_t idx) { return at(idx); }
 
-	operator bool() const { return _buffer; }
+	operator bool() const { return buffer; }
 
 private:
-	Buffer _buffer;
-	uint32_t _count = 0;
-	uint32_t _max_elements = 0;
+	Buffer buffer;
+	uint32_t count = 0;
+	uint32_t max_elements = 0;
 };
 
 #endif

@@ -3,68 +3,57 @@
 #include "core/color.h"
 #include "core/entrypoint.h"
 #include "core/input.h"
-#include "core/key_code.h"
-#include "core/mouse_code.h"
-#include "core/transform.h"
 #include "renderer/renderer.h"
-#include "renderer/renderer_api.h"
+#include "renderer/texture.h"
+#include "scene/components.h"
+#include "scene/entity.h"
+#include "scene/scene_manager.h"
+#include "scene/scene_renderer.h"
 
 EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 		Application(info) {
+	editor_camera = create_ref<EditorCamera>();
+	scene_renderer = create_ref<SceneRenderer>(renderer);
 }
 
 EditorApplication::~EditorApplication() {}
 
-void EditorApplication::on_start() {
-	_mouse_pos = Input::mouse_position();
-}
+void EditorApplication::_on_start() {
+	Ref<Scene> scene = create_ref<Scene>("test");
 
-void EditorApplication::on_update(float dt) {
-	_camera.aspect_ratio = window->aspect_ratio();
+	Ref<Texture2D> texture = create_ref<Texture2D>("res/texture.png", true);
 
-	// camera control
-	if (Input::is_mouse_pressed(MouseCode::RIGHT)) {
-		glm::vec2 mouse_delta = Input::mouse_position() - _mouse_pos;
-
-		_camera_transform.local_position.x += mouse_delta.x * dt;
-		_camera_transform.local_position.y -= mouse_delta.y * dt;
-
-		_camera.zoom_level += Input::scroll_offset().y * _scroll_sensitivity * dt;
-	}
-
-	_mouse_pos = Input::mouse_position();
-
-	on_render();
-}
-
-void EditorApplication::on_destroy() {}
-
-void EditorApplication::on_render() {
-	RendererAPI::clear_color(COLOR_GRAY);
-	RendererAPI::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
-
-	renderer->begin_pass(
-			{ _camera.view_matrix(_camera_transform),
-					_camera.projection_matrix(),
-					_camera_transform.position() });
-
-	Transform t{};
 	for (int i = -50; i <= 50; i++) {
 		for (int j = -50; j <= 50; j++) {
-			t.local_position = { i, j, 0 };
-
 			Color color;
 			color.r = static_cast<float>(i + 50) / 100.0f;
-			color.g = 0.0f;
 			color.b = static_cast<float>(j + 50) / 100.0f;
+			color.g = (color.r + color.b) / 2.0f;
 			color.a = 1.0f;
 
-			renderer->draw_quad(t, 0, nullptr, color);
+			Entity sprite = scene->create("sprite " + std::to_string(i) + std::to_string(j));
+			auto& sc = sprite.add_component<SpriteRendererComponent>();
+			sc.color = color;
+			sc.texture = texture;
+
+			sprite.get_transform().local_position = { i, j, 0 };
 		}
 	}
 
-	renderer->end_pass();
+	SceneManager::set_active(scene);
 }
+
+void EditorApplication::_on_update(float dt) {
+	// TODO cache
+	editor_camera->aspect_ratio = window->get_aspect_ratio();
+
+	editor_camera->update(dt);
+
+	scene_renderer->on_viewport_resize(window->get_size());
+	scene_renderer->render_editor(dt, editor_camera);
+}
+
+void EditorApplication::_on_destroy() {}
 
 Application* create_application(int argc, const char** argv) {
 	ApplicationCreateInfo info;

@@ -3,6 +3,6 @@
 
 #include "core/application.h"
 
-extern Application *create_application(int argc, const char **argv);
+extern Application* create_application(int argc, const char** argv);
 
 #endif

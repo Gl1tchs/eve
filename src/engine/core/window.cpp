@@ -1,9 +1,9 @@
 #include "core/window.h"
 
+#include "core/assert.h"
 #include "core/event_system.h"
 #include "core/input.h"
 #include "core/key_code.h"
-#include "core/assert.h"
 #include "core/mouse_code.h"
 
 #include <GLFW/glfw3.h>
@@ -30,7 +30,7 @@ Window::Window(WindowCreateInfo info) {
 	glfwMakeContextCurrent(_window);
 
 	// initialize event system
-	assign_event_delegates();
+	_assign_event_delegates();
 
 	// initialize input
 	Input::init();
@@ -53,22 +53,22 @@ bool Window::is_open() const {
 	return !glfwWindowShouldClose(_window);
 }
 
-glm::ivec2 Window::size() const {
+glm::ivec2 Window::get_size() const {
 	glm::ivec2 s{};
 	glfwGetWindowSize(_window, &s.x, &s.y);
 	return s;
 }
 
-float Window::aspect_ratio() const {
-	const glm::ivec2 s = size();
+float Window::get_aspect_ratio() const {
+	const glm::ivec2 s = get_size();
 	return static_cast<float>(s.x) / static_cast<float>(s.y);
 }
 
-void* Window::native_window() {
+void* Window::get_native_window() {
 	return _window;
 }
 
-void Window::assign_event_delegates() {
+void Window::_assign_event_delegates() {
 	glfwSetWindowSizeCallback(_window,
 			[](GLFWwindow* window, int width, int height) {
 				WindowResizeEvent resize_event;

@@ -6,10 +6,10 @@ public:
 	UniformBuffer(uint32_t size, uint32_t binding);
 	~UniformBuffer();
 
-	void set_data(const void *data, uint32_t size, uint32_t offset = 0);
+	void set_data(const void* data, uint32_t size, uint32_t offset = 0);
 
 private:
-	uint32_t _ubo;
+	uint32_t ubo;
 };
 
 #endif

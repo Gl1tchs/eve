@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <string>
 
-const char *serialize_shader_type(ShaderType type) {
+const char* serialize_shader_type(ShaderType type) {
 	switch (type) {
 		case ShaderType::VERTEX:
 			return "vertex";
@@ -17,7 +17,7 @@ const char *serialize_shader_type(ShaderType type) {
 	}
 }
 
-ShaderType DeserializeShaderType(const std::string &value) {
+ShaderType DeserializeShaderType(const std::string& value) {
 	if (value == "vertex")
 		return ShaderType::VERTEX;
 	else if (value == "fragment")
@@ -41,43 +41,43 @@ int shader_type_to_opengl(ShaderType type) {
 	}
 }
 
-Shader::Shader(const char *vs_path, const char *fs_path) {
+Shader::Shader(const char* vs_path, const char* fs_path) {
 	recompile(vs_path, fs_path);
 }
 
 Shader::~Shader() {
-	glDeleteProgram(_renderer_id);
+	glDeleteProgram(renderer_id);
 }
 
-void Shader::recompile(const char *vs_path, const char *fs_path) {
-	glDeleteProgram(_renderer_id);
-	_renderer_id = glCreateProgram();
+void Shader::recompile(const char* vs_path, const char* fs_path) {
+	glDeleteProgram(renderer_id);
+	renderer_id = glCreateProgram();
 
-	std::string vertex_source = load_shader_source(vs_path);
+	std::string vertex_source = _load_shader_source(vs_path);
 	const uint32_t vertex_shader =
-			compile_shader(vertex_source.c_str(), ShaderType::VERTEX);
-	glAttachShader(_renderer_id, vertex_shader);
+			_compile_shader(vertex_source.c_str(), ShaderType::VERTEX);
+	glAttachShader(renderer_id, vertex_shader);
 
-	std::string fragment_source = load_shader_source(fs_path);
+	std::string fragment_source = _load_shader_source(fs_path);
 	const uint32_t fragment_shader =
-			compile_shader(fragment_source.c_str(), ShaderType::FRAGMENT);
-	glAttachShader(_renderer_id, fragment_shader);
+			_compile_shader(fragment_source.c_str(), ShaderType::FRAGMENT);
+	glAttachShader(renderer_id, fragment_shader);
 
-	glLinkProgram(_renderer_id);
+	glLinkProgram(renderer_id);
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 }
 
 void Shader::bind() const {
-	glUseProgram(_renderer_id);
+	glUseProgram(renderer_id);
 }
 
 void Shader::unbind() const {
 	glUseProgram(0);
 }
 
-std::string Shader::load_shader_source(const char *path) {
+std::string Shader::_load_shader_source(const char* path) {
 	if (!std::filesystem::exists(path)) {
 		printf("Shader file not found at: %s", path);
 		return "";
@@ -106,7 +106,7 @@ std::string Shader::load_shader_source(const char *path) {
 			line_buffer.insert(0, p.string() + "/");
 
 			is_recursive_call = true;
-			full_source_code += load_shader_source(line_buffer.c_str());
+			full_source_code += _load_shader_source(line_buffer.c_str());
 			continue;
 		}
 
@@ -122,47 +122,47 @@ std::string Shader::load_shader_source(const char *path) {
 	return full_source_code;
 }
 
-int Shader::uniform_location(const char *name) const {
-	return glGetUniformLocation(_renderer_id, name);
+int Shader::_get_uniform_location(const char* name) const {
+	return glGetUniformLocation(renderer_id, name);
 }
 
-void Shader::set_uniform(const char *name, const int value) const {
-	glUniform1i(uniform_location(name), value);
+void Shader::set_uniform(const char* name, const int value) const {
+	glUniform1i(_get_uniform_location(name), value);
 }
 
-void Shader::set_uniform(const char *name, const float value) const {
-	glUniform1f(uniform_location(name), value);
+void Shader::set_uniform(const char* name, const float value) const {
+	glUniform1f(_get_uniform_location(name), value);
 }
 
-void Shader::set_uniform(const char *name, const glm::vec2 value) const {
-	glUniform2f(uniform_location(name), value.x, value.y);
+void Shader::set_uniform(const char* name, const glm::vec2 value) const {
+	glUniform2f(_get_uniform_location(name), value.x, value.y);
 }
 
-void Shader::set_uniform(const char *name, const glm::vec3 value) const {
-	glUniform3f(uniform_location(name), value.x, value.y, value.z);
+void Shader::set_uniform(const char* name, const glm::vec3 value) const {
+	glUniform3f(_get_uniform_location(name), value.x, value.y, value.z);
 }
 
-void Shader::set_uniform(const char *name, const glm::vec4 value) const {
-	glUniform4f(uniform_location(name), value.x, value.y, value.z, value.w);
+void Shader::set_uniform(const char* name, const glm::vec4 value) const {
+	glUniform4f(_get_uniform_location(name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::set_uniform(const char *name, const glm::mat3 &value) const {
-	glUniformMatrix3fv(uniform_location(name), 1, false, glm::value_ptr(value));
+void Shader::set_uniform(const char* name, const glm::mat3& value) const {
+	glUniformMatrix3fv(_get_uniform_location(name), 1, false, glm::value_ptr(value));
 }
 
-void Shader::set_uniform(const char *name, const glm::mat4 &value) const {
-	glUniformMatrix4fv(uniform_location(name), 1, false, glm::value_ptr(value));
+void Shader::set_uniform(const char* name, const glm::mat4& value) const {
+	glUniformMatrix4fv(_get_uniform_location(name), 1, false, glm::value_ptr(value));
 }
 
-void Shader::set_uniform(const char *name, int count, int *value) const {
-	glUniform1iv(uniform_location(name), count, value);
+void Shader::set_uniform(const char* name, int count, int* value) const {
+	glUniform1iv(_get_uniform_location(name), count, value);
 }
 
-void Shader::set_uniform(const char *name, int count, float *value) const {
-	glUniform1fv(uniform_location(name), count, value);
+void Shader::set_uniform(const char* name, int count, float* value) const {
+	glUniform1fv(_get_uniform_location(name), count, value);
 }
 
-bool Shader::check_compile_errors(const uint32_t shader,
+bool Shader::_check_compile_errors(const uint32_t shader,
 		const ShaderType type) {
 	int success;
 	char info_log[512];
@@ -178,14 +178,14 @@ bool Shader::check_compile_errors(const uint32_t shader,
 	return true;
 }
 
-uint32_t Shader::compile_shader(const char *source, ShaderType type) {
+uint32_t Shader::_compile_shader(const char* source, ShaderType type) {
 	EVE_ASSERT(type != ShaderType::NONE)
 
 	const uint32_t shader = glCreateShader(shader_type_to_opengl(type));
 	glShaderSource(shader, 1, &source, nullptr);
 	glCompileShader(shader);
 
-	if (!check_compile_errors(shader, type)) {
+	if (!_check_compile_errors(shader, type)) {
 		printf("Unable to compile shader:\n%s", source);
 		EVE_ASSERT(false);
 	}

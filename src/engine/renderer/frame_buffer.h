@@ -5,7 +5,7 @@
 
 class FrameBuffer {
 public:
-	FrameBuffer(const glm::ivec2 &size);
+	FrameBuffer(const glm::ivec2& size);
 	~FrameBuffer();
 
 	void bind() const;
@@ -14,18 +14,18 @@ public:
 
 	void refresh();
 
-	[[nodiscard]] const glm::ivec2 &size() const;
+	const glm::ivec2& get_size() const;
 	void set_size(glm::ivec2 size);
 
-	Ref<Texture2D> texture();
+	Ref<Texture2D> get_texture();
 
 private:
-	glm::ivec2 _size;
+	glm::ivec2 size;
 
-	uint32_t _fbo;
-	uint32_t _rbo;
+	uint32_t fbo;
+	uint32_t rbo;
 
-	Ref<Texture2D> _texture;
+	Ref<Texture2D> texture;
 };
 
 #endif

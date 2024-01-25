@@ -10,7 +10,7 @@ Application::Application(const ApplicationCreateInfo& info) {
 	window = create_ref<Window>(window_info);
 
 	event::subscribe<WindowCloseEvent>(
-			[this](const auto& _event) { _running = false; });
+			[this](const auto& _event) { running = false; });
 
 	renderer = create_ref<Renderer>();
 }
@@ -18,19 +18,19 @@ Application::Application(const ApplicationCreateInfo& info) {
 Application::~Application() {}
 
 void Application::run() {
-	on_start();
+	_on_start();
 
 	Timer timer;
-	while (_running) {
+	while (running) {
 		float dt = timer.delta_time();
-		printf("%.2f\n", 1000 / dt);
+		// printf("FPS: %.2f\n", 1000.0f / dt);
 
 		window->poll_events();
 
-		on_update(dt);
+		_on_update(dt);
 
 		window->swap_buffers();
 	}
 
-	on_destroy();
+	_on_destroy();
 }

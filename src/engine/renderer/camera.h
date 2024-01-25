@@ -11,9 +11,9 @@ struct OrthographicCamera {
 
 	virtual ~OrthographicCamera() = default;
 
-	[[nodiscard]] glm::mat4 projection_matrix() const;
+	glm::mat4 get_projection_matrix() const;
 
-	[[nodiscard]] glm::mat4 view_matrix(const Transform &transform);
+	glm::mat4 get_view_matrix(const Transform& transform);
 };
 
 #endif

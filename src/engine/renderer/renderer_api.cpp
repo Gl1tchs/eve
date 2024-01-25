@@ -6,8 +6,8 @@
 static void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 		uint32_t id, uint32_t severity,
 		int32_t length,
-		const char *message,
-		const void *user_param);
+		const char* message,
+		const void* user_param);
 
 void RendererAPI::init() {
 	// TODO if you add different window classes update this
@@ -29,11 +29,11 @@ void RendererAPI::init() {
 	glDepthFunc(GL_LESS);
 }
 
-void RendererAPI::viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
+void RendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
 	glViewport(x, y, w, h);
 }
 
-void RendererAPI::clear_color(const Color &color) {
+void RendererAPI::set_clear_color(const Color& color) {
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
@@ -51,24 +51,24 @@ void RendererAPI::clear(uint16_t bits) {
 	glClear(flags);
 }
 
-void RendererAPI::draw_arrays(const Ref<VertexArray> &vertex_array, uint32_t vertex_count) {
+void RendererAPI::draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
 
-void RendererAPI::draw_indexed(const Ref<VertexArray> &vertex_array, uint32_t index_count) {
+void RendererAPI::draw_indexed(const Ref<VertexArray>& vertex_array, uint32_t index_count) {
 	vertex_array->bind();
 	uint32_t count =
-			index_count ? index_count : vertex_array->index_buffer()->count();
+			index_count ? index_count : vertex_array->get_index_buffer()->get_count();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 
-void RendererAPI::draw_lines(const Ref<VertexArray> &vertex_array, uint32_t vertex_count) {
+void RendererAPI::draw_lines(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_LINES, 0, vertex_count);
 }
 
-void RendererAPI::draw_arrays_instanced(const Ref<VertexArray> &vertex_array,
+void RendererAPI::draw_arrays_instanced(const Ref<VertexArray>& vertex_array,
 		uint32_t vertex_count, uint32_t instance_count) {
 	vertex_array->bind();
 	glDrawArraysInstanced(GL_TRIANGLES, 0, vertex_count, instance_count);
@@ -118,9 +118,9 @@ void RendererAPI::set_active_texture(uint8_t index) {
 
 void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 		uint32_t id, uint32_t severity, int32_t,
-		const char *message, const void *) {
+		const char* message, const void*) {
 	// Convert GLenum parameters to strings
-	const char *source_string;
+	const char* source_string;
 	switch (source) {
 		case GL_DEBUG_SOURCE_API:
 			source_string = "API";
@@ -145,7 +145,7 @@ void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 			break;
 	}
 
-	const char *type_string;
+	const char* type_string;
 	switch (type) {
 		case GL_DEBUG_TYPE_ERROR:
 			type_string = "Error";
@@ -179,7 +179,7 @@ void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 			break;
 	}
 
-	const char *severity_string;
+	const char* severity_string;
 	switch (severity) {
 		case GL_DEBUG_SEVERITY_HIGH:
 			severity_string = "High";

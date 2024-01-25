@@ -16,7 +16,7 @@ enum class ShaderDataType {
 	BOOL,
 };
 
-uint32_t shader_data_type_size(ShaderDataType type);
+uint32_t get_shader_data_type_size(ShaderDataType type);
 
 struct BufferElement final {
 	ShaderDataType type;
@@ -29,7 +29,7 @@ struct BufferElement final {
 	BufferElement(ShaderDataType type, const std::string& name,
 			bool normalized = false, uint32_t divisor = 0);
 
-	uint32_t component_count() const;
+	uint32_t get_component_count() const;
 };
 
 class BufferLayout final {
@@ -38,9 +38,9 @@ public:
 
 	BufferLayout(std::initializer_list<BufferElement> elements);
 
-	uint32_t stride() const { return _stride; }
+	uint32_t get_stride() const { return _stride; }
 
-	const std::vector<BufferElement>& elements() const { return _elements; }
+	const std::vector<BufferElement>& get_elements() const { return _elements; }
 
 	std::vector<BufferElement>::iterator begin() { return _elements.begin(); }
 	std::vector<BufferElement>::iterator end() { return _elements.end(); }
@@ -52,7 +52,7 @@ public:
 	}
 
 private:
-	void calculate_offset_and_stride();
+	void _calculate_offset_and_stride();
 
 	std::vector<BufferElement> _elements;
 	uint32_t _stride = 0;
@@ -69,12 +69,12 @@ public:
 
 	void set_data(const void* data, uint32_t size);
 
-	const BufferLayout& layout();
-	void set_layout(const BufferLayout& layout);
+	const BufferLayout& get_layout();
+	void set_layout(const BufferLayout& r_layout);
 
 private:
-	uint32_t _vbo;
-	BufferLayout _layout;
+	uint32_t vbo;
+	BufferLayout layout;
 };
 
 #endif

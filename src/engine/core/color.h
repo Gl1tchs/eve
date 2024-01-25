@@ -15,10 +15,10 @@ struct Color {
 	constexpr Color(float red, float green, float blue, float alpha) :
 			r(red), g(green), b(blue), a(alpha) {}
 
-	constexpr Color(const glm::vec3 &v3, float alpha) :
+	constexpr Color(const glm::vec3& v3, float alpha) :
 			r(v3.r), g(v3.g), b(v3.b), a(alpha) {}
 
-	constexpr Color(const glm::vec4 &v4) :
+	constexpr Color(const glm::vec4& v4) :
 			r(v4.r), g(v4.g), b(v4.b), a(v4.a) {}
 };
 
