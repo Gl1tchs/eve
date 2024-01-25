@@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 include(CMakeOptions)
+include(CMakeHelpers)
 
 # Define the targets
 add_subdirectory(vendor)

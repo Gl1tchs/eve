@@ -9,45 +9,18 @@ PUBLIC
     ${ENGINE_DIR}
     ${VENDOR_DIR}/glm
 PRIVATE
-    ${VENDOR_DIR}/bgfx/bgfx/include
-    ${VENDOR_DIR}/bgfx/bimg/include
-    ${VENDOR_DIR}/bgfx/bx/include
+    ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
+    ${VENDOR_DIR}/stb
+    ${CMAKE_BINARY_DIR}/include/generated/shaders
 )
 
-target_link_libraries(eve2d PRIVATE
-    bgfx
-    glfw
+target_link_libraries(eve2d
+PUBLIC
     glm
+PRIVATE
+    glad
+    glfw
 )
 
-# bgfx_compile_binary_to_header(
-# 	INPUT_FILE filename
-# 	OUTPUT_FILE filename
-# 	ARRAY_NAME name
-# )
-# bgfx_compile_texture(
-#      FILE filename
-#      OUTPUT filename
-#      [FORMAT format]
-#      [QUALITY default|fastest|highest]
-#      [MIPS]
-#      [MIPSKIP N]
-#      [NORMALMAP]
-#      [EQUIRECT]
-#      [STRIP]
-#      [SDF]
-#      [REF alpha]
-#      [IQA]
-#      [PMA]
-#      [LINEAR]
-#      [MAX max size]
-#      [RADIANCE model]
-#      [AS extension]
-# )
-# bgfx_compile_shader_to_header(
-# 	TYPE VERTEX|FRAGMENT|COMPUTE
-# 	SHADERS filenames
-# 	VARYING_DEF filename
-# 	OUTPUT_DIR directory
-# )
+target_compile_definitions(eve2d PRIVATE GLFW_INCLUDE_NONE)

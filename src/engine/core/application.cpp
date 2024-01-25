@@ -1,33 +1,36 @@
 #include "core/application.h"
 
+#include "core/assert.h"
 #include "core/event_system.h"
-#include "renderer/debug_renderer.h"
-
-namespace eve2d {
+#include "core/timer.h"
 
 Application::Application(const ApplicationCreateInfo& info) {
-    WindowCreateInfo window_info{};
-    window_info.title = info.name;
-    m_window = std::make_shared<Window>(window_info);
-    m_renderer = std::make_shared<Renderer>(m_window);
+	WindowCreateInfo window_info{};
+	window_info.title = info.name;
+	window = create_ref<Window>(window_info);
 
-    event::subscribe<WindowCloseEvent>(
-        [this](const auto& _event) { m_running = false; });
+	event::subscribe<WindowCloseEvent>(
+			[this](const auto& _event) { _running = false; });
+
+	renderer = create_ref<Renderer>();
 }
 
 Application::~Application() {}
 
 void Application::run() {
-    while (m_running) {
-        m_window->poll_events();
+	on_start();
 
-        m_renderer->begin_pass();
+	Timer timer;
+	while (_running) {
+		float dt = timer.delta_time();
+		printf("%.2f\n", 1000 / dt);
 
-        debug::text_clear();
-        debug::text_printf(0, 0, 0x0f, "Press F2 to show stats.");
+		window->poll_events();
 
-        m_renderer->end_pass();
-    }
+		on_update(dt);
+
+		window->swap_buffers();
+	}
+
+	on_destroy();
 }
-
-}  // namespace eve2d

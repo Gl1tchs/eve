@@ -1,28 +1,34 @@
-#pragma once
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
 #include "core/window.h"
-#include "renderer/render_instance.h"
-
-namespace eve2d {
+#include "renderer/renderer.h"
 
 struct ApplicationCreateInfo {
-    const char* name;
-    int argc;
-    const char** argv;
+	const char* name;
+	int argc;
+	const char** argv;
 };
 
 class Application {
 public:
-    Application(const ApplicationCreateInfo& info);
-    ~Application();
+	Application(const ApplicationCreateInfo& info);
+	~Application();
 
-    void run();
+	void run();
+
+protected:
+	Ref<Window> window;
+	Ref<Renderer> renderer;
+
+	inline virtual void on_start() {}
+
+	inline virtual void on_update(float dt) {}
+
+	inline virtual void on_destroy() {}
 
 private:
-    std::shared_ptr<Window> m_window;
-    std::shared_ptr<Renderer> m_renderer;
+	bool _running = true;
+};
 
-    bool m_running = true;
-};  
-
-}
+#endif

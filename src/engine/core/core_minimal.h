@@ -1,6 +1,9 @@
-#pragma once
+#ifndef CORE_MINIMAL_H
+#define CORE_MINIMAL_H
 
-#include "core/log.h"
+#include "core/buffer.h"
+#include "core/assert.h"
+#include "core/memory.h"
 
 #if __linux__
 #define EVE_PLATFORM_LINUX 1
@@ -12,4 +15,6 @@
 #define EVE_PLATFORM_APPLE
 #elif __ANDROID__
 #define EVE_PLATFORM_ANDROID 1
+#endif
+
 #endif

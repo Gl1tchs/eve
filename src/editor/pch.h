@@ -1,12 +1,9 @@
-#pragma once
-
 #include <algorithm>
 #include <any>
 #include <array>
 #include <chrono>
 #include <cmath>
 #include <cstdarg>
-#include <cstdio>
 #include <cstdint>
 #include <cstdio>
 #include <filesystem>
@@ -36,4 +33,4 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "core/log.h"
+#include "core/core_minimal.h"

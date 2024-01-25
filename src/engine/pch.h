@@ -1,12 +1,9 @@
-#pragma once
-
 #include <algorithm>
 #include <any>
 #include <array>
 #include <chrono>
 #include <cmath>
 #include <cstdarg>
-#include <cstdio>
 #include <cstdint>
 #include <cstdio>
 #include <filesystem>
@@ -37,3 +34,5 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "core/core_minimal.h"
+
+namespace fs = std::filesystem;
