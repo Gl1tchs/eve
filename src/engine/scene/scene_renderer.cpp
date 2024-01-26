@@ -77,8 +77,8 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 
 	renderer->begin_pass(data);
 
-	scene->view<Transform, SpriteRendererComponent>().each(
-			[&](entt::entity entity_id, const Transform& transform,
+	scene->view<TransformComponent, SpriteRendererComponent>().each(
+			[&](entt::entity entity_id, const TransformComponent& transform,
 					const SpriteRendererComponent& sprite) {
 				Entity entity{ entity_id, scene.get() };
 

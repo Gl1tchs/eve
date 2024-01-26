@@ -2,7 +2,7 @@
 #define RENDERER_H
 
 #include "core/color.h"
-#include "core/transform.h"
+#include "scene/transform.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/uniform_buffer.h"
 
@@ -21,7 +21,7 @@ public:
 
 	void end_pass();
 
-	void draw_quad(const Transform& transform, int z_index = 0,
+	void draw_quad(const TransformComponent& transform, int z_index = 0,
 			Ref<Texture2D> texture = nullptr,
 			const Color& color = { 1, 1, 1, 1 },
 			const glm::vec2& tex_tiling = { 1, 1 });

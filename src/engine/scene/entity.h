@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "core/transform.h"
+#include "scene/transform.h"
 #include "core/uid.h"
 #include "scene/scene.h"
 
@@ -13,14 +13,14 @@ struct IdComponent {
 };
 
 struct RelationComponent {
-	UID parent_id;
-	std::vector<UID> children_ids;
+	UID parent_id = 0;
+	std::vector<UID> children_ids{};
 };
 
 class Entity {
 public:
 	inline constexpr Entity() :
-			handle(), scene(nullptr) {}
+			handle(entt::null), scene(nullptr) {}
 
 	inline Entity(entt::entity handle, Scene* scene) :
 			handle(handle), scene(scene) {
@@ -78,7 +78,7 @@ public:
 
 	const std::string& get_name();
 
-	Transform& get_transform();
+	TransformComponent& get_transform();
 
 	operator bool() const;
 

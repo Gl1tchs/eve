@@ -2,7 +2,7 @@
 #define COMPONENTS_H
 
 #include "core/color.h"
-#include "core/transform.h"
+#include "scene/transform.h"
 #include "renderer/camera.h"
 #include "renderer/texture.h"
 
@@ -23,6 +23,6 @@ template <typename... Component>
 struct ComponentGroup {};
 
 using AllComponents =
-		ComponentGroup<Transform, CameraComponent, SpriteRendererComponent>;
+		ComponentGroup<TransformComponent, CameraComponent, SpriteRendererComponent>;
 
 #endif

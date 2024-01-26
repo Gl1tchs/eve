@@ -1,7 +1,7 @@
 #ifndef EDITOR_CAMERA_H
 #define EDITOR_CAMERA_H
 
-#include "core/transform.h"
+#include "scene/transform.h"
 #include "renderer/camera.h"
 
 class EditorCamera : public OrthographicCamera {
@@ -14,8 +14,8 @@ public:
 
 	void reset_transform();
 
-	Transform& get_transform();
-	const Transform& get_transform() const;
+	TransformComponent& get_transform();
+	const TransformComponent& get_transform() const;
 
 	void set_speed(float value);
 	float get_speed() const;
@@ -24,7 +24,7 @@ public:
 	float get_sensitivity() const;
 
 private:
-	Transform transform;
+	TransformComponent transform;
 
 	float speed{ 1.0f };
 	float sensitivity{ 10.0f };

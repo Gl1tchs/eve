@@ -1,5 +1,5 @@
 #include "scene/entity.h"
-#include "core/transform.h"
+#include "scene/transform.h"
 #include "core/uid.h"
 
 RelationComponent& Entity::get_relation() {
@@ -7,7 +7,7 @@ RelationComponent& Entity::get_relation() {
 }
 
 const RelationComponent& Entity::get_relation() const {
-	return get_relation();
+	return get_component<RelationComponent>();
 }
 
 Entity Entity::get_parent() const {
@@ -45,8 +45,8 @@ void Entity::set_parent(Entity parent) {
 	parent_children_ids.push_back(get_uid());
 
 	// Make transform values relative to the new parent.
-	Transform& transform = get_transform();
-	Transform& parent_transform = parent.get_transform();
+	TransformComponent& transform = get_transform();
+	TransformComponent& parent_transform = parent.get_transform();
 
 	transform.local_position =
 			transform.get_position() - parent_transform.get_position();
@@ -90,7 +90,7 @@ bool Entity::remove_child(Entity child) {
 
 	if (it != children_ids.end()) {
 		// Set local positions as the world position
-		Transform& child_transform = child.get_transform();
+		TransformComponent& child_transform = child.get_transform();
 		child_transform.local_position = child_transform.get_position();
 		child_transform.local_rotation = child_transform.get_rotation();
 		child_transform.local_scale = child_transform.get_scale();
@@ -137,12 +137,12 @@ const std::string& Entity::get_name() {
 	return get_component<IdComponent>().tag;
 }
 
-Transform& Entity::get_transform() {
-	return get_component<Transform>();
+TransformComponent& Entity::get_transform() {
+	return get_component<TransformComponent>();
 }
 
 Entity::operator bool() const {
-	return handle != entt::null || scene != nullptr;
+	return handle != entt::null && scene != nullptr;
 }
 
 Entity::operator entt::entity() const {

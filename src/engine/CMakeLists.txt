@@ -9,11 +9,11 @@ PUBLIC
     ${ENGINE_DIR}
     ${VENDOR_DIR}/glm
     ${VENDOR_DIR}/entt/src
+    ${VENDOR_DIR}/json/include
 PRIVATE
     ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
     ${VENDOR_DIR}/stb
-    ${CMAKE_BINARY_DIR}/include/generated/shaders
 )
 
 target_link_libraries(eve2d

@@ -71,8 +71,12 @@ public:
 	//  component group will be copied.
 	void copy_to(Ref<Scene> dst);
 
+	static void serialize(Ref<Scene> scene, const char* path);
+
+	static bool deserialize(Ref<Scene>& scene, const char* path);
+
 private:
-	const char* name;
+	std::string name;
 
 	entt::registry registry;
 	std::unordered_map<UID, Entity> entity_map;

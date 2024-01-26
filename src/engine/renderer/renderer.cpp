@@ -24,7 +24,7 @@ void Renderer::end_pass() {
 	_flush();
 }
 
-void Renderer::draw_quad(const Transform& transform, int z_index,
+void Renderer::draw_quad(const TransformComponent& transform, int z_index,
 		Ref<Texture2D> texture, const Color& color,
 		const glm::vec2& tex_tiling) {
 	if (quad_primitive->needs_batch()) {
