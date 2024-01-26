@@ -1,7 +1,5 @@
-// Copyright (c) 2023 Berke Umut Biricik All Rights Reserved
-
-#ifndef CAMERA_DATA_GLSL_
-#define CAMERA_DATA_GLSL_
+#ifndef CAMERA_DATA_GLSL
+#define CAMERA_DATA_GLSL
 
 layout(std140, binding = 0) uniform Camera {
   mat4 view;
@@ -10,4 +8,4 @@ layout(std140, binding = 0) uniform Camera {
 }
 u_camera;
 
-#endif  // CAMERA_DATA_GLSL_
+#endif  // CAMERA_DATA_GLSL

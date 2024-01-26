@@ -28,8 +28,8 @@ struct TextureMetadata final {
 	TextureFormat format = TextureFormat::RGBA;
 	TextureFilteringMode min_filter = TextureFilteringMode::LINEAR;
 	TextureFilteringMode mag_filter = TextureFilteringMode::LINEAR;
-	TextureWrappingMode wrap_s = TextureWrappingMode::REPEAT;
-	TextureWrappingMode wrap_t = TextureWrappingMode::REPEAT;
+	TextureWrappingMode wrap_s = TextureWrappingMode::CLAMP_TO_EDGE;
+	TextureWrappingMode wrap_t = TextureWrappingMode::CLAMP_TO_EDGE;
 	bool generate_mipmaps = true;
 };
 

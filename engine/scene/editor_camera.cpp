@@ -21,10 +21,10 @@ void EditorCamera::update(float dt) {
 
 	glm::vec2 mouse_delta = Input::get_mouse_position() - last_mouse_pos;
 
-	transform.local_position.x += mouse_delta.x * speed * dt;
-	transform.local_position.y -= mouse_delta.y * speed * dt;
+	transform.local_position.x += mouse_delta.x * sensitivity * zoom_level * dt;
+	transform.local_position.y -= mouse_delta.y * sensitivity * zoom_level * dt;
 
-	zoom_level -= Input::get_scroll_offset().y * sensitivity * dt;
+	zoom_level -= Input::get_scroll_offset().y * scroll_speed;
 	if (zoom_level <= 0.1f) {
 		zoom_level = 0.1f;
 	}
@@ -43,10 +43,10 @@ TransformComponent& EditorCamera::get_transform() { return transform; }
 
 const TransformComponent& EditorCamera::get_transform() const { return transform; }
 
-void EditorCamera::set_speed(float value) { speed = value; }
+void EditorCamera::set_speed(float value) { sensitivity = value; }
 
-float EditorCamera::get_speed() const { return speed; }
+float EditorCamera::get_speed() const { return sensitivity; }
 
-void EditorCamera::set_sensitivity(float value) { sensitivity = value; }
+void EditorCamera::set_sensitivity(float value) { scroll_speed = value; }
 
-float EditorCamera::get_sensitivity() const { return sensitivity; }
+float EditorCamera::get_sensitivity() const { return scroll_speed; }

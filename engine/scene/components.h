@@ -2,9 +2,10 @@
 #define COMPONENTS_H
 
 #include "core/color.h"
-#include "scene/transform.h"
 #include "renderer/camera.h"
+#include "renderer/font.h"
 #include "renderer/texture.h"
+#include "scene/transform.h"
 
 struct CameraComponent {
 	OrthographicCamera camera;
@@ -19,10 +20,19 @@ struct SpriteRendererComponent {
 	glm::vec2 tex_tiling = { 1, 1 };
 };
 
+struct TextRendererComponent {
+	std::string text;
+	Ref<Font> font = nullptr;
+	Color fg_color = COLOR_WHITE;
+	Color bg_color = COLOR_TRANSPARENT;
+	float kerning = 0.0f;
+	float line_spacing = 0.0f;
+};
+
 template <typename... Component>
 struct ComponentGroup {};
 
 using AllComponents =
-		ComponentGroup<TransformComponent, CameraComponent, SpriteRendererComponent>;
+		ComponentGroup<TransformComponent, CameraComponent, SpriteRendererComponent, TextRendererComponent>;
 
 #endif

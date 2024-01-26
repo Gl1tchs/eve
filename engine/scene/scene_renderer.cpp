@@ -4,6 +4,7 @@
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
+#include "scene/transform.h"
 #include "scene_renderer.h"
 
 SceneRenderer::SceneRenderer(Ref<Renderer> renderer) :
@@ -84,10 +85,24 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 
 				renderer->draw_quad(
 						transform,
-						sprite.z_index,
 						sprite.texture,
 						sprite.color,
 						sprite.tex_tiling);
+			});
+
+	scene->view<TransformComponent, TextRendererComponent>().each(
+			[&](entt::entity entity_id, const TransformComponent& transform,
+					const TextRendererComponent& text_component) {
+				Entity entity{ entity_id, scene.get() };
+
+				renderer->draw_string(
+						text_component.text,
+						text_component.font ? text_component.font : Font::get_default(),
+						transform,
+						text_component.fg_color,
+						text_component.bg_color,
+						text_component.kerning,
+						text_component.line_spacing);
 			});
 
 	renderer->end_pass();

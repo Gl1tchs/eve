@@ -54,7 +54,15 @@ void EditorApplication::_on_start() {
 
 	// child.get_transform().local_position = { 0, 1, 0 };
 
+	// Entity text_sample = scene->create("text sample");
+	// auto& text_comp = text_sample.add_component<TextRendererComponent>();
+	// text_comp.text = "lorem ipsum\ndolor sit amet";
+	// text_comp.fg_color = COLOR_MAGENTA;
+
+	// Scene::serialize(scene, "res/scene.escn");
 	Scene::deserialize(scene, "res/scene.escn");
+
+	// Ref<Font> font = Font::get_default();
 
 	SceneManager::set_active(scene);
 }

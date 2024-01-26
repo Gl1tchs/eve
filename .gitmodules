@@ -1,6 +1,3 @@
-[submodule "vendor/bgfx"]
-	path = vendor/bgfx
-	url = https://github.com/bkaradzic/bgfx.cmake.git
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm.git
@@ -10,3 +7,6 @@
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "msdf-atlas-gen-cmake"]
+	path = vendor/msdf-atlas-gen
+	url = https://github.com/Gl1tchs/msdf-atlas-gen.git

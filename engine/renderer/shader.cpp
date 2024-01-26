@@ -81,7 +81,7 @@ void Shader::unbind() const {
 
 std::string Shader::_load_shader_source(const char* path) {
 	if (!std::filesystem::exists(path)) {
-		printf("Shader file not found at: %s", path);
+		printf("Shader file not found at: %s\n", path);
 		return "";
 	}
 
@@ -93,7 +93,7 @@ std::string Shader::_load_shader_source(const char* path) {
 	std::ifstream file(path);
 
 	if (!file.is_open()) {
-		printf("Could not open the shader at: %s", path);
+		printf("Could not open the shader at: %s\n", path);
 		return full_source_code;
 	}
 
@@ -172,7 +172,7 @@ bool Shader::_check_compile_errors(const uint32_t shader,
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(shader, 512, nullptr, info_log);
-		printf("Unable to link shader of type: %s\n%s",
+		printf("Unable to link shader of type: %s\n%s\n",
 				serialize_shader_type(type), info_log);
 		return false;
 	}
@@ -188,7 +188,7 @@ uint32_t Shader::_compile_shader(const char* source, ShaderType type) {
 	glCompileShader(shader);
 
 	if (!_check_compile_errors(shader, type)) {
-		printf("Unable to compile shader:\n%s", source);
+		printf("Unable to compile shader:\n%s\n", source);
 		EVE_ASSERT(false);
 	}
 

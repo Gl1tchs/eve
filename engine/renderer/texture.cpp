@@ -60,7 +60,7 @@ Texture2D::Texture2D(const char* path, bool flip_on_load) :
 
 	if (!data) {
 		stbi_image_free(data);
-		printf("Unable to load texture from: %s", path);
+		printf("Unable to load texture from: %s\n", path);
 		EVE_ASSERT(false);
 	}
 

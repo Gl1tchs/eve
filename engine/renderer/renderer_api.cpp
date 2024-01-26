@@ -198,10 +198,10 @@ void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 			break;
 	}
 
-	printf("OpenGL Debug Message:");
-	printf("Source: %s", source_string);
-	printf("Type: %s", type_string);
-	printf("ID: %d", id);
-	printf("Severity: %s", severity_string);
-	printf("Message: %s", message);
+	printf("OpenGL Debug Message:\n");
+	printf("Source: %s\n", source_string);
+	printf("Type: %s\n", type_string);
+	printf("ID: %d\n", id);
+	printf("Severity: %s\n", severity_string);
+	printf("Message: %s\n", message);
 }

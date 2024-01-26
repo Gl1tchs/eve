@@ -12,7 +12,7 @@ FrameBuffer::FrameBuffer(const glm::ivec2& size) :
 	refresh();
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		printf("Framebuffer is not complete!");
+		printf("Framebuffer is not complete!\n");
 	}
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);

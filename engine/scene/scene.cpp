@@ -3,6 +3,7 @@
 #include "core/json_utils.h"
 #include "core/uid.h"
 #include "nlohmann/json.hpp"
+#include "renderer/font.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/transform.h"
@@ -197,6 +198,19 @@ static nlohmann::ordered_json serialize_entity(Entity& entity) {
 		};
 	}
 
+	if (entity.has_component<TextRendererComponent>()) {
+		const TextRendererComponent& tc = entity.get_component<TextRendererComponent>();
+
+		out["text_renderer_component"] = nlohmann::ordered_json{
+			{ "text", tc.text },
+			// {"font", tc.font},
+			{ "fg_color", tc.fg_color },
+			{ "bg_color", tc.bg_color },
+			{ "kerning", tc.kerning },
+			{ "line_spacing", tc.line_spacing },
+		};
+	}
+
 	return out;
 }
 
@@ -221,7 +235,7 @@ void Scene::serialize(Ref<Scene> scene, const char* path) {
 
 bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 	if (!scene->entity_map.empty()) {
-		printf("Given scene to deserialize is not empty.\nClearing the data...");
+		printf("Given scene to deserialize is not empty.\nClearing the data...\n");
 		scene->entity_map.clear();
 		scene->registry.clear();
 	}
@@ -230,7 +244,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 
 	std::ifstream file(path);
 	if (!file.is_open()) {
-		printf("Failed to load scene file '%s'", path);
+		printf("Failed to load scene file '%s'\n", path);
 		return false;
 	}
 	file >> data;
@@ -307,6 +321,18 @@ bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
+		}
+
+		if (auto text_comp_json = entity_json["text_renderer_component"]; !text_comp_json.is_null()) {
+			auto& text_component = deserialing_entity.add_component<TextRendererComponent>();
+
+			text_component.text = text_comp_json["text"].get<std::string>();
+			// {"font", tc.font},
+			text_component.font = Font::get_default();
+			text_component.fg_color = text_comp_json["fg_color"].get<Color>();
+			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
+			text_component.kerning = text_comp_json["kerning"].get<float>();
+			text_component.line_spacing = text_comp_json["line_spacing"].get<float>();
 		}
 	}
 
