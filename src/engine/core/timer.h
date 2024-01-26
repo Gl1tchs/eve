@@ -5,11 +5,11 @@ class Timer final {
 public:
 	Timer();
 
-	float elapsed_milliseconds();
+	float get_elapsed_milliseconds();
 
-	float elapsed_seconds();
+	float get_elapsed_seconds();
 
-	float delta_time();
+	float get_delta_time();
 
 private:
 	std::chrono::time_point<std::chrono::high_resolution_clock>

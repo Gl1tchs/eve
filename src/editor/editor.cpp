@@ -3,7 +3,6 @@
 #include "core/color.h"
 #include "core/entrypoint.h"
 #include "core/input.h"
-#include "core/timer.h"
 #include "renderer/renderer.h"
 #include "renderer/texture.h"
 #include "scene/components.h"

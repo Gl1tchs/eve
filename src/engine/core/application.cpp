@@ -22,7 +22,7 @@ void Application::run() {
 
 	Timer timer;
 	while (running) {
-		float dt = timer.delta_time();
+		float dt = timer.get_delta_time();
 		// printf("FPS: %.2f\n", 1000.0f / dt);
 
 		window->poll_events();
