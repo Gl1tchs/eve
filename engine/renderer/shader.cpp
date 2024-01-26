@@ -18,14 +18,15 @@ const char* serialize_shader_type(ShaderType type) {
 }
 
 ShaderType DeserializeShaderType(const std::string& value) {
-	if (value == "vertex")
+	if (value == "vertex") {
 		return ShaderType::VERTEX;
-	else if (value == "fragment")
+	} else if (value == "fragment") {
 		return ShaderType::FRAGMENT;
-	else if (value == "geometry")
+	} else if (value == "geometry") {
 		return ShaderType::GEOMETRY;
-	else
+	} else {
 		return ShaderType::NONE;
+	}
 }
 
 int shader_type_to_opengl(ShaderType type) {
@@ -41,7 +42,8 @@ int shader_type_to_opengl(ShaderType type) {
 	}
 }
 
-Shader::Shader(const char* vs_path, const char* fs_path) {
+Shader::Shader(const char* vs_path, const char* fs_path) :
+		renderer_id(0) {
 	recompile(vs_path, fs_path);
 }
 

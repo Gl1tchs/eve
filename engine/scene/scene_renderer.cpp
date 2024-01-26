@@ -7,7 +7,7 @@
 #include "scene_renderer.h"
 
 SceneRenderer::SceneRenderer(Ref<Renderer> renderer) :
-		renderer(renderer) {
+		renderer(renderer), viewport_size(0, 0) {
 }
 
 void SceneRenderer::render_runtime(float ds) {

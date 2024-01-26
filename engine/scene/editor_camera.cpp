@@ -3,7 +3,7 @@
 #include "core/input.h"
 
 EditorCamera::EditorCamera() :
-		OrthographicCamera() {
+		OrthographicCamera(), last_mouse_pos(0, 0) {
 	reset_transform();
 
 	last_mouse_pos = Input::get_mouse_position();

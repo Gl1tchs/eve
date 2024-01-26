@@ -72,7 +72,7 @@ void EditorApplication::_on_update(float dt) {
 void EditorApplication::_on_destroy() {}
 
 Application* create_application(int argc, const char** argv) {
-	ApplicationCreateInfo info;
+	ApplicationCreateInfo info{};
 	info.name = "editor2d";
 	info.argc = argc;
 	info.argv = argv;

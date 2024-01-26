@@ -4,7 +4,7 @@
 #include "scene/transform.h"
 
 struct OrthographicCamera {
-	float aspect_ratio;
+	float aspect_ratio = 1.77f;
 	float zoom_level = 1.0f;
 	float near_clip = -1.0f;
 	float far_clip = 1.0f;

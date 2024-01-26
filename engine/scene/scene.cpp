@@ -103,8 +103,9 @@ template <typename... Component>
 static void copy_component_if_exists(Entity dst, Entity src) {
 	(
 			[&]() {
-				if (src.has_component<Component>())
+				if (src.has_component<Component>()) {
 					dst.add_or_replace_component<Component>(src.get_component<Component>());
+				}
 			}(),
 			...);
 }

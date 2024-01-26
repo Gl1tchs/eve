@@ -71,7 +71,7 @@ void* Window::get_native_window() {
 void Window::_assign_event_delegates() {
 	glfwSetWindowSizeCallback(_window,
 			[](GLFWwindow* window, int width, int height) {
-				WindowResizeEvent resize_event;
+				WindowResizeEvent resize_event{};
 				resize_event.size = { width, height };
 				event::notify(resize_event);
 			});
@@ -84,19 +84,19 @@ void Window::_assign_event_delegates() {
 	glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 		switch (action) {
 			case GLFW_PRESS: {
-				KeyPressEvent key_event;
+				KeyPressEvent key_event{};
 				key_event.key_code = static_cast<KeyCode>(key);
 				event::notify(key_event);
 				break;
 			}
 			case GLFW_RELEASE: {
-				KeyReleaseEvent key_event;
+				KeyReleaseEvent key_event{};
 				key_event.key_code = static_cast<KeyCode>(key);
 				event::notify(key_event);
 				break;
 			}
 			case GLFW_REPEAT: {
-				KeyPressEvent key_event;
+				KeyPressEvent key_event{};
 				key_event.key_code = static_cast<KeyCode>(key);
 				key_event.is_repeat = true;
 				event::notify(key_event);
@@ -109,7 +109,7 @@ void Window::_assign_event_delegates() {
 	});
 
 	glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int keycode) {
-		KeyTypeEvent type_event;
+		KeyTypeEvent type_event{};
 		type_event.key_code = static_cast<KeyCode>(keycode);
 		event::notify(type_event);
 	});
@@ -118,13 +118,13 @@ void Window::_assign_event_delegates() {
 			_window, [](GLFWwindow* window, int button, int action, int mods) {
 				switch (action) {
 					case GLFW_PRESS: {
-						MousePressEvent mouse_event;
+						MousePressEvent mouse_event{};
 						mouse_event.button_code = static_cast<MouseCode>(button);
 						event::notify(mouse_event);
 						break;
 					}
 					case GLFW_RELEASE: {
-						MouseReleaseEvent mouse_event;
+						MouseReleaseEvent mouse_event{};
 						mouse_event.button_code = static_cast<MouseCode>(button);
 						event::notify(mouse_event);
 						break;
@@ -138,7 +138,7 @@ void Window::_assign_event_delegates() {
 	glfwSetCursorPosCallback(
 			_window,
 			[](GLFWwindow* window, const double x_pos, const double y_pos) {
-				MouseMoveEvent move_event;
+				MouseMoveEvent move_event{};
 				move_event.position = { static_cast<float>(x_pos),
 					static_cast<float>(y_pos) };
 				event::notify(move_event);
@@ -147,7 +147,7 @@ void Window::_assign_event_delegates() {
 	glfwSetScrollCallback(
 			_window,
 			[](GLFWwindow* window, const double x_offset, const double y_offset) {
-				MouseScrollEvent scroll_event;
+				MouseScrollEvent scroll_event{};
 				scroll_event.offset = { static_cast<float>(x_offset),
 					static_cast<float>(y_offset) };
 				event::notify(scroll_event);

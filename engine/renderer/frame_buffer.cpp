@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 
 FrameBuffer::FrameBuffer(const glm::ivec2& size) :
-		size(size) {
+		size(size), fbo(0), rbo(0) {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

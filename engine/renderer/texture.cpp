@@ -51,7 +51,8 @@ int deserialize_texture_wrapping_mode(TextureWrappingMode mode) {
 	}
 }
 
-Texture2D::Texture2D(const char* path, bool flip_on_load) {
+Texture2D::Texture2D(const char* path, bool flip_on_load) :
+		renderer_id(0) {
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
 	int width, height, channels;
@@ -98,7 +99,7 @@ Texture2D::Texture2D(const char* path, bool flip_on_load) {
 }
 
 Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels) :
-		metadata(metadata) {
+		renderer_id(0), metadata(metadata) {
 	_gen_texture(metadata, pixels);
 }
 

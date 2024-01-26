@@ -1,31 +1,20 @@
+# Properly detect languages on Github
+*.h linguist-language=cpp
+*.inc linguist-language=cpp
+vendor/* linguist-vendored
+
+# Normalize EOL for all files that Git considers text files
 * text=auto eol=lf
+# Except for bat files, which are Windows only files
+*.bat eol=crlf
+# And some test files where the EOL matters
+*.test.txt -text
 
-*.c text
-*.cpp text
-*.h text
-*.m text
-*.mm text
-*.md text
-*.txt text
-*.html text
-*.bat text
-*.frag text
-*.vert text
-*.mkb text
-*.icf text
-
-*.sln text eol=crlf
-*.vcxproj text eol=crlf
-*.vcxproj.filters text eol=crlf
-*.natvis text eol=crlf
-
-Makefile text eol=lf
-*.sh text eol=lf
-*.pbxproj text eol=lf
-*.storyboard text eol=lf
-*.plist text eol=lf
-
+# The above only works properly for Git 2.10+, so for older versions
+# we need to manually list the binary files we don't want modified.
+*.icns binary
+*.ico binary
+*.jar binary
 *.png binary
-*.jpg binary
 *.ttf binary
-*.lib binary
+*.tza binary

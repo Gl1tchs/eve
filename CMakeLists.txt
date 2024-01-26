@@ -7,8 +7,12 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 include(CMakeOptions)
-include(CMakeHelpers)
+
+set(EDITOR_DIR ${CMAKE_SOURCE_DIR}/editor)
+set(ENGINE_DIR ${CMAKE_SOURCE_DIR}/engine)
+set(VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
 # Define the targets
 add_subdirectory(vendor)
-add_subdirectory(src)
+add_subdirectory(engine)
+add_subdirectory(editor)

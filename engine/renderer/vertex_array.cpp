@@ -32,7 +32,8 @@ static GLenum shader_data_type_to_opengl(ShaderDataType type) {
 	}
 }
 
-VertexArray::VertexArray() {
+VertexArray::VertexArray() :
+		vao(0) {
 	glCreateVertexArrays(1, &vao);
 }
 

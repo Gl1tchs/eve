@@ -2,7 +2,8 @@
 
 #include <glad/glad.h>
 
-IndexBuffer::IndexBuffer(uint32_t size) {
+IndexBuffer::IndexBuffer(uint32_t size) :
+		ibo(0), count(0) {
 	glCreateBuffers(1, &ibo);
 	glBindBuffer(GL_ARRAY_BUFFER, ibo);
 	// TODO documentate this constructor and tell the client this defines as DYNAMIC_DRAW
@@ -10,7 +11,7 @@ IndexBuffer::IndexBuffer(uint32_t size) {
 }
 
 IndexBuffer::IndexBuffer(const uint32_t* indices, uint32_t count) :
-		count(count) {
+		ibo(0), count(count) {
 	glCreateBuffers(1, &ibo);
 
 	// GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
