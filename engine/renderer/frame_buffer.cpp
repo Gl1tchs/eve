@@ -12,7 +12,7 @@ FrameBuffer::FrameBuffer(const glm::ivec2& size) :
 	refresh();
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-		printf("Framebuffer is not complete!\n");
+		EVE_LOG_ENGINE_ERROR("Framebuffer is not complete!");
 	}
 
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);

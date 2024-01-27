@@ -9,11 +9,11 @@
 #include <GLFW/glfw3.h>
 
 static void glfw_error_callback(int error, const char* description) {
-	fprintf(stderr, "GLFW error %d: %s\n", error, description);
+	EVE_LOG_ENGINE_ERROR("GLFW error {}: {}.", error, description);
 }
 
 Window::Window(WindowCreateInfo info) {
-	EVE_ASSERT(glfwInit());
+	EVE_ASSERT_ENGINE(glfwInit());
 
 #if EVE_DEBUG
 	glfwSetErrorCallback(glfw_error_callback);
@@ -24,7 +24,7 @@ Window::Window(WindowCreateInfo info) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	_window = glfwCreateWindow(info.w, info.h, info.title, nullptr, nullptr);
-	EVE_ASSERT(_window);
+	EVE_ASSERT_ENGINE(_window);
 
 	//! TODO remove this if any other grapichs api implemented.
 	glfwMakeContextCurrent(_window);

@@ -61,8 +61,8 @@ Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 
 	if (!data) {
 		stbi_image_free(data);
-		printf("Unable to load texture from: %s\n", path_cstr);
-		EVE_ASSERT(false);
+		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path_cstr);
+		EVE_ASSERT_ENGINE(false);
 	}
 
 	TextureMetadata texture_metadata;
@@ -87,7 +87,7 @@ Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 			texture_metadata.format = TextureFormat::RGBA;
 			break;
 		default:
-			EVE_ASSERT(false, "Unsupported number of channels in the image");
+			EVE_ASSERT_ENGINE(false, "Unsupported number of channels in the image");
 			break;
 	}
 
@@ -110,8 +110,8 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bo
 
 	if (!data) {
 		stbi_image_free(data);
-		printf("Unable to load texture from: %s\n", path_cstr);
-		EVE_ASSERT(false);
+		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path_cstr);
+		EVE_ASSERT_ENGINE(false);
 	}
 
 	TextureMetadata texture_metadata;
@@ -136,7 +136,7 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bo
 			texture_metadata.format = TextureFormat::RGBA;
 			break;
 		default:
-			EVE_ASSERT(false, "Unsupported number of channels in the image");
+			EVE_ASSERT_ENGINE(false, "Unsupported number of channels in the image");
 			break;
 	}
 
@@ -169,7 +169,7 @@ void Texture2D::set_data(void* data, uint32_t size) {
 	int format = deserialize_texture_format(metadata.format);
 
 	uint32_t bpp = format == GL_RGBA ? 4 : 3;
-	EVE_ASSERT(size == metadata.size.x * metadata.size.y * bpp,
+	EVE_ASSERT_ENGINE(size == metadata.size.x * metadata.size.y * bpp,
 			"Data must be entire texture!");
 
 	glTextureSubImage2D(renderer_id, 0, 0, 0, metadata.size.x,

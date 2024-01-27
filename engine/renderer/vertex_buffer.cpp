@@ -27,7 +27,7 @@ uint32_t get_shader_data_type_size(ShaderDataType type) {
 		case ShaderDataType::BOOL:
 			return 1;
 		default:
-			EVE_ASSERT(false, "Unknown ShaderDataType!")
+			EVE_ASSERT_ENGINE(false, "Unknown ShaderDataType!")
 			return 0;
 	}
 }
@@ -66,7 +66,7 @@ uint32_t BufferElement::get_component_count() const {
 		case ShaderDataType::BOOL:
 			return 1;
 		default:
-			EVE_ASSERT(false, "Unknown ShaderDataType!")
+			EVE_ASSERT_ENGINE(false, "Unknown ShaderDataType!")
 			return 0;
 	}
 }

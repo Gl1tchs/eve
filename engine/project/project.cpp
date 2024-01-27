@@ -19,7 +19,7 @@ void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path)
 bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 	Json json;
 	if (!json_utils::read_file(path, json)) {
-		printf("Failed to load project file from: %s\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load project file from: {}", path.c_str());
 		return false;
 	}
 
@@ -36,43 +36,43 @@ Project::Project(const fs::path& path, const ProjectConfig& config) :
 }
 
 const std::string& Project::get_name() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return s_active_project->config.name;
 }
 
 const fs::path& Project::get_project_path() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return s_active_project->path;
 }
 
 fs::path Project::get_project_directory() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return s_active_project->path.parent_path();
 }
 
 fs::path Project::get_asset_directory() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return get_project_directory() / s_active_project->config.asset_directory;
 }
 
 std::string Project::get_asset_registry_path() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return get_asset_path(s_active_project->config.asset_registry);
 }
 
 std::string Project::get_starting_scene_path() {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	return get_asset_path(s_active_project->config.starting_scene);
 }
 
 fs::path Project::get_asset_path(std::string asset) {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	const std::string proj_substr = "prj://";
 	const std::string res_substr = "res://";
@@ -107,7 +107,7 @@ Ref<Project> Project::create(const fs::path& path) {
 Ref<Project> Project::load(const fs::path& path) {
 	ProjectConfig config{};
 	if (!ProjectConfig::deserialize(config, path)) {
-		printf("Unable to load project from: %s\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Unable to load project from: {}", path.c_str());
 		return nullptr;
 	}
 
@@ -120,7 +120,7 @@ Ref<Project> Project::load(const fs::path& path) {
 }
 
 void Project::save_active(const fs::path& path) {
-	EVE_ASSERT(s_active_project);
+	EVE_ASSERT_ENGINE(s_active_project);
 
 	const ProjectConfig& config = s_active_project->config;
 	ProjectConfig::serialize(config, path);

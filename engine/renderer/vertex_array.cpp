@@ -27,7 +27,7 @@ static GLenum shader_data_type_to_opengl(ShaderDataType type) {
 		case ShaderDataType::BOOL:
 			return GL_BOOL;
 		default:
-			EVE_ASSERT(false, "Unknown ShaderDataType!");
+			EVE_ASSERT_ENGINE(false, "Unknown ShaderDataType!");
 			return 0;
 	}
 }
@@ -56,7 +56,7 @@ VertexArray::get_vertex_buffers() const {
 
 void VertexArray::add_vertex_buffer(
 		const Ref<VertexBuffer>& vertex_buffer) {
-	EVE_ASSERT(vertex_buffer->get_layout().get_elements().size(),
+	EVE_ASSERT_ENGINE(vertex_buffer->get_layout().get_elements().size(),
 			"Vertex Buffer has no layout!");
 
 	glBindVertexArray(vao);
@@ -121,7 +121,7 @@ void VertexArray::add_vertex_buffer(
 				break;
 			}
 			default:
-				EVE_ASSERT(false, "Unknown ShaderDataType!");
+				EVE_ASSERT_ENGINE(false, "Unknown ShaderDataType!");
 		}
 	}
 

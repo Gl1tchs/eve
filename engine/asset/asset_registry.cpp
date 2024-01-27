@@ -23,7 +23,7 @@ Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
 
 	const auto it = loaded_assets.find(handle);
 	if (it == loaded_assets.end()) {
-		printf("Asset handle of %zu not found thus couln't be loaded.\n", handle.value);
+		EVE_LOG_ENGINE_ERROR("Asset handle of {} not found thus couln't be loaded.", handle.value);
 		return nullptr;
 	}
 
@@ -51,7 +51,7 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type, AssetHa
 	}
 
 	if (!asset) {
-		printf("Unable to load asset from: %s.\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Unable to load asset from: {}.", path);
 		return 0;
 	}
 
@@ -110,7 +110,7 @@ bool AssetRegistry::deserialize(const fs::path& path) {
 
 	Json json{};
 	if (!json_utils::read_file(path, json)) {
-		printf("Unable to deserialize asset registry to %s", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Unable to deserialize asset registry to {}", path.string());
 		return false;
 	}
 

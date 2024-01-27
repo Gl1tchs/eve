@@ -1,6 +1,9 @@
 #include "core/entrypoint.h"
+#include "core/log.h"
 
 int main(int argc, const char** argv) {
+	Logger::init("eve2d.log");
+
 	// create application instance
 	Application* _application = create_application(argc, argv);
 
@@ -9,6 +12,8 @@ int main(int argc, const char** argv) {
 
 	// cleanup
 	delete _application;
+
+	Logger::deinit();
 
 	return 0;
 }

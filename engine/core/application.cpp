@@ -31,7 +31,7 @@ void Application::run() {
 	Timer timer;
 	while (running) {
 		float dt = timer.get_delta_time();
-		// printf("FPS: %.2f\n", 1000.0f / dt);
+		// EVE_LOG_ENGINE_TRACE("FPS: {}", 1000.0f / dt);
 
 		window->poll_events();
 

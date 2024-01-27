@@ -20,11 +20,11 @@ NLOHMANN_JSON_SERIALIZE_ENUM(TextureWrappingMode,
 Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
 	Json json{};
 	if (!json_utils::read_file(path, json)) {
-		printf("Failed to load texture file from: %s\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load texture file from: {}", path.string());
 		return nullptr;
 	}
 
-	EVE_ASSERT(json["type"].get<std::string>() == "texture");
+	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "texture");
 
 	const std::string asset_path = json["path"].get<std::string>();
 	const fs::path asset_path_abs = Project::get_asset_path(asset_path);
@@ -46,11 +46,11 @@ Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
 Ref<Font> AssetLoader::load_font(const fs::path& path) {
 	Json json{};
 	if (!json_utils::read_file(path, json)) {
-		printf("Failed to load font file from: %s\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load font file from: {}", path.string());
 		return nullptr;
 	}
 
-	EVE_ASSERT(json["type"].get<std::string>() == "font");
+	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "font");
 
 	const std::string asset_path = json["path"].get<std::string>();
 	const fs::path asset_path_abs = Project::get_asset_path(asset_path);

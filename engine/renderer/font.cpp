@@ -66,7 +66,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSD
 	int glyphs_loaded = data->font_geometry.loadCharset(font, font_scale, charset);
 
 #if EVE_DEBUG
-	printf("Loaded %d glyphs from font (out of %zu)\n", glyphs_loaded, charset.size());
+	EVE_LOG_ENGINE_INFO("Loaded {} glyphs from font (out of {})", glyphs_loaded, charset.size());
 #endif
 
 	// FIXME
@@ -80,7 +80,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSD
 	atlas_packer.setScale(em_size);
 
 	int remaining = atlas_packer.pack(data->glyphs.data(), (int)data->glyphs.size());
-	EVE_ASSERT(remaining == 0);
+	EVE_ASSERT_ENGINE(remaining == 0);
 
 	int width, height;
 	atlas_packer.getDimensions(width, height);
@@ -104,7 +104,7 @@ Font::Font(const std::string& path) {
 
 	msdfgen::FontHandle* font = msdfgen::loadFont(ft, path.c_str());
 	if (!font) {
-		printf("Failed to load font: %s\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path.c_str());
 		return;
 	}
 
@@ -119,7 +119,7 @@ Font::Font(const uint8_t* bytes, uint32_t length) {
 
 	msdfgen::FontHandle* font = msdfgen::loadFontData(ft, bytes, length);
 	if (!font) {
-		printf("Failed to load memory font!\n");
+		EVE_LOG_ENGINE_ERROR("Failed to load memory font!");
 		return;
 	}
 

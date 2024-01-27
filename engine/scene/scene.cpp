@@ -158,7 +158,7 @@ void Scene::copy_to(Ref<Scene> dst) {
 
 static Json serialize_entity(Entity& entity) {
 	bool has_required_components = entity.has_component<IdComponent, RelationComponent, TransformComponent>();
-	EVE_ASSERT(has_required_components);
+	EVE_ASSERT_ENGINE(has_required_components);
 
 	Json out;
 
@@ -234,14 +234,14 @@ void Scene::serialize(Ref<Scene> scene, const fs::path& path) {
 
 bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 	if (!scene->entity_map.empty()) {
-		printf("Given scene to deserialize is not empty.\nClearing the data...\n");
+		EVE_LOG_ENGINE_WARNING("Given scene to deserialize is not empty.\nClearing the data...");
 		scene->entity_map.clear();
 		scene->registry.clear();
 	}
 
 	Json data;
 	if (!json_utils::read_file(path, data)) {
-		printf("Failed to load scene file '%s'\n", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path.c_str());
 		return false;
 	}
 

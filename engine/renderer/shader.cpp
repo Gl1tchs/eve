@@ -81,7 +81,7 @@ void Shader::unbind() const {
 
 std::string Shader::_load_shader_source(const char* path) {
 	if (!std::filesystem::exists(path)) {
-		printf("Shader file not found at: %s\n", path);
+		EVE_LOG_ENGINE_ERROR("Shader file not found at: {}", path);
 		return "";
 	}
 
@@ -93,7 +93,7 @@ std::string Shader::_load_shader_source(const char* path) {
 	std::ifstream file(path);
 
 	if (!file.is_open()) {
-		printf("Could not open the shader at: %s\n", path);
+		EVE_LOG_ENGINE_ERROR("Could not open the shader at: {}", path);
 		return full_source_code;
 	}
 
@@ -172,7 +172,7 @@ bool Shader::_check_compile_errors(const uint32_t shader,
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(shader, 512, nullptr, info_log);
-		printf("Unable to link shader of type: %s\n%s\n",
+		EVE_LOG_ENGINE_ERROR("Unable to link shader of {} shader:\n{}",
 				serialize_shader_type(type), info_log);
 		return false;
 	}
@@ -181,15 +181,15 @@ bool Shader::_check_compile_errors(const uint32_t shader,
 }
 
 uint32_t Shader::_compile_shader(const char* source, ShaderType type) {
-	EVE_ASSERT(type != ShaderType::NONE)
+	EVE_ASSERT_ENGINE(type != ShaderType::NONE)
 
 	const uint32_t shader = glCreateShader(shader_type_to_opengl(type));
 	glShaderSource(shader, 1, &source, nullptr);
 	glCompileShader(shader);
 
 	if (!_check_compile_errors(shader, type)) {
-		printf("Unable to compile shader:\n%s\n", source);
-		EVE_ASSERT(false);
+		EVE_LOG_ENGINE_ERROR("Unable to compile shader:\n{}", source);
+		EVE_ASSERT_ENGINE(false);
 	}
 
 	return shader;
