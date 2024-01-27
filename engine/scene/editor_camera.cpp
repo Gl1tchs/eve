@@ -1,6 +1,7 @@
 #include "scene/editor_camera.h"
 
 #include "core/input.h"
+#include <algorithm>
 
 EditorCamera::EditorCamera() :
 		OrthographicCamera(), last_mouse_pos(0, 0) {
@@ -25,9 +26,8 @@ void EditorCamera::update(float dt) {
 	transform.local_position.y -= mouse_delta.y * sensitivity * zoom_level * dt;
 
 	zoom_level -= Input::get_scroll_offset().y * scroll_speed;
-	if (zoom_level <= 0.1f) {
-		zoom_level = 0.1f;
-	}
+	zoom_level = std::max(zoom_level, 0.5f);
+
 
 	// store last mouse pos to prevent instant rotations
 	last_mouse_pos = Input::get_mouse_position();

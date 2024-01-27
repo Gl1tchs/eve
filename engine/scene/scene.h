@@ -100,6 +100,8 @@ private:
 
 	entt::registry registry;
 	std::unordered_map<UID, Entity> entity_map;
+
+	friend class HierarchyPanel;
 };
 
 #endif

@@ -1,8 +1,12 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include "core/application.h"
+#include "panels/console_panel.h"
+#include "panels/hierarchy_panel.h"
+#include "panels/viewport_panel.h"
+#include "widgets/menu_bar.h"
 
+#include "core/application.h"
 #include "renderer/frame_buffer.h"
 #include "scene/editor_camera.h"
 #include "scene/scene_renderer.h"
@@ -22,13 +26,19 @@ protected:
 	void _on_destroy() override;
 
 private:
+	void _setup_menubar();
+
+private:
 	Ref<SceneRenderer> scene_renderer;
 	Ref<EditorCamera> editor_camera;
 
 	Ref<FrameBuffer> frame_buffer;
-	int viewport_width = 0;
-	int viewport_height = 0;
-	glm::vec2 viewport_bounds[2];
+
+	// panels and widgets
+	MenuBar menubar;
+	Scope<ViewportPanel> viewport;
+	HierarchyPanel hierarchy;
+	ConsolePanel console;
 };
 
 #endif

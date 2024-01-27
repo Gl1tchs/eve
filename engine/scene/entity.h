@@ -92,6 +92,8 @@ public:
 private:
 	entt::entity handle;
 	Scene* scene = nullptr;
+
+	friend class HierarchyPanel;
 };
 
 constexpr Entity INVALID_ENTITY{};

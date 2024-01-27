@@ -35,7 +35,7 @@ PUBLIC
 PRIVATE
     glad
     glfw
-	ImGui
+	imgui
 	msdf-atlas-gen
 )
 

@@ -8,6 +8,7 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <imgui_spectrum.h>
 
 ImGuiLayer::ImGuiLayer(Ref<Window> window) :
 		window(window) {
@@ -29,6 +30,11 @@ ImGuiLayer::ImGuiLayer(Ref<Window> window) :
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
+
+	ImGui::Spectrum::StyleColorsSpectrum();
+
+	io.Fonts->Clear();
+	ImGui::Spectrum::LoadFont();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window->get_native_window(), true);

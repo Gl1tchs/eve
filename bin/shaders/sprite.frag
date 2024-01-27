@@ -12,16 +12,14 @@ layout(location = 1) out int o_entity_id;
 uniform sampler2D u_textures[32];
 
 void main() {
+	o_entity_id = v_entity_id;
+
 	int index = int(v_tex_index);
-
 	vec4 texture = texture(u_textures[index], v_tex_coord * v_tex_tiling);
-
 	vec4 color = texture * v_color;
-
 	if (color.a == 0.00) {
 		discard;
 	}
 
 	o_color = color;
-	o_entity_id = v_entity_id;
 }

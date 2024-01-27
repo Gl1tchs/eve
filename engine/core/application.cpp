@@ -80,3 +80,7 @@ void Application::_process_main_thread_queue() {
 
 	main_thread_queue.clear();
 }
+
+void Application::_quit() {
+	running = false;
+}

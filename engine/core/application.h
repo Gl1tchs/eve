@@ -41,6 +41,8 @@ protected:
 
 	inline virtual void _on_destroy() {}
 
+	void _quit();
+
 private:
 	bool running = true;
 

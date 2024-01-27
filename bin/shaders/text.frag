@@ -24,6 +24,8 @@ float median(float r, float g, float b) {
 }
 
 void main() {
+	o_entity_id = v_entity_id;
+
 	vec3 msd = texture(u_font_atlas, v_tex_coord).rgb;
 	float sd = median(msd.r, msd.g, msd.b);
 	float screen_px_distance = screen_px_range() * (sd - 0.5);
@@ -38,5 +40,4 @@ void main() {
 	}
 
 	o_color = color;
-	o_entity_id = v_entity_id;
 }

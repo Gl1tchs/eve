@@ -27,7 +27,7 @@ private:
 	TransformComponent transform;
 
 	float sensitivity{ 0.25 };
-	float scroll_speed{ 1.0f };
+	float scroll_speed{ 0.5f };
 
 	glm::vec2 last_mouse_pos;
 };
