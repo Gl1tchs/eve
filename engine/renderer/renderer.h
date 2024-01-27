@@ -22,7 +22,7 @@ struct CameraData final {
 class Renderer final {
 public:
 	Renderer();
-	~Renderer();
+	~Renderer() = default;
 
 	void begin_pass(const CameraData& camera_data);
 

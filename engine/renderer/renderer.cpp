@@ -86,8 +86,6 @@ Renderer::Renderer() {
 	camera_buffer = create_ref<UniformBuffer>(sizeof(CameraData), 0);
 }
 
-Renderer::~Renderer() {}
-
 void Renderer::begin_pass(const CameraData& camera_data) {
 	camera_buffer->set_data(&camera_data, sizeof(CameraData));
 
@@ -127,13 +125,17 @@ void Renderer::draw_quad(const TransformComponent& transform,
 void Renderer::draw_string(const std::string& text, Ref<Font> font, const TransformComponent& transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing) {
+	Ref<Texture2D> font_atlas = font->get_atlas_texture();
+	if (font_atlas != font_atlas_texture) {
+		_next_batch();
+	}
+
+	font_atlas_texture = font_atlas;
+
 	const glm::mat4 transform_matrix = transform.get_transform_matrix();
 
 	const auto& font_geometry = font->get_msdf_data().font_geometry;
 	const auto& metrics = font_geometry.getMetrics();
-	Ref<Texture2D> font_atlas = font->get_atlas_texture();
-
-	font_atlas_texture = font_atlas;
 
 	double x = 0.0;
 	double y = 0.0;

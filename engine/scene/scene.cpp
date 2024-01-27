@@ -156,18 +156,18 @@ void Scene::copy_to(Ref<Scene> dst) {
 	}
 }
 
-static nlohmann::ordered_json serialize_entity(Entity& entity) {
+static Json serialize_entity(Entity& entity) {
 	bool has_required_components = entity.has_component<IdComponent, RelationComponent, TransformComponent>();
 	EVE_ASSERT(has_required_components);
 
-	nlohmann::ordered_json out;
+	Json out;
 
 	out["id"] = entity.get_uid();
 	out["tag"] = entity.get_name();
 	out["parent_id"] = entity.get_relation().parent_id;
 
 	const TransformComponent& transform = entity.get_transform();
-	out["transform_component"] = nlohmann::ordered_json{
+	out["transform_component"] = Json{
 		{ "local_position", transform.local_position },
 		{ "local_rotation", transform.local_rotation },
 		{ "local_scale", transform.local_scale },
@@ -176,7 +176,7 @@ static nlohmann::ordered_json serialize_entity(Entity& entity) {
 	if (entity.has_component<CameraComponent>()) {
 		const CameraComponent& cc = entity.get_component<CameraComponent>();
 
-		out["camera_component"] = nlohmann::ordered_json{
+		out["camera_component"] = Json{
 			{ "camera",
 					{ { "aspect_ratio", cc.camera.aspect_ratio },
 							{ "zoom_level", cc.camera.zoom_level },
@@ -190,8 +190,8 @@ static nlohmann::ordered_json serialize_entity(Entity& entity) {
 	if (entity.has_component<SpriteRendererComponent>()) {
 		const SpriteRendererComponent& sc = entity.get_component<SpriteRendererComponent>();
 
-		out["sprite_renderer_component"] = nlohmann::ordered_json{
-			// {"texture", sc.texture},
+		out["sprite_renderer_component"] = Json{
+			{ "texture", sc.texture },
 			{ "z_index", sc.z_index },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
@@ -201,9 +201,9 @@ static nlohmann::ordered_json serialize_entity(Entity& entity) {
 	if (entity.has_component<TextRendererComponent>()) {
 		const TextRendererComponent& tc = entity.get_component<TextRendererComponent>();
 
-		out["text_renderer_component"] = nlohmann::ordered_json{
+		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
-			// {"font", tc.font},
+			{ "font", tc.font },
 			{ "fg_color", tc.fg_color },
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
@@ -214,10 +214,10 @@ static nlohmann::ordered_json serialize_entity(Entity& entity) {
 	return out;
 }
 
-void Scene::serialize(Ref<Scene> scene, const char* path) {
-	nlohmann::ordered_json scene_json;
+void Scene::serialize(Ref<Scene> scene, const fs::path& path) {
+	Json scene_json;
 	scene_json["scene"] = path;
-	scene_json["entities"] = nlohmann::ordered_json::array();
+	scene_json["entities"] = Json::array();
 
 	scene->view<entt::entity>().each([&](auto entity_id) {
 		Entity entity = { entity_id, scene.get() };
@@ -225,29 +225,25 @@ void Scene::serialize(Ref<Scene> scene, const char* path) {
 			return;
 		}
 
-		nlohmann::ordered_json entity_json = serialize_entity(entity);
+		Json entity_json = serialize_entity(entity);
 		scene_json["entities"].push_back(entity_json);
 	});
 
-	std::ofstream fout(path);
-	fout << scene_json.dump(2);
+	json_utils::write_file(path, scene_json);
 }
 
-bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
+bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 	if (!scene->entity_map.empty()) {
 		printf("Given scene to deserialize is not empty.\nClearing the data...\n");
 		scene->entity_map.clear();
 		scene->registry.clear();
 	}
 
-	nlohmann::ordered_json data;
-
-	std::ifstream file(path);
-	if (!file.is_open()) {
-		printf("Failed to load scene file '%s'\n", path);
+	Json data;
+	if (!json_utils::read_file(path, data)) {
+		printf("Failed to load scene file '%s'\n", path.c_str());
 		return false;
 	}
-	file >> data;
 
 	if (!data.contains("scene")) {
 		return false;
@@ -259,7 +255,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 		return false;
 	}
 
-	nlohmann::ordered_json entities_json = data["entities"];
+	Json entities_json = data["entities"];
 
 	// Create entities before adding components in order to build parent/child relations.
 	std::vector<Entity> entities;
@@ -316,7 +312,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 			auto& sprite_component =
 					deserialing_entity.add_component<SpriteRendererComponent>();
 
-			// sprite_component.texture = sprite_comp_json["texture"].get<UID>();
+			sprite_component.texture = sprite_comp_json["texture"].get<AssetHandle>();
 			sprite_component.z_index = sprite_comp_json["z_index"].get<int>();
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
@@ -327,8 +323,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const char* path) {
 			auto& text_component = deserialing_entity.add_component<TextRendererComponent>();
 
 			text_component.text = text_comp_json["text"].get<std::string>();
-			// {"font", tc.font},
-			text_component.font = Font::get_default();
+			text_component.font = text_comp_json["font"].get<AssetHandle>();
 			text_component.fg_color = text_comp_json["fg_color"].get<Color>();
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();

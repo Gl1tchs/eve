@@ -1,6 +1,8 @@
 #include "scene/scene_renderer.h"
 
+#include "asset/asset_registry.h"
 #include "renderer/renderer_api.h"
+#include "renderer/texture.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
@@ -83,9 +85,14 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 					const SpriteRendererComponent& sprite) {
 				Entity entity{ entity_id, scene.get() };
 
+				Ref<Texture2D> texture = nullptr;
+				if (AssetRegistry::exists(sprite.texture)) {
+					texture = AssetRegistry::get<Texture2D>(sprite.texture);
+				}
+
 				renderer->draw_quad(
 						transform,
-						sprite.texture,
+						texture,
 						sprite.color,
 						sprite.tex_tiling);
 			});
@@ -95,9 +102,18 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 					const TextRendererComponent& text_component) {
 				Entity entity{ entity_id, scene.get() };
 
+				Ref<Font> font = nullptr;
+				if (AssetRegistry::exists(text_component.font)) {
+					font = AssetRegistry::get<Font>(text_component.font);
+				}
+
+				if (!font) {
+					font = Font::get_default();
+				}
+
 				renderer->draw_string(
 						text_component.text,
-						text_component.font ? text_component.font : Font::get_default(),
+						font ? font : Font::get_default(), // not necessary but won't harm
 						transform,
 						text_component.fg_color,
 						text_component.bg_color,

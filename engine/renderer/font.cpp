@@ -6,7 +6,9 @@
 #include <FontGeometry.h>
 #include <GlyphGeometry.h>
 
-static uint32_t s_memory_counter = 1;
+Ref<Font> Font::s_default_font = nullptr;
+
+inline static uint32_t s_memory_counter = 1;
 
 inline static Ref<Texture2D> create_and_cache_atlas(const std::string& font_name, float font_size,
 		const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& font_geometry,
@@ -66,14 +68,14 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSD
 	printf("Loaded %d glyphs from font (out of %zu)\n", glyphs_loaded, charset.size());
 #endif
 
-	double em_size = 40.0;
+	double em_size = 48.0;
 
 	msdf_atlas::TightAtlasPacker atlas_packer;
-	// atlasPacker.setDimensionsConstraint()
 	atlas_packer.setPixelRange(2.0);
 	atlas_packer.setMiterLimit(1.0);
 	atlas_packer.setPadding(0);
 	atlas_packer.setScale(em_size);
+
 	int remaining = atlas_packer.pack(data->glyphs.data(), (int)data->glyphs.size());
 	EVE_ASSERT(remaining == 0);
 
@@ -124,9 +126,6 @@ Font::Font(const uint8_t* bytes, uint32_t length) {
 	msdfgen::deinitializeFreetype(ft);
 }
 
-Font::~Font() {
-}
-
 const MSDFData& Font::get_msdf_data() const {
 	return msdf_data;
 }
@@ -136,10 +135,8 @@ Ref<Texture2D> Font::get_atlas_texture() const {
 }
 
 Ref<Font> Font::get_default() {
-	static Ref<Font> s_default_font;
 	if (!s_default_font) {
 		s_default_font = create_ref<Font>(g_roboto_regular_data, g_roboto_regular_length);
 	}
-
 	return s_default_font;
 }

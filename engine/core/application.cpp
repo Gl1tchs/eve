@@ -3,6 +3,7 @@
 #include "core/assert.h"
 #include "core/event_system.h"
 #include "core/timer.h"
+#include "renderer/font.h"
 
 Application::Application(const ApplicationCreateInfo& info) {
 	WindowCreateInfo window_info{};
@@ -15,7 +16,14 @@ Application::Application(const ApplicationCreateInfo& info) {
 	renderer = create_ref<Renderer>();
 }
 
-Application::~Application() {}
+Application::~Application() {
+	// FIXME
+	// 	perhaps there is a better way to
+	//	delete static opengl resources.
+	if (Font::s_default_font) {
+		Font::s_default_font.reset();
+	}
+}
 
 void Application::run() {
 	_on_start();

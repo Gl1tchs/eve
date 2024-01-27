@@ -1,0 +1,12 @@
+[
+	{
+		"handle": 14893956255418369223,
+		"path": "res://texture.png.asset",
+		"type": "texture"
+	},
+	{
+		"handle": 3218595271423152695,
+		"path": "res://Workbench.ttf.asset",
+		"type": "font"
+	}
+]

@@ -50,3 +50,4 @@
 bin/*
 !bin/shaders
 !bin/res
+!bin/sample

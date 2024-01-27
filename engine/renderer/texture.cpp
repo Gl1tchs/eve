@@ -1,6 +1,5 @@
 #include "renderer/texture.h"
 
-#include "core/assert.h"
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -51,16 +50,18 @@ int deserialize_texture_wrapping_mode(TextureWrappingMode mode) {
 	}
 }
 
-Texture2D::Texture2D(const char* path, bool flip_on_load) :
+Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 		renderer_id(0) {
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
+	const char* path_cstr = path.c_str();
+
 	int width, height, channels;
-	stbi_uc* data = stbi_load(path, &width, &height, &channels, 0);
+	stbi_uc* data = stbi_load(path_cstr, &width, &height, &channels, 0);
 
 	if (!data) {
 		stbi_image_free(data);
-		printf("Unable to load texture from: %s\n", path);
+		printf("Unable to load texture from: %s\n", path_cstr);
 		EVE_ASSERT(false);
 	}
 
@@ -68,9 +69,58 @@ Texture2D::Texture2D(const char* path, bool flip_on_load) :
 	texture_metadata.size = glm::ivec2{ width, height };
 	texture_metadata.min_filter = TextureFilteringMode::LINEAR;
 	texture_metadata.mag_filter = TextureFilteringMode::LINEAR;
-	texture_metadata.wrap_s = TextureWrappingMode::REPEAT;
-	texture_metadata.wrap_t = TextureWrappingMode::REPEAT;
+	texture_metadata.wrap_s = TextureWrappingMode::CLAMP_TO_EDGE;
+	texture_metadata.wrap_t = TextureWrappingMode::CLAMP_TO_EDGE;
 	texture_metadata.generate_mipmaps = true;
+
+	switch (channels) {
+		case 1:
+			texture_metadata.format = TextureFormat::RED;
+			break;
+		case 2:
+			texture_metadata.format = TextureFormat::RG;
+			break;
+		case 3:
+			texture_metadata.format = TextureFormat::RGB;
+			break;
+		case 4:
+			texture_metadata.format = TextureFormat::RGBA;
+			break;
+		default:
+			EVE_ASSERT(false, "Unsupported number of channels in the image");
+			break;
+	}
+
+	// save metadata
+	metadata = texture_metadata;
+
+	_gen_texture(texture_metadata, data);
+
+	stbi_image_free(data);
+}
+
+Texture2D::Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bool flip_on_load) :
+		renderer_id(0) {
+	stbi_set_flip_vertically_on_load(flip_on_load);
+
+	const char* path_cstr = path.c_str();
+
+	int width, height, channels;
+	stbi_uc* data = stbi_load(path_cstr, &width, &height, &channels, 0);
+
+	if (!data) {
+		stbi_image_free(data);
+		printf("Unable to load texture from: %s\n", path_cstr);
+		EVE_ASSERT(false);
+	}
+
+	TextureMetadata texture_metadata;
+	texture_metadata.size = glm::ivec2{ width, height };
+	texture_metadata.min_filter = r_metadata.min_filter;
+	texture_metadata.mag_filter = r_metadata.mag_filter;
+	texture_metadata.wrap_s = r_metadata.wrap_s;
+	texture_metadata.wrap_t = r_metadata.wrap_t;
+	texture_metadata.generate_mipmaps = r_metadata.generate_mipmaps;
 
 	switch (channels) {
 		case 1:

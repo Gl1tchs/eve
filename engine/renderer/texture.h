@@ -1,6 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "asset/asset.h"
+
 enum class TextureFormat {
 	RED,
 	RG,
@@ -33,11 +35,15 @@ struct TextureMetadata final {
 	bool generate_mipmaps = true;
 };
 
-class Texture2D final {
+class Texture2D final : public Asset {
+	EVE_IMPL_ASSET(AssetType::TEXTURE)
+
 public:
-	Texture2D(const char* path, bool flip_on_load = false);
+	Texture2D(const fs::path& path, bool flip_on_load = true);
+	Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bool flip_on_load = true);
 	Texture2D(const TextureMetadata& metadata, const void* pixels = nullptr);
-	~Texture2D();
+
+	virtual ~Texture2D();
 
 	// TODO update metadata
 

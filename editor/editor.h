@@ -10,7 +10,7 @@
 class EditorApplication : public Application {
 public:
 	EditorApplication(const ApplicationCreateInfo& info);
-	~EditorApplication();
+	~EditorApplication() = default;
 
 protected:
 	void _on_start() override;

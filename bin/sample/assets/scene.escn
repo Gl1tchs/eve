@@ -1,0 +1,121 @@
+{
+	"scene": "sample/assets/scene.escn",
+	"entities": [
+		{
+			"id": 12517815595370061652,
+			"tag": "my text",
+			"parent_id": 0,
+			"transform_component": {
+				"local_position": [
+					-1.25,
+					-1.25,
+					0.0
+				],
+				"local_rotation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"local_scale": [
+					0.5,
+					0.5,
+					1.0
+				]
+			},
+			"text_renderer_component": {
+				"text": "Hello, Workbench!",
+				"font": 3218595271423152695,
+				"fg_color": [
+					1.0,
+					1.0,
+					1.0,
+					1.0
+				],
+				"bg_color": [
+					0.0,
+					0.0,
+					0.0,
+					0.0
+				],
+				"kerning": 0.0,
+				"line_spacing": 0.0
+			}
+		},
+		{
+			"id": 72511816595470261652,
+			"tag": "my text 2",
+			"parent_id": 0,
+			"transform_component": {
+				"local_position": [
+					-1.25,
+					-1.75,
+					0.0
+				],
+				"local_rotation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"local_scale": [
+					0.5,
+					0.5,
+					1.0
+				]
+			},
+			"text_renderer_component": {
+				"text": "Hello, Roboto!",
+				"font": 0,
+				"fg_color": [
+					1.0,
+					1.0,
+					1.0,
+					1.0
+				],
+				"bg_color": [
+					0.0,
+					0.0,
+					0.0,
+					0.0
+				],
+				"kerning": 0.0,
+				"line_spacing": 0.0
+			}
+		},
+		{
+			"id": 7070123401178905868,
+			"tag": "my entity",
+			"parent_id": 0,
+			"transform_component": {
+				"local_position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"local_rotation": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"local_scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"sprite_renderer_component": {
+				"texture": 14893956255418369223,
+				"z_index": 0,
+				"color": [
+					1.0,
+					1.0,
+					1.0,
+					1.0
+				],
+				"tex_tiling": [
+					1.0,
+					1.0
+				]
+			}
+		}
+	]
+}

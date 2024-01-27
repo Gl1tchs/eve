@@ -14,15 +14,15 @@ struct CameraComponent {
 };
 
 struct SpriteRendererComponent {
-	Ref<Texture2D> texture;
+	AssetHandle texture;
 	int z_index = 0;
 	Color color = COLOR_WHITE;
 	glm::vec2 tex_tiling = { 1, 1 };
 };
 
 struct TextRendererComponent {
-	std::string text;
-	Ref<Font> font = nullptr;
+	std::string text = "Add a Caption!";
+	AssetHandle font = 0;
 	Color fg_color = COLOR_WHITE;
 	Color bg_color = COLOR_TRANSPARENT;
 	float kerning = 0.0f;
