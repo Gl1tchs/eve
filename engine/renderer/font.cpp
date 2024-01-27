@@ -64,10 +64,13 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSD
 	double font_scale = 1.0;
 	data->font_geometry = msdf_atlas::FontGeometry(&data->glyphs);
 	int glyphs_loaded = data->font_geometry.loadCharset(font, font_scale, charset);
-#if _DEBUG
+
+#if EVE_DEBUG
 	printf("Loaded %d glyphs from font (out of %zu)\n", glyphs_loaded, charset.size());
 #endif
 
+	// FIXME
+	//	If camera zooms out this is the reason it seems bad
 	double em_size = 48.0;
 
 	msdf_atlas::TightAtlasPacker atlas_packer;

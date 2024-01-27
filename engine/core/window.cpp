@@ -15,7 +15,7 @@ static void glfw_error_callback(int error, const char* description) {
 Window::Window(WindowCreateInfo info) {
 	EVE_ASSERT(glfwInit());
 
-#if _DEBUG
+#if EVE_DEBUG
 	glfwSetErrorCallback(glfw_error_callback);
 #endif
 
