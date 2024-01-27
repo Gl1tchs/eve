@@ -5,7 +5,12 @@
 #include "core/timer.h"
 #include "renderer/font.h"
 
+Application* Application::s_instance = nullptr;
+
 Application::Application(const ApplicationCreateInfo& info) {
+	EVE_ASSERT_ENGINE(!s_instance, "Only on instance can exists at a time!");
+	s_instance = this;
+
 	WindowCreateInfo window_info{};
 	window_info.title = info.name;
 	window = create_ref<Window>(window_info);
@@ -31,7 +36,8 @@ void Application::run() {
 	Timer timer;
 	while (running) {
 		float dt = timer.get_delta_time();
-		// EVE_LOG_ENGINE_TRACE("FPS: {}", 1000.0f / dt);
+
+		_process_main_thread_queue();
 
 		window->poll_events();
 
@@ -41,4 +47,27 @@ void Application::run() {
 	}
 
 	_on_destroy();
+}
+
+void Application::enque_main_thread(MainThreadFunc func) {
+	Application* app = get_instance();
+	if (!app) {
+		return;
+	}
+
+	std::scoped_lock<std::mutex> lock(app->main_thread_queue_mutex);
+	app->main_thread_queue.push_back(func);
+}
+
+Application* Application::get_instance() {
+	return s_instance;
+}
+
+void Application::_process_main_thread_queue() {
+	std::scoped_lock<std::mutex> lock(main_thread_queue_mutex);
+	for (auto& func : main_thread_queue) {
+		func();
+	}
+
+	main_thread_queue.clear();
 }

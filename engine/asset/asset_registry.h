@@ -28,31 +28,19 @@ public:
 
 	static AssetHandle subscribe(AssetImportData asset, AssetHandle handle = AssetHandle());
 
-	/**
-	 * @brief loads asset to memory
-	 *
-	 * @param path path of the asset
-	 * @param type type of the asset
-	 * @param handle optional id of the asset default will be a random UID
-	 * @return AssetHandle new handle of the asset
-	 */
+	// FIXME
+	//	make an async version
 	static AssetHandle load(const std::string& path, AssetType type, AssetHandle handle = AssetHandle());
 
-	/**
-	 * @brief removes asset data from loaded assets
-	 *
-	 * @param handle asset to unload
-	 */
 	static void unload(const AssetHandle& handle);
 
-	/**
-	 * @brief removes asset data from both assets and loaded assets
-	 *
-	 * @param handle asset to remoev
-	 */
+	static void unload_all();
+
 	static void remove(const AssetHandle& handle);
 
 	static bool exists(const AssetHandle& handle);
+
+	static bool exists_as(const AssetHandle& handle, AssetType type);
 
 	static bool is_loaded(const AssetHandle& handle);
 
@@ -64,7 +52,6 @@ public:
 
 private:
 	static std::unordered_map<AssetHandle, AssetImportData> assets;
-
 	static AssetRegistryMap loaded_assets;
 };
 

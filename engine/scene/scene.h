@@ -1,15 +1,31 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "core/uid.h"
+#include "asset/asset.h"
 
 #include <entt/entt.hpp>
 
 class Entity;
 
-class Scene {
+class Scene : public Asset {
 public:
+	EVE_IMPL_ASSET(AssetType::SCENE)
+
 	Scene(const char* name = "default");
+
+	void start();
+
+	void update(float dt);
+
+	void stop();
+
+	void set_paused(bool paused);
+
+	void step(uint32_t frames);
+
+	bool is_running();
+
+	bool is_paused();
 
 	Entity create(const std::string& name, UID parent_id = 0);
 	Entity create(UID uid, const std::string& name, UID parent_id = INVALID_UID);
@@ -77,6 +93,10 @@ public:
 
 private:
 	std::string name;
+
+	bool running = false;
+	bool paused = false;
+	int step_frames = 0;
 
 	entt::registry registry;
 	std::unordered_map<UID, Entity> entity_map;

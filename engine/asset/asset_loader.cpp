@@ -57,7 +57,16 @@ Ref<Font> AssetLoader::load_font(const fs::path& path) {
 
 	// TODO maybe add metadata to this too?
 
-	Ref<Font> fnont = create_ref<Font>(asset_path_abs);
+	Ref<Font> font = create_ref<Font>(asset_path_abs);
 
-	return fnont;
+	return font;
+}
+
+Ref<Scene> AssetLoader::load_scene(const fs::path& path) {
+	Ref<Scene> scene = create_ref<Scene>();
+	if (!Scene::deserialize(scene, path)) {
+		return nullptr;
+	}
+
+	return scene;
 }

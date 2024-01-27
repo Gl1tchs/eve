@@ -12,6 +12,36 @@ Scene::Scene(const char* name) :
 		name(name) {
 }
 
+void Scene::start() {
+	running = true;
+}
+
+void Scene::update(float dt) {
+	if (paused && step_frames-- <= 0) {
+		return;
+	}
+}
+
+void Scene::stop() {
+	running = false;
+}
+
+void Scene::set_paused(bool p_paused) {
+	paused = p_paused;
+}
+
+void Scene::step(uint32_t frames) {
+	step_frames = frames;
+}
+
+bool Scene::is_running() {
+	return running;
+}
+
+bool Scene::is_paused() {
+	return paused;
+}
+
 Entity Scene::create(const std::string& name, UID parent_id) {
 	return create(UID(), name, parent_id);
 }

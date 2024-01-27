@@ -8,5 +8,15 @@
 		"handle": 3218595271423152695,
 		"path": "res://Workbench.ttf.asset",
 		"type": "font"
+	},
+	{
+		"handle": 4416864070139396018,
+		"path": "res://scene.escn",
+		"type": "scene"
+	},
+	{
+		"handle": 2173008177704578963,
+		"path": "res://scene2.escn",
+		"type": "scene"
 	}
 ]

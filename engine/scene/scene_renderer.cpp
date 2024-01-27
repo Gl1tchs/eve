@@ -7,7 +7,6 @@
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
 #include "scene/transform.h"
-#include "scene_renderer.h"
 
 SceneRenderer::SceneRenderer(Ref<Renderer> renderer) :
 		renderer(renderer), viewport_size(0, 0) {
@@ -86,7 +85,7 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 				Entity entity{ entity_id, scene.get() };
 
 				Ref<Texture2D> texture = nullptr;
-				if (AssetRegistry::exists(sprite.texture)) {
+				if (AssetRegistry::exists_as(sprite.texture, AssetType::TEXTURE)) {
 					texture = AssetRegistry::get<Texture2D>(sprite.texture);
 				}
 
@@ -103,7 +102,7 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 				Entity entity{ entity_id, scene.get() };
 
 				Ref<Font> font = nullptr;
-				if (AssetRegistry::exists(text_component.font)) {
+				if (AssetRegistry::exists_as(text_component.font, AssetType::FONT)) {
 					font = AssetRegistry::get<Font>(text_component.font);
 				}
 

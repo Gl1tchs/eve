@@ -26,7 +26,7 @@ bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 	config.name = json["name"].get<std::string>();
 	config.asset_directory = json["asset_directory"].get<std::string>();
 	config.asset_registry = json["asset_registry"].get<std::string>();
-	config.starting_scene = json["starting_scene"].get<std::string>();
+	config.starting_scene = json["starting_scene"].get<AssetHandle>();
 
 	return true;
 }
@@ -65,10 +65,10 @@ std::string Project::get_asset_registry_path() {
 	return get_asset_path(s_active_project->config.asset_registry);
 }
 
-std::string Project::get_starting_scene_path() {
+AssetHandle Project::get_starting_scene_handle() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
-	return get_asset_path(s_active_project->config.starting_scene);
+	return s_active_project->config.starting_scene;
 }
 
 fs::path Project::get_asset_path(std::string asset) {

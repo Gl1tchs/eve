@@ -36,9 +36,9 @@ struct TextureMetadata final {
 };
 
 class Texture2D final : public Asset {
+public:
 	EVE_IMPL_ASSET(AssetType::TEXTURE)
 
-public:
 	Texture2D(const fs::path& path, bool flip_on_load = true);
 	Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bool flip_on_load = true);
 	Texture2D(const TextureMetadata& metadata, const void* pixels = nullptr);

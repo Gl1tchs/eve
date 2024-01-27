@@ -1,42 +1,35 @@
 #include "scene/scene_manager.h"
 
+#include "asset/asset_registry.h"
+#include "core/application.h"
+
 Ref<Scene> SceneManager::active_scene = nullptr;
-bool SceneManager::running = false;
-bool SceneManager::paused = false;
-uint32_t SceneManager::step_frames = 0;
 
-void SceneManager::play() {
-	running = true;
-}
-
-void SceneManager::update(float dt) {
-	if (paused && step_frames-- <= 0) {
+void SceneManager::set_active(AssetHandle handle) {
+	if (!AssetRegistry::exists_as(handle, AssetType::SCENE)) {
 		return;
 	}
-}
 
-void SceneManager::stop() {
-	running = false;
-}
+	// FIXME
+	//	do not unload shared assets
+	if (active_scene) {
+		if (active_scene->is_running()) {
+			Application::enque_main_thread([handle]() {
+				active_scene->stop();
 
-void SceneManager::set_paused(bool p_paused) {
-	paused = p_paused;
-}
+				AssetRegistry::unload_all();
 
-void SceneManager::step(uint32_t frames) {
-	step_frames = frames;
-}
+				active_scene = AssetRegistry::get<Scene>(handle);
+				active_scene->start();
+			});
 
-bool SceneManager::is_running() {
-	return running;
-}
+			return;
+		} else {
+			AssetRegistry::unload_all();
+		}
+	}
 
-bool SceneManager::is_paused() {
-	return paused;
-}
-
-void SceneManager::set_active(Ref<Scene> scene) {
-	active_scene = scene;
+	active_scene = AssetRegistry::get<Scene>(handle);
 }
 
 Ref<Scene> SceneManager::get_active() {

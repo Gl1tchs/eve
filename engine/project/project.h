@@ -1,11 +1,13 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
+#include "asset/asset.h"
+
 struct ProjectConfig {
 	std::string name;
 	fs::path asset_directory;
 	std::string asset_registry;
-	std::string starting_scene;
+	AssetHandle starting_scene;
 
 	static void serialize(const ProjectConfig& config, const fs::path& path);
 
@@ -26,7 +28,7 @@ public:
 
 	static std::string get_asset_registry_path();
 
-	static std::string get_starting_scene_path();
+	static AssetHandle get_starting_scene_handle();
 
 	static fs::path get_asset_path(std::string asset);
 

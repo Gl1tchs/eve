@@ -3,9 +3,11 @@
 std::string deserialize_asset_type(const AssetType type) {
 	switch (type) {
 		case AssetType::TEXTURE:
-			return "Texture";
+			return "texture";
 		case AssetType::FONT:
-			return "Font";
+			return "font";
+		case AssetType::SCENE:
+			return "scene";
 		default:
 			return "";
 	}

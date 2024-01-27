@@ -1,9 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "scene/transform.h"
-#include "core/uid.h"
 #include "scene/scene.h"
+#include "scene/transform.h"
 
 #include <entt/entt.hpp>
 
@@ -20,7 +19,7 @@ struct RelationComponent {
 class Entity {
 public:
 	inline constexpr Entity() :
-			handle(entt::null), scene(nullptr) {}
+			handle(entt::null) {}
 
 	inline Entity(entt::entity handle, Scene* scene) :
 			handle(handle), scene(scene) {

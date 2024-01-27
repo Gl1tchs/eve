@@ -13,8 +13,9 @@ struct MSDFData {
 };
 
 class Font final : public Asset {
-	EVE_IMPL_ASSET(AssetType::FONT)
 public:
+	EVE_IMPL_ASSET(AssetType::FONT)
+
 	Font(const std::string& path);
 	Font(const uint8_t* bytes, uint32_t length);
 

@@ -2,5 +2,5 @@
   "name": "sample",
   "asset_directory": "assets",
   "asset_registry": "prj://config/asset_registry.esf",
-  "starting_scene": "res://scene.escn"
+  "starting_scene": 4416864070139396018
 }

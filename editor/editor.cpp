@@ -1,6 +1,7 @@
 #include "editor.h"
 
 #include "asset/asset.h"
+#include "asset/asset_loader.h"
 #include "asset/asset_registry.h"
 #include "core/color.h"
 #include "core/entrypoint.h"
@@ -22,13 +23,19 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 void EditorApplication::_on_start() {
 	Project::load("sample/sample.eve");
 
-	Ref<Scene> scene = create_ref<Scene>();
-	Scene::deserialize(scene, "sample/assets/scene.escn");
+	// Ref<Scene> scene = create_ref<Scene>();
+	// Scene::deserialize(scene, "sample/assets/scene.escn");
 
-	SceneManager::set_active(scene);
+	SceneManager::set_active(Project::get_starting_scene_handle());
 }
 
 void EditorApplication::_on_update(float dt) {
+	static bool pressed = false;
+	if (!pressed && Input::is_key_pressed(KeyCode::SPACE)) {
+		SceneManager::set_active(2173008177704578963);
+		pressed = true;
+	}
+
 	// TODO cache
 	editor_camera->aspect_ratio = window->get_aspect_ratio();
 

@@ -10,6 +10,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(AssetType,
 				{ AssetType::NONE, "none" },
 				{ AssetType::TEXTURE, "texture" },
 				{ AssetType::FONT, "font" },
+				{ AssetType::SCENE, "scene" },
 		});
 
 std::unordered_map<AssetHandle, AssetImportData> AssetRegistry::assets = {};
@@ -46,6 +47,9 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type, AssetHa
 		case AssetType::FONT:
 			asset = AssetLoader::load_font(path_abs);
 			break;
+		case AssetType::SCENE:
+			asset = AssetLoader::load_scene(path_abs);
+			break;
 		default:
 			return 0;
 	}
@@ -70,6 +74,10 @@ void AssetRegistry::unload(const AssetHandle& handle) {
 	}
 }
 
+void AssetRegistry::unload_all() {
+	loaded_assets.clear();
+}
+
 void AssetRegistry::remove(const AssetHandle& handle) {
 	const auto it = assets.find(handle);
 	if (it != assets.end()) {
@@ -81,6 +89,15 @@ void AssetRegistry::remove(const AssetHandle& handle) {
 
 bool AssetRegistry::exists(const AssetHandle& handle) {
 	return assets.find(handle) != assets.end();
+}
+
+bool AssetRegistry::exists_as(const AssetHandle& handle, AssetType type) {
+	const auto it = assets.find(handle);
+	if (it == assets.end()) {
+		return false;
+	}
+
+	return it->second.type == type;
 }
 
 bool AssetRegistry::is_loaded(const AssetHandle& handle) {

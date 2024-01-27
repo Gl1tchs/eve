@@ -15,6 +15,7 @@ enum class AssetType : uint8_t {
 	NONE = 0,
 	TEXTURE,
 	FONT,
+	SCENE
 };
 
 std::string deserialize_asset_type(const AssetType type);

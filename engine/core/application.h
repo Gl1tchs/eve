@@ -10,6 +10,9 @@ struct ApplicationCreateInfo {
 	const char** argv;
 };
 
+// TODO try to make this function pointer
+typedef std::function<void(void)> MainThreadFunc;
+
 class Application {
 public:
 	Application(const ApplicationCreateInfo& info);
@@ -17,7 +20,16 @@ public:
 
 	void run();
 
+	static void enque_main_thread(MainThreadFunc func);
+
+	static Application* get_instance();
+
+private:
+	void _process_main_thread_queue();
+
 protected:
+	static Application* s_instance;
+
 	Ref<Window> window;
 	Ref<Renderer> renderer;
 
@@ -29,6 +41,9 @@ protected:
 
 private:
 	bool running = true;
+
+	std::vector<MainThreadFunc> main_thread_queue;
+	std::mutex main_thread_queue_mutex;
 };
 
 #endif
