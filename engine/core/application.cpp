@@ -3,6 +3,7 @@
 #include "core/assert.h"
 #include "core/event_system.h"
 #include "core/timer.h"
+#include "imgui/imgui_layer.h"
 #include "renderer/font.h"
 
 Application* Application::s_instance = nullptr;
@@ -31,17 +32,25 @@ Application::~Application() {
 }
 
 void Application::run() {
+	ImGuiLayer imgui_layer(window);
+
 	_on_start();
 
 	Timer timer;
 	while (running) {
 		float dt = timer.get_delta_time();
 
-		_process_main_thread_queue();
-
 		window->poll_events();
 
+		_process_main_thread_queue();
+
 		_on_update(dt);
+
+		imgui_layer.begin();
+		{
+			_on_imgui_update(dt);
+		}
+		imgui_layer.end();
 
 		window->swap_buffers();
 	}

@@ -9,6 +9,7 @@ struct QuadVertex {
 	Color color = glm::vec4(1.0f);
 	float tex_index = 0.0f;
 	glm::vec2 tex_tiling = { 1, 1 };
+	uint32_t entity_id;
 };
 
 constexpr uint64_t QUAD_VERTEX_COUNT = 4;

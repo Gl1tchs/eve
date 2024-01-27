@@ -37,6 +37,8 @@ protected:
 
 	inline virtual void _on_update(float dt) {}
 
+	inline virtual void _on_imgui_update(float dt) {}
+
 	inline virtual void _on_destroy() {}
 
 private:

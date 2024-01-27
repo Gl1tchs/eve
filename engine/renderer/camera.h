@@ -3,6 +3,12 @@
 
 #include "scene/transform.h"
 
+struct CameraData final {
+	glm::mat4 view;
+	glm::mat4 proj;
+	glm::vec2 position;
+};
+
 struct OrthographicCamera {
 	float aspect_ratio = 1.77f;
 	float zoom_level = 1.0f;

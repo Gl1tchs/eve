@@ -2,7 +2,6 @@
 
 #include "asset/asset_registry.h"
 #include "core/color.h"
-#include "renderer/renderer_api.h"
 #include "renderer/texture.h"
 #include "scene/components.h"
 #include "scene/entity.h"
@@ -74,10 +73,6 @@ void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
 void SceneRenderer::_render_scene(const CameraData& data) {
 	auto scene = SceneManager::get_active();
 
-	RendererAPI::set_viewport(0, 0, viewport_size.x, viewport_size.y);
-	RendererAPI::set_clear_color(COLOR_GRAY);
-	RendererAPI::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
-
 	renderer->begin_pass(data);
 
 	scene->view<TransformComponent, SpriteRendererComponent>().each(
@@ -94,7 +89,8 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 						transform,
 						texture,
 						sprite.color,
-						sprite.tex_tiling);
+						sprite.tex_tiling,
+						entity);
 			});
 
 	scene->view<TransformComponent, TextRendererComponent>().each(
@@ -118,7 +114,8 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 						text_component.fg_color,
 						text_component.bg_color,
 						text_component.kerning,
-						text_component.line_spacing);
+						text_component.line_spacing,
+						entity);
 			});
 
 	renderer->end_pass();

@@ -22,7 +22,7 @@
 	}
 
 #define EVE_INTERNAL_ASSERT_WITH_MSG(type, check, ...) \
-	EVE_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: %s", __VA_ARGS__)
+	EVE_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {}", __VA_ARGS__)
 
 #define EVE_INTERNAL_ASSERT_NO_MSG(type, check)                                        \
 	EVE_INTERNAL_ASSERT_IMPL(                                                          \

@@ -38,4 +38,6 @@ struct TransformComponent final {
 	glm::vec3 get_direction() const;
 };
 
+constexpr TransformComponent DEFAULT_TRANSFORM{};
+
 #endif

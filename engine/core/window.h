@@ -24,13 +24,13 @@ public:
 
 	float get_aspect_ratio() const;
 
-	void* get_native_window();
+	GLFWwindow* get_native_window();
 
 private:
 	void _assign_event_delegates();
 
 private:
-	GLFWwindow* _window;
+	GLFWwindow* window;
 };
 
 #endif

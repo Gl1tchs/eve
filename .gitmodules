@@ -10,3 +10,7 @@
 [submodule "msdf-atlas-gen-cmake"]
 	path = vendor/msdf-atlas-gen
 	url = https://github.com/Gl1tchs/msdf-atlas-gen.git
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/Gl1tchs/imgui.git
+	branch = docking

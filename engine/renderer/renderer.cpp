@@ -1,5 +1,6 @@
 #include "renderer/renderer.h"
 
+#include "core/color.h"
 #include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/primitives/text.h"
@@ -21,6 +22,7 @@ Renderer::Renderer() {
 			{ ShaderDataType::FLOAT4, "a_color" },
 			{ ShaderDataType::FLOAT, "a_tex_index" },
 			{ ShaderDataType::FLOAT2, "a_tex_tiling" },
+			{ ShaderDataType::INT, "a_entity_id" },
 	});
 	quad_vertex_array->add_vertex_buffer(quad_vertex_buffer);
 
@@ -66,6 +68,7 @@ Renderer::Renderer() {
 			{ ShaderDataType::FLOAT2, "a_tex_coord" },
 			{ ShaderDataType::FLOAT4, "a_fg_color" },
 			{ ShaderDataType::FLOAT4, "a_bg_color" },
+			{ ShaderDataType::INT, "a_entity_id" },
 	});
 	text_vertex_array->add_vertex_buffer(text_vertex_buffer);
 	text_vertex_array->set_index_buffer(quad_index_buffer);
@@ -107,13 +110,26 @@ void Renderer::begin_pass(const CameraData& camera_data) {
 	_begin_batch();
 }
 
+void Renderer::begin_pass() {
+	_begin_batch();
+}
+
 void Renderer::end_pass() {
 	_flush();
 }
 
+void Renderer::draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id) {
+	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
+}
+
+void Renderer::draw_quad(const TransformComponent& transform, Ref<Texture2D> texture,
+		const glm::vec2& tex_tiling, uint32_t entity_id) {
+	draw_quad(transform, texture, COLOR_WHITE, tex_tiling, entity_id);
+}
+
 void Renderer::draw_quad(const TransformComponent& transform,
 		Ref<Texture2D> texture, const Color& color,
-		const glm::vec2& tex_tiling) {
+		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	if (quad_needs_batch(quad_index_count) ||
 			(texture && texture_slot_index + 1 >= MAX_TEXTURE_COUNT)) {
 		_next_batch();
@@ -130,6 +146,7 @@ void Renderer::draw_quad(const TransformComponent& transform,
 		vertex.color = color;
 		vertex.tex_index = tex_index;
 		vertex.tex_tiling = tex_tiling;
+		vertex.entity_id = entity_id;
 
 		quad_vertices.add(vertex);
 	}
@@ -137,9 +154,16 @@ void Renderer::draw_quad(const TransformComponent& transform,
 	quad_index_count += QUAD_INDEX_COUNT;
 }
 
+void Renderer::draw_string(const std::string& text, const TransformComponent& transform,
+		const Color& fg_color,
+		const Color& bg_color,
+		float kerning, float line_spacing, uint32_t entity_id) {
+	draw_string(text, nullptr, transform, fg_color, bg_color, kerning, line_spacing, entity_id);
+}
+
 void Renderer::draw_string(const std::string& text, Ref<Font> font, const TransformComponent& transform,
 		const Color& fg_color, const Color& bg_color,
-		float kerning, float line_spacing) {
+		float kerning, float line_spacing, uint32_t entity_id) {
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();
 	if (font_atlas != font_atlas_texture) {
 		_next_batch();
@@ -223,24 +247,28 @@ void Renderer::draw_string(const std::string& text, Ref<Font> font, const Transf
 		vertex.tex_coord = tex_coord_min;
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.entity_id = entity_id;
 		text_vertices.add(vertex);
 
 		vertex.position = transform_matrix * glm::vec4(quad_min.x, quad_max.y, 0.0f, 1.0f);
 		vertex.tex_coord = { tex_coord_min.x, tex_coord_max.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.entity_id = entity_id;
 		text_vertices.add(vertex);
 
 		vertex.position = transform_matrix * glm::vec4(quad_max, 0.0f, 1.0f);
 		vertex.tex_coord = tex_coord_max;
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.entity_id = entity_id;
 		text_vertices.add(vertex);
 
 		vertex.position = transform_matrix * glm::vec4(quad_max.x, quad_min.y, 0.0f, 1.0f);
 		vertex.tex_coord = { tex_coord_max.x, tex_coord_min.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.entity_id = entity_id;
 		text_vertices.add(vertex);
 
 		text_index_count += QUAD_INDEX_COUNT;

@@ -3,6 +3,7 @@
 
 #include "core/buffer.h"
 #include "core/color.h"
+#include "renderer/camera.h"
 #include "renderer/font.h"
 #include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
@@ -15,12 +16,6 @@
 
 constexpr uint64_t MAX_TEXTURE_COUNT = 32;
 
-struct CameraData final {
-	glm::mat4 view;
-	glm::mat4 proj;
-	glm::vec2 position;
-};
-
 class Renderer final {
 public:
 	Renderer();
@@ -28,18 +23,34 @@ public:
 
 	void begin_pass(const CameraData& camera_data);
 
+	// DISCLAIMER
+	//	This won't set any camera data
+	//	do not try to access u_camera buffer
+	//	from shader it will return old passes value.
+	void begin_pass();
+
 	void end_pass();
 
+	void draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id = -1);
+
+	void draw_quad(const TransformComponent& transform, Ref<Texture2D> texture,
+			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
+
 	void draw_quad(const TransformComponent& transform,
-			Ref<Texture2D> texture = nullptr, const Color& color = COLOR_WHITE,
-			const glm::vec2& tex_tiling = { 1, 1 });
+			Ref<Texture2D> texture, const Color& color,
+			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
+
+	void draw_string(const std::string& text, const TransformComponent& transform,
+			const Color& fg_color,
+			const Color& bg_color,
+			float kerning, float line_spacing, uint32_t entity_id = -1);
 
 	// FIXME
 	//  If camera zooms out characters are breaking down.
 	void draw_string(const std::string& text, Ref<Font> font,
-			const TransformComponent& transform, const Color& fg_color = COLOR_WHITE,
-			const Color& bg_color = COLOR_TRANSPARENT,
-			float kerning = 0.0f, float line_spacing = 0.0f);
+			const TransformComponent& transform, const Color& fg_color,
+			const Color& bg_color,
+			float kerning, float line_spacing, uint32_t entity_id = -1);
 
 	void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color = COLOR_WHITE);
 

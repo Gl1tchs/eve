@@ -5,8 +5,10 @@
 layout(location = 0) in vec2 v_tex_coord;
 layout(location = 1) in vec4 v_fg_color;
 layout(location = 2) in vec4 v_bg_color;
+layout(location = 3) in flat int v_entity_id;
 
 layout(location = 0) out vec4 o_color;
+layout(location = 1) out int o_entity_id;
 
 layout(binding = 0) uniform sampler2D u_font_atlas;
 
@@ -36,4 +38,5 @@ void main() {
 	}
 
 	o_color = color;
+	o_entity_id = v_entity_id;
 }

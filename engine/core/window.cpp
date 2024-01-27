@@ -23,11 +23,11 @@ Window::Window(WindowCreateInfo info) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	_window = glfwCreateWindow(info.w, info.h, info.title, nullptr, nullptr);
-	EVE_ASSERT_ENGINE(_window);
+	window = glfwCreateWindow(info.w, info.h, info.title, nullptr, nullptr);
+	EVE_ASSERT_ENGINE(window);
 
 	//! TODO remove this if any other grapichs api implemented.
-	glfwMakeContextCurrent(_window);
+	glfwMakeContextCurrent(window);
 
 	// initialize event system
 	_assign_event_delegates();
@@ -37,12 +37,12 @@ Window::Window(WindowCreateInfo info) {
 }
 
 Window::~Window() {
-	glfwDestroyWindow(_window);
+	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
 void Window::swap_buffers() const {
-	glfwSwapBuffers(_window);
+	glfwSwapBuffers(window);
 }
 
 void Window::poll_events() const {
@@ -50,12 +50,12 @@ void Window::poll_events() const {
 }
 
 bool Window::is_open() const {
-	return !glfwWindowShouldClose(_window);
+	return !glfwWindowShouldClose(window);
 }
 
 glm::ivec2 Window::get_size() const {
 	glm::ivec2 s{};
-	glfwGetWindowSize(_window, &s.x, &s.y);
+	glfwGetWindowSize(window, &s.x, &s.y);
 	return s;
 }
 
@@ -64,24 +64,24 @@ float Window::get_aspect_ratio() const {
 	return static_cast<float>(s.x) / static_cast<float>(s.y);
 }
 
-void* Window::get_native_window() {
-	return _window;
+GLFWwindow* Window::get_native_window() {
+	return window;
 }
 
 void Window::_assign_event_delegates() {
-	glfwSetWindowSizeCallback(_window,
+	glfwSetWindowSizeCallback(window,
 			[](GLFWwindow* window, int width, int height) {
 				WindowResizeEvent resize_event{};
 				resize_event.size = { width, height };
 				event::notify(resize_event);
 			});
 
-	glfwSetWindowCloseCallback(_window, [](GLFWwindow* window) {
+	glfwSetWindowCloseCallback(window, [](GLFWwindow* window) {
 		WindowCloseEvent close_event{};
 		event::notify<WindowCloseEvent>(close_event);
 	});
 
-	glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+	glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 		switch (action) {
 			case GLFW_PRESS: {
 				KeyPressEvent key_event{};
@@ -108,14 +108,14 @@ void Window::_assign_event_delegates() {
 		}
 	});
 
-	glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int keycode) {
+	glfwSetCharCallback(window, [](GLFWwindow* window, unsigned int keycode) {
 		KeyTypeEvent type_event{};
 		type_event.key_code = static_cast<KeyCode>(keycode);
 		event::notify(type_event);
 	});
 
 	glfwSetMouseButtonCallback(
-			_window, [](GLFWwindow* window, int button, int action, int mods) {
+			window, [](GLFWwindow* window, int button, int action, int mods) {
 				switch (action) {
 					case GLFW_PRESS: {
 						MousePressEvent mouse_event{};
@@ -136,7 +136,7 @@ void Window::_assign_event_delegates() {
 			});
 
 	glfwSetCursorPosCallback(
-			_window,
+			window,
 			[](GLFWwindow* window, const double x_pos, const double y_pos) {
 				MouseMoveEvent move_event{};
 				move_event.position = { static_cast<float>(x_pos),
@@ -145,7 +145,7 @@ void Window::_assign_event_delegates() {
 			});
 
 	glfwSetScrollCallback(
-			_window,
+			window,
 			[](GLFWwindow* window, const double x_offset, const double y_offset) {
 				MouseScrollEvent scroll_event{};
 				scroll_event.offset = { static_cast<float>(x_offset),

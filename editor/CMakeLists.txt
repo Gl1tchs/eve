@@ -6,11 +6,15 @@ target_precompile_headers(editor2d PUBLIC pch.h)
 
 target_include_directories(editor2d
 PUBLIC
+	${EDITOR_DIR}
     ${ENGINE_DIR}
 	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
 	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
+PRIVATE
+	${VENDOR_DIR}/imgui
 )
 
 target_link_libraries(editor2d PRIVATE
     eve2d
+	ImGui
 )
