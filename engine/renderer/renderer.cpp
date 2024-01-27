@@ -1,8 +1,10 @@
 #include "renderer/renderer.h"
 
+#include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/primitives/text.h"
 #include "renderer/renderer_api.h"
+#include "renderer/vertex_buffer.h"
 
 Renderer::Renderer() {
 	RendererAPI::init();
@@ -66,10 +68,23 @@ Renderer::Renderer() {
 			{ ShaderDataType::FLOAT4, "a_bg_color" },
 	});
 	text_vertex_array->add_vertex_buffer(text_vertex_buffer);
-
 	text_vertex_array->set_index_buffer(quad_index_buffer);
 
 	text_shader = create_ref<Shader>("shaders/text.vert", "shaders/text.frag");
+
+	// line data
+	line_vertex_array = create_ref<VertexArray>();
+
+	line_vertices.allocate(LINE_MAX_VERTEX_COUNT);
+
+	line_vertex_buffer = create_ref<VertexBuffer>(line_vertices.get_size());
+	line_vertex_buffer->set_layout({
+			{ ShaderDataType::FLOAT3, "a_position" },
+			{ ShaderDataType::FLOAT4, "a_color" },
+	});
+	line_vertex_array->add_vertex_buffer(line_vertex_buffer);
+
+	line_shader = create_ref<Shader>("shaders/line.vert", "shaders/line.frag");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;
@@ -240,6 +255,20 @@ void Renderer::draw_string(const std::string& text, Ref<Font> font, const Transf
 	}
 }
 
+void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color) {
+	LineVertex vertex;
+
+	vertex.position = p0;
+	vertex.color = color;
+
+	line_vertices.add(vertex);
+
+	vertex.position = p1;
+	vertex.color = color;
+
+	line_vertices.add(vertex);
+}
+
 void Renderer::_begin_batch() {
 	quad_vertices.reset_index();
 	quad_index_count = 0;
@@ -247,10 +276,19 @@ void Renderer::_begin_batch() {
 	text_vertices.reset_index();
 	text_index_count = 0;
 
+	line_vertices.reset_index();
+
 	texture_slot_index = 1;
 }
 
 void Renderer::_flush() {
+	if (line_vertices.get_count() > 0) {
+		line_vertex_buffer->set_data(line_vertices.get_data(), line_vertices.get_size());
+
+		line_shader->bind();
+		RendererAPI::draw_lines(line_vertex_array, line_vertices.get_count());
+	}
+
 	if (text_index_count > 0) {
 		text_vertex_buffer->set_data(text_vertices.get_data(), text_vertices.get_size());
 

@@ -1,6 +1,7 @@
 #include "scene/scene_renderer.h"
 
 #include "asset/asset_registry.h"
+#include "core/color.h"
 #include "renderer/renderer_api.h"
 #include "renderer/texture.h"
 #include "scene/components.h"

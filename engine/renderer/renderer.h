@@ -1,8 +1,10 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "core/buffer.h"
 #include "core/color.h"
 #include "renderer/font.h"
+#include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/primitives/text.h"
 #include "renderer/shader.h"
@@ -39,6 +41,8 @@ public:
 			const Color& bg_color = COLOR_TRANSPARENT,
 			float kerning = 0.0f, float line_spacing = 0.0f);
 
+	void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color = COLOR_WHITE);
+
 private:
 	void _begin_batch();
 
@@ -66,6 +70,13 @@ private:
 	uint32_t text_index_count = 0;
 
 	Ref<Texture2D> font_atlas_texture;
+
+	// line render data
+	Ref<VertexArray> line_vertex_array;
+	Ref<VertexBuffer> line_vertex_buffer;
+	Ref<Shader> line_shader;
+
+	BufferArray<LineVertex> line_vertices;
 
 	// textures
 	Ref<Texture2D> white_texture;
