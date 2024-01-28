@@ -15,7 +15,6 @@ struct CameraComponent {
 
 struct SpriteRendererComponent {
 	AssetHandle texture;
-	int z_index = 0;
 	Color color = COLOR_WHITE;
 	glm::vec2 tex_tiling = { 1, 1 };
 };

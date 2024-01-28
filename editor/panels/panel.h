@@ -8,7 +8,7 @@
 
 class Panel {
 public:
-	Panel(bool default_active = false, glm::vec2 size = {}, glm::vec2 pos = {});
+	Panel(bool default_active = true, glm::vec2 size = {}, glm::vec2 pos = {});
 	virtual ~Panel() = default;
 
 	void render();

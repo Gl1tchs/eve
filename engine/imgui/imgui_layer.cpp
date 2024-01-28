@@ -1,7 +1,8 @@
 #include "imgui/imgui_layer.h"
 
 #include "core/window.h"
-#include "data/roboto_regular.h"
+#include "data/font_awesome.h"
+#include "data/icons_font_aweome.h"
 
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
@@ -34,7 +35,19 @@ ImGuiLayer::ImGuiLayer(Ref<Window> window) :
 	ImGui::Spectrum::StyleColorsSpectrum();
 
 	io.Fonts->Clear();
+
 	ImGui::Spectrum::LoadFont();
+
+	ImFontConfig font_cfg;
+	font_cfg.FontDataOwnedByAtlas = false;
+	font_cfg.MergeMode = true;
+
+	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+
+	io.Fonts->AddFontFromMemoryTTF(
+			(void*)g_fontawesome_data,
+			g_fontawesome_length,
+			16.0f, &font_cfg, icon_ranges);
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window->get_native_window(), true);

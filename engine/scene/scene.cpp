@@ -222,7 +222,6 @@ static Json serialize_entity(Entity& entity) {
 
 		out["sprite_renderer_component"] = Json{
 			{ "texture", sc.texture },
-			{ "z_index", sc.z_index },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
 		};
@@ -343,7 +342,6 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 					deserialing_entity.add_component<SpriteRendererComponent>();
 
 			sprite_component.texture = sprite_comp_json["texture"].get<AssetHandle>();
-			sprite_component.z_index = sprite_comp_json["z_index"].get<int>();
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();

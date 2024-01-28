@@ -8,8 +8,7 @@ void push_button_activity_color() {
 			ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 }
 
-ConsolePanel::ConsolePanel() :
-		Panel(true) {
+ConsolePanel::ConsolePanel() {
 	buffer = create_ref<LogBuffer>(1000);
 	Logger::push_buffer(buffer);
 }

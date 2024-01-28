@@ -40,6 +40,9 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 
 	viewport = create_scope<ViewportPanel>(frame_buffer);
 
+	hierarchy = create_ref<HierarchyPanel>();
+	inspector = create_ref<InspectorPanel>(hierarchy);
+
 	_setup_menubar();
 }
 
@@ -55,19 +58,14 @@ void EditorApplication::_on_update(float dt) {
 		pressed = true;
 	}
 
-	// Resize
-	const auto fb_size = frame_buffer->get_size();
-	const auto viewport_size = viewport->get_size();
-	if (viewport_size.x > 0 && viewport_size.y > 0 && // zero sized framebuffer is invalid
-			(fb_size.x != viewport_size.x || fb_size.y != viewport_size.y)) {
-		frame_buffer->resize(viewport_size.x, viewport_size.y);
-		editor_camera->aspect_ratio = (float)viewport_size.x / (float)viewport_size.y;
-		scene_renderer->on_viewport_resize(window->get_size());
-	}
+	// resize
+	_on_viewport_resize();
 
 	if (viewport->is_focused()) {
 		editor_camera->update(dt);
 	}
+
+	// render image to frame buffer
 
 	frame_buffer->bind();
 	RendererAPI::set_clear_color(COLOR_GRAY);
@@ -78,36 +76,8 @@ void EditorApplication::_on_update(float dt) {
 
 	scene_renderer->render_editor(dt, editor_camera);
 
-	{
-		auto [mx, my] = ImGui::GetMousePos();
-		mx -= viewport->get_min_bounds().x;
-		my -= viewport->get_min_bounds().y;
-
-		const glm::vec2 viewport_size = viewport->get_max_bounds() - viewport->get_min_bounds();
-
-		// Ensure the correct y-coordinate inversion
-		my = viewport_size.y - my;
-
-		int mouse_x = static_cast<int>(mx);
-		int mouse_y = static_cast<int>(my);
-
-		// Check if the mouse is within the viewport bounds
-		if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x && mouse_y < viewport_size.y) {
-			int pixel_data;
-			frame_buffer->read_pixel(1, mouse_x, mouse_y, FrameBufferTextureFormat::RED_INT, &pixel_data);
-
-			// Convert the pixel data to entity
-			Entity hovered_entity = (pixel_data == -1)
-					? INVALID_ENTITY
-					: Entity(entt::entity(pixel_data), SceneManager::get_active().get());
-
-			// Check for left mouse click and a valid hovered entity
-			if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && hovered_entity) {
-				hierarchy.set_selected_entity(hovered_entity);
-				EVE_LOG_ENGINE_INFO("Selected entity: {}", hovered_entity.get_name());
-			}
-		}
-	}
+	// entity selection
+	_handle_entity_selection();
 
 	frame_buffer->unbind();
 }
@@ -126,8 +96,10 @@ void EditorApplication::_on_imgui_update(float dt) {
 	viewport->render();
 	ImGui::PopStyleVar();
 
+	hierarchy->render();
+	inspector->render();
+
 	console.render();
-	hierarchy.render();
 
 	DockSpace::end();
 }
@@ -145,10 +117,51 @@ void EditorApplication::_setup_menubar() {
 		{ { "Viewport",
 				  [this]() { viewport->set_active(true); } },
 				{ "Hierarchy",
-						[this]() { hierarchy.set_active(true); } },
+						[this]() { hierarchy->set_active(true); } },
 				{ "Console", [this]() { console.set_active(true); } } }
 	};
 	menubar.push_menu(view_menu);
+}
+
+void EditorApplication::_on_viewport_resize() {
+	const auto fb_size = frame_buffer->get_size();
+	const auto viewport_size = viewport->get_size();
+	if (viewport_size.x > 0 && viewport_size.y > 0 && // zero sized framebuffer is invalid
+			(fb_size.x != viewport_size.x || fb_size.y != viewport_size.y)) {
+		frame_buffer->resize(viewport_size.x, viewport_size.y);
+		editor_camera->aspect_ratio = (float)viewport_size.x / (float)viewport_size.y;
+		scene_renderer->on_viewport_resize(window->get_size());
+	}
+}
+
+void EditorApplication::_handle_entity_selection() {
+	auto [mx, my] = ImGui::GetMousePos();
+	mx -= viewport->get_min_bounds().x;
+	my -= viewport->get_min_bounds().y;
+
+	const glm::vec2 viewport_size = viewport->get_max_bounds() - viewport->get_min_bounds();
+
+	// Ensure the correct y-coordinate inversion
+	my = viewport_size.y - my;
+
+	const int mouse_x = static_cast<int>(mx);
+	const int mouse_y = static_cast<int>(my);
+
+	// Check if the mouse is within the viewport bounds
+	if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x && mouse_y < viewport_size.y) {
+		int pixel_data;
+		frame_buffer->read_pixel(1, mouse_x, mouse_y, FrameBufferTextureFormat::RED_INT, &pixel_data);
+
+		// Convert the pixel data to entity
+		Entity hovered_entity = (pixel_data == -1)
+				? INVALID_ENTITY
+				: Entity(entt::entity(pixel_data), SceneManager::get_active().get());
+
+		// Check for left mouse click and a valid hovered entity
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && hovered_entity) {
+			hierarchy->set_selected_entity(hovered_entity);
+		}
+	}
 }
 
 Application* create_application(int argc, const char** argv) {

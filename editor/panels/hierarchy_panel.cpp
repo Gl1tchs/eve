@@ -5,10 +5,12 @@
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 
+#include "data/icons_font_aweome.h"
 #include "scene/entity.h"
 
-HierarchyPanel::HierarchyPanel() :
-		Panel(true) {}
+HierarchyPanel::HierarchyPanel() {
+	set_flags(ImGuiWindowFlags_HorizontalScrollbar);
+}
 
 void HierarchyPanel::set_selected_entity(Entity entity) {
 	selected_entity = entity;
@@ -35,13 +37,13 @@ void HierarchyPanel::_draw() {
 		selected_entity = Entity{ selected_entity.handle, scene.get() };
 	}
 
-	ImGui::TextUnformatted(scene->name.c_str());
+	ImGui::Text("scene: %s", scene->name.c_str());
 
 	ImGui::SameLine(ImGui::GetContentRegionMax().x -
-			(ImGui::CalcTextSize("Add").x +
+			(ImGui::CalcTextSize(ICON_FA_PLUS).x +
 					2 * ImGui::GetStyle().FramePadding.x));
 
-	if (ImGui::Button("Add")) {
+	if (ImGui::Button(ICON_FA_PLUS)) {
 		// create entity and set selected to new created entity
 		selected_entity = scene->create("Entity");
 	}
@@ -62,7 +64,7 @@ void HierarchyPanel::_draw() {
 	}
 
 	ImGui::Dummy(
-			ImVec2(ImGui::GetWindowWidth(), ImGui::GetContentRegionAvail().y));
+			ImVec2(ImGui::GetWindowWidth(), std::max(ImGui::GetContentRegionAvail().y, 100.0f)));
 
 	// If an item dragged here it will set as top object.
 	_draw_entity_drag_drop_target(INVALID_ENTITY);

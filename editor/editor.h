@@ -3,6 +3,7 @@
 
 #include "panels/console_panel.h"
 #include "panels/hierarchy_panel.h"
+#include "panels/inspector_panel.h"
 #include "panels/viewport_panel.h"
 #include "widgets/menu_bar.h"
 
@@ -28,6 +29,10 @@ protected:
 private:
 	void _setup_menubar();
 
+	void _on_viewport_resize();
+
+	void _handle_entity_selection();
+
 private:
 	Ref<SceneRenderer> scene_renderer;
 	Ref<EditorCamera> editor_camera;
@@ -36,9 +41,11 @@ private:
 
 	// panels and widgets
 	MenuBar menubar;
-	Scope<ViewportPanel> viewport;
-	HierarchyPanel hierarchy;
 	ConsolePanel console;
+
+	Scope<ViewportPanel> viewport;
+	Ref<HierarchyPanel> hierarchy;
+	Ref<InspectorPanel> inspector;
 };
 
 #endif
