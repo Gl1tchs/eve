@@ -1,7 +1,7 @@
 #include "panels/inspector_panel.h"
 
 #include "asset/asset_registry.h"
-#include "data/icons_font_aweome.h"
+#include "data/fonts/font_awesome.h"
 #include "renderer/font.h"
 #include "renderer/texture.h"
 #include "scene/components.h"
@@ -297,7 +297,7 @@ void InspectorPanel::_draw() {
 				if (!font) {
 					BEGIN_FIELD("Font");
 					{
-						ImGui::TextUnformatted("Drag Font Here");
+						ImGui::TextUnformatted("Default Font");
 					}
 					END_FIELD();
 

@@ -5,7 +5,7 @@
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-#include "data/icons_font_aweome.h"
+#include "data/fonts/font_awesome.h"
 #include "scene/entity.h"
 
 HierarchyPanel::HierarchyPanel() {

@@ -1,6 +1,6 @@
 #include "renderer/font.h"
 
-#include "data/roboto_regular.h"
+#include "data/fonts/roboto_regular.h"
 #include "renderer/texture.h"
 
 #include <FontGeometry.h>
@@ -139,7 +139,7 @@ Ref<Texture2D> Font::get_atlas_texture() const {
 
 Ref<Font> Font::get_default() {
 	if (!s_default_font) {
-		s_default_font = create_ref<Font>(g_roboto_regular_data, g_roboto_regular_length);
+		s_default_font = create_ref<Font>(ROBOTO_REGULAR_TTF_DATA, ROBOTO_REGULAR_TTF_LENGTH);
 	}
 	return s_default_font;
 }

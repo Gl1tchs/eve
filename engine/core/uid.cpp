@@ -1,8 +1,9 @@
 #include "core/uid.h"
 
 static std::random_device random_device;
-static std::mt19937_64 engine(random_device());
-static std::uniform_int_distribution<uint64_t> uniform_distribution;
+
+static thread_local std::mt19937_64 engine(random_device());
+static thread_local std::uniform_int_distribution<uint64_t> uniform_distribution;
 
 UID::UID() :
 		value(uniform_distribution(engine)) {}

@@ -2,12 +2,12 @@
 
 #include "core/event_system.h"
 
-std::unordered_map<KeyCode, bool> Input::key_press_states = {};
-std::unordered_map<KeyCode, bool> Input::key_release_states = {};
-std::unordered_map<MouseCode, bool> Input::mouse_press_states = {};
-std::unordered_map<MouseCode, bool> Input::mouse_release_states = {};
-glm::vec2 Input::mouse_position = glm::vec2(0.0f);
-glm::vec2 Input::scroll_offset = glm::vec2(0.0f);
+inline static std::unordered_map<KeyCode, bool> key_press_states = {};
+inline static std::unordered_map<KeyCode, bool> key_release_states = {};
+inline static std::unordered_map<MouseCode, bool> mouse_press_states = {};
+inline static std::unordered_map<MouseCode, bool> mouse_release_states = {};
+inline static glm::vec2 mouse_position = glm::vec2(0.0f);
+inline static glm::vec2 scroll_offset = glm::vec2(0.0f);
 
 void Input::init() {
 	event::subscribe<KeyPressEvent>([&](const KeyPressEvent& event) {

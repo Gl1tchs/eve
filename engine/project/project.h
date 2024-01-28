@@ -39,8 +39,6 @@ public:
 	static void save_active(const fs::path& path);
 
 private:
-	static Ref<Project> s_active_project;
-
 	fs::path path;
 	ProjectConfig config;
 };

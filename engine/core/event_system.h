@@ -37,19 +37,18 @@ struct WindowResizeEvent {
 	glm::ivec2 size;
 };
 
-struct WindowCloseEvent {
-};
+struct WindowCloseEvent {};
 
 template <typename T>
-using event_callback = std::function<void(const T&)>;
+using EventCallbackFunc = std::function<void(const T&)>;
 
 namespace event {
 
 template <typename T>
-auto g_callbacks = std::vector<event_callback<T>>();
+inline auto g_callbacks = std::vector<EventCallbackFunc<T>>();
 
 template <typename T>
-inline void subscribe(const event_callback<T>& callback) {
+inline void subscribe(const EventCallbackFunc<T>& callback) {
 	g_callbacks<T>.push_back(callback);
 }
 

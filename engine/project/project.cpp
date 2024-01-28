@@ -3,7 +3,7 @@
 #include "asset/asset_registry.h"
 #include "core/json_utils.h"
 
-Ref<Project> Project::s_active_project = nullptr;
+inline static Ref<Project> s_active_project = nullptr;
 
 void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path) {
 	Json out{

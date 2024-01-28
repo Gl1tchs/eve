@@ -1,6 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+namespace chrono = std::chrono;
+
 class Timer final {
 public:
 	Timer();
@@ -12,7 +14,7 @@ public:
 	float get_delta_time();
 
 private:
-	std::chrono::time_point<std::chrono::high_resolution_clock>
+	chrono::time_point<chrono::high_resolution_clock>
 			last_frame_time;
 };
 

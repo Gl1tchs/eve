@@ -1,8 +1,7 @@
 #include "imgui/imgui_layer.h"
 
 #include "core/window.h"
-#include "data/font_awesome.h"
-#include "data/icons_font_aweome.h"
+#include "data/fonts/font_awesome.h"
 
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
@@ -45,8 +44,8 @@ ImGuiLayer::ImGuiLayer(Ref<Window> window) :
 	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 
 	io.Fonts->AddFontFromMemoryTTF(
-			(void*)g_fontawesome_data,
-			g_fontawesome_length,
+			(void*)FONT_AWESOME_TTF_DATA,
+			FONT_AWESOME_TTF_LENGTH,
 			16.0f, &font_cfg, icon_ranges);
 
 	// Setup Platform/Renderer bindings
