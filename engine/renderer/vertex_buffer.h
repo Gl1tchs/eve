@@ -60,14 +60,14 @@ private:
 
 class VertexBuffer final {
 public:
-	VertexBuffer(uint32_t size);
-	VertexBuffer(const void* vertices, uint32_t size);
+	VertexBuffer(uint64_t size);
+	VertexBuffer(const void* vertices, uint64_t size);
 	~VertexBuffer();
 
 	void bind();
 	void unbind();
 
-	void set_data(const void* data, uint32_t size);
+	void set_data(const void* data, uint64_t size);
 
 	const BufferLayout& get_layout();
 	void set_layout(const BufferLayout& r_layout);

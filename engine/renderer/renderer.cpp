@@ -95,7 +95,7 @@ Renderer::Renderer() {
 	metadata.generate_mipmaps = false;
 
 	uint32_t color = 0xffffffff;
-	white_texture = create_ref<Texture2D>(metadata, &color);
+	white_texture = create_ref<Texture2D>(metadata, &color, glm::ivec2{ 1, 1 });
 
 	// fill texture slots with default white texture
 	std::fill(std::begin(texture_slots), std::end(texture_slots),
@@ -264,7 +264,7 @@ void Renderer::draw_string(const std::string& text, Ref<Font> font, const Transf
 		quad_min += glm::vec2(x, y);
 		quad_max += glm::vec2(x, y);
 
-		const glm::vec2 texel_size = 1.0f / (glm::vec2)font_atlas->get_metadata().size;
+		const glm::vec2 texel_size = 1.0f / (glm::vec2)font_atlas->get_size();
 
 		tex_coord_min *= texel_size;
 		tex_coord_max *= texel_size;

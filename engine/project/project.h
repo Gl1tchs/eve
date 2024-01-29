@@ -26,7 +26,7 @@ public:
 
 	static fs::path get_asset_directory();
 
-	static std::string get_asset_registry_path();
+	static fs::path get_asset_registry_path();
 
 	static AssetHandle get_starting_scene_handle();
 

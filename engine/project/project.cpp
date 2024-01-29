@@ -19,7 +19,7 @@ void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path)
 bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 	Json json;
 	if (!json_utils::read_file(path, json)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load project file from: {}", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load project file from: {}", path.string().c_str());
 		return false;
 	}
 
@@ -59,7 +59,7 @@ fs::path Project::get_asset_directory() {
 	return get_project_directory() / s_active_project->config.asset_directory;
 }
 
-std::string Project::get_asset_registry_path() {
+fs::path Project::get_asset_registry_path() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
 	return get_asset_path(s_active_project->config.asset_registry);
@@ -107,7 +107,7 @@ Ref<Project> Project::create(const fs::path& path) {
 Ref<Project> Project::load(const fs::path& path) {
 	ProjectConfig config{};
 	if (!ProjectConfig::deserialize(config, path)) {
-		EVE_LOG_ENGINE_ERROR("Unable to load project from: {}", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Unable to load project from: {}", path.string().c_str());
 		return nullptr;
 	}
 

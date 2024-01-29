@@ -37,15 +37,15 @@ inline static Ref<Texture2D> create_and_cache_atlas(const std::string& font_name
 	// msdfgen::savePng(bitmap, "myfont.png");
 
 	TextureMetadata metadata;
-	metadata.size = { bitmap.width, bitmap.height };
 	metadata.format = TextureFormat::RGB;
 	metadata.generate_mipmaps = false;
 
-	Ref<Texture2D> texture = create_ref<Texture2D>(metadata, bitmap.pixels);
+	Ref<Texture2D> texture = create_ref<Texture2D>(metadata, (void*)bitmap.pixels, glm::ivec2{ bitmap.width, bitmap.height });
 	return texture;
 }
 
-inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSDFData* data, const std::string& name) {
+inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
+		MSDFData* data, const std::string& name) {
 	struct CharsetRange {
 		uint32_t begin, end;
 	};
@@ -99,16 +99,18 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font, MSD
 			name, (float)em_size, data->glyphs, data->font_geometry, width, height);
 }
 
-Font::Font(const std::string& path) {
+Font::Font(const fs::path& path) {
 	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 
-	msdfgen::FontHandle* font = msdfgen::loadFont(ft, path.c_str());
+	const std::string path_str = path.string();
+
+	msdfgen::FontHandle* font = msdfgen::loadFont(ft, path_str.c_str());
 	if (!font) {
-		EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path_str.c_str());
 		return;
 	}
 
-	atlas_texture = create_texture_atlas(font, &msdf_data, path);
+	atlas_texture = create_texture_atlas(font, &msdf_data, path_str);
 
 	msdfgen::destroyFont(font);
 	msdfgen::deinitializeFreetype(ft);

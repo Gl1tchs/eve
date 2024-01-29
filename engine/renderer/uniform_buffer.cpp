@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-UniformBuffer::UniformBuffer(uint32_t size, uint32_t binding) :
+UniformBuffer::UniformBuffer(uint64_t size, uint32_t binding) :
 		ubo(0) {
 	glCreateBuffers(1, &ubo);
 	glNamedBufferData(ubo, size, nullptr, GL_DYNAMIC_DRAW);
@@ -13,6 +13,6 @@ UniformBuffer::~UniformBuffer() {
 	glDeleteBuffers(1, &ubo);
 }
 
-void UniformBuffer::set_data(const void* data, uint32_t size, uint32_t offset) {
+void UniformBuffer::set_data(const void* data, uint64_t size, uint32_t offset) {
 	glNamedBufferSubData(ubo, offset, size, data);
 }

@@ -3,9 +3,10 @@
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
+#include "texture.h"
 #include <stb_image.h>
 
-int deserialize_texture_format(TextureFormat format) {
+int texture_format_to_gl(TextureFormat format) {
 	switch (format) {
 		case TextureFormat::RED:
 			return GL_RED;
@@ -24,7 +25,7 @@ int deserialize_texture_format(TextureFormat format) {
 	}
 }
 
-int deserialize_texture_filtering_mode(TextureFilteringMode mode) {
+inline static int texture_filtering_mode_to_gl(TextureFilteringMode mode) {
 	switch (mode) {
 		case TextureFilteringMode::LINEAR:
 			return GL_LINEAR;
@@ -35,7 +36,7 @@ int deserialize_texture_filtering_mode(TextureFilteringMode mode) {
 	}
 }
 
-int deserialize_texture_wrapping_mode(TextureWrappingMode mode) {
+inline static int texture_wrapping_mode_to_gl(TextureWrappingMode mode) {
 	switch (mode) {
 		case TextureWrappingMode::REPEAT:
 			return GL_REPEAT;
@@ -50,106 +51,80 @@ int deserialize_texture_wrapping_mode(TextureWrappingMode mode) {
 	}
 }
 
+inline static TextureFormat get_texture_format_from_channels(const int channels) {
+	switch (channels) {
+		case 1:
+			return TextureFormat::RED;
+		case 2:
+			return TextureFormat::RG;
+		case 3:
+			return TextureFormat::RGB;
+		case 4:
+			return TextureFormat::RGBA;
+		default:
+			break;
+	}
+
+	EVE_ASSERT_ENGINE(false, "Unsupported number of channels in the image");
+	return TextureFormat::RED;
+}
+
 Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 		renderer_id(0) {
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
-	const char* path_cstr = path.c_str();
-
-	int width, height, channels;
-	stbi_uc* data = stbi_load(path_cstr, &width, &height, &channels, 0);
+	int channels;
+	stbi_uc* data = stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
 
 	if (!data) {
 		stbi_image_free(data);
-		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path_cstr);
+		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path.string());
 		EVE_ASSERT_ENGINE(false);
 	}
 
 	TextureMetadata texture_metadata;
-	texture_metadata.size = glm::ivec2{ width, height };
+	texture_metadata.format = get_texture_format_from_channels(channels);
 	texture_metadata.min_filter = TextureFilteringMode::LINEAR;
 	texture_metadata.mag_filter = TextureFilteringMode::LINEAR;
 	texture_metadata.wrap_s = TextureWrappingMode::CLAMP_TO_EDGE;
 	texture_metadata.wrap_t = TextureWrappingMode::CLAMP_TO_EDGE;
 	texture_metadata.generate_mipmaps = true;
 
-	switch (channels) {
-		case 1:
-			texture_metadata.format = TextureFormat::RED;
-			break;
-		case 2:
-			texture_metadata.format = TextureFormat::RG;
-			break;
-		case 3:
-			texture_metadata.format = TextureFormat::RGB;
-			break;
-		case 4:
-			texture_metadata.format = TextureFormat::RGBA;
-			break;
-		default:
-			EVE_ASSERT_ENGINE(false, "Unsupported number of channels in the image");
-			break;
-	}
-
-	// save metadata
-	metadata = texture_metadata;
-
+	// generate texture (this will also set the metadata)
 	_gen_texture(texture_metadata, data);
 
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bool flip_on_load) :
+Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, bool flip_on_load) :
 		renderer_id(0) {
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
-	const char* path_cstr = path.c_str();
-
-	int width, height, channels;
-	stbi_uc* data = stbi_load(path_cstr, &width, &height, &channels, 0);
+	int channels;
+	stbi_uc* data = stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
 
 	if (!data) {
 		stbi_image_free(data);
-		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path_cstr);
+		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path.string());
 		EVE_ASSERT_ENGINE(false);
 	}
 
 	TextureMetadata texture_metadata;
-	texture_metadata.size = glm::ivec2{ width, height };
-	texture_metadata.min_filter = r_metadata.min_filter;
-	texture_metadata.mag_filter = r_metadata.mag_filter;
-	texture_metadata.wrap_s = r_metadata.wrap_s;
-	texture_metadata.wrap_t = r_metadata.wrap_t;
-	texture_metadata.generate_mipmaps = r_metadata.generate_mipmaps;
+	texture_metadata.format = get_texture_format_from_channels(channels);
+	texture_metadata.min_filter = _metadata.min_filter;
+	texture_metadata.mag_filter = _metadata.mag_filter;
+	texture_metadata.wrap_s = _metadata.wrap_s;
+	texture_metadata.wrap_t = _metadata.wrap_t;
+	texture_metadata.generate_mipmaps = _metadata.generate_mipmaps;
 
-	switch (channels) {
-		case 1:
-			texture_metadata.format = TextureFormat::RED;
-			break;
-		case 2:
-			texture_metadata.format = TextureFormat::RG;
-			break;
-		case 3:
-			texture_metadata.format = TextureFormat::RGB;
-			break;
-		case 4:
-			texture_metadata.format = TextureFormat::RGBA;
-			break;
-		default:
-			EVE_ASSERT_ENGINE(false, "Unsupported number of channels in the image");
-			break;
-	}
-
-	// save metadata
-	metadata = texture_metadata;
-
+	// generate texture (this will also set the metadata)
 	_gen_texture(texture_metadata, data);
 
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels) :
-		renderer_id(0), metadata(metadata) {
+Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size) :
+		renderer_id(0), metadata(metadata), size(size) {
 	_gen_texture(metadata, pixels);
 }
 
@@ -165,15 +140,39 @@ uint32_t Texture2D::get_renderer_id() const {
 	return renderer_id;
 }
 
-void Texture2D::set_data(void* data, uint32_t size) {
-	int format = deserialize_texture_format(metadata.format);
+void Texture2D::set_data(void* data, uint32_t _size) {
+	const int format = texture_format_to_gl(metadata.format);
 
 	uint32_t bpp = format == GL_RGBA ? 4 : 3;
-	EVE_ASSERT_ENGINE(size == metadata.size.x * metadata.size.y * bpp,
+	EVE_ASSERT_ENGINE(_size == size.x * size.y * bpp,
 			"Data must be entire texture!");
 
-	glTextureSubImage2D(renderer_id, 0, 0, 0, metadata.size.x,
-			metadata.size.y, format, GL_UNSIGNED_BYTE, data);
+	glTextureSubImage2D(renderer_id, 0, 0, 0, size.x,
+			size.y, format, GL_UNSIGNED_BYTE, data);
+}
+
+const glm::ivec2& Texture2D::get_size() const {
+	return size;
+}
+
+void Texture2D::set_metadata(const TextureMetadata& _metadata) {
+	metadata = _metadata;
+
+	glBindTexture(GL_TEXTURE_2D, renderer_id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			texture_filtering_mode_to_gl(metadata.min_filter));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+			texture_filtering_mode_to_gl(metadata.mag_filter));
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+			texture_wrapping_mode_to_gl(metadata.wrap_s));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+			texture_wrapping_mode_to_gl(metadata.wrap_t));
+
+	if (metadata.generate_mipmaps) {
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 }
 
 void Texture2D::bind(uint16_t slot) const {
@@ -189,22 +188,10 @@ void Texture2D::_gen_texture(const TextureMetadata& metadata,
 	glGenTextures(1, &renderer_id);
 	glBindTexture(GL_TEXTURE_2D, renderer_id);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-			deserialize_texture_filtering_mode(metadata.min_filter));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-			deserialize_texture_filtering_mode(metadata.mag_filter));
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-			deserialize_texture_wrapping_mode(metadata.wrap_s));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-			deserialize_texture_wrapping_mode(metadata.wrap_t));
-
-	glTexImage2D(GL_TEXTURE_2D, 0, deserialize_texture_format(metadata.format),
-			metadata.size.x, metadata.size.y, 0,
-			deserialize_texture_format(metadata.format), GL_UNSIGNED_BYTE,
+	glTexImage2D(GL_TEXTURE_2D, 0, texture_format_to_gl(metadata.format),
+			size.x, size.y, 0,
+			texture_format_to_gl(metadata.format), GL_UNSIGNED_BYTE,
 			pixels);
 
-	if (metadata.generate_mipmaps) {
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+	set_metadata(metadata);
 }

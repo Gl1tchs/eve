@@ -186,7 +186,7 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Near Clip");
 				{
-					ImGui::DragFloat("##ZearClipControl", &camera.near_clip);
+					ImGui::DragFloat("##NearClipControl", &camera.near_clip);
 				}
 				END_FIELD();
 
@@ -194,7 +194,7 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Far Clip");
 				{
-					ImGui::DragFloat("##ZarClipControl", &camera.far_clip);
+					ImGui::DragFloat("##FarClipControl", &camera.far_clip);
 				}
 				END_FIELD();
 
@@ -202,7 +202,7 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Is Primary");
 				{
-					ImGui::Checkbox("##ZsPrimaryControl", &camera_comp.is_primary);
+					ImGui::Checkbox("##IsPrimaryControl", &camera_comp.is_primary);
 				}
 				END_FIELD();
 
@@ -210,7 +210,7 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Is Fixed");
 				{
-					ImGui::Checkbox("##ZsFixedControl", &camera_comp.is_fixed_aspect_ratio);
+					ImGui::Checkbox("##IsFixedControl", &camera_comp.is_fixed_aspect_ratio);
 				}
 				END_FIELD();
 
@@ -236,7 +236,8 @@ void InspectorPanel::_draw() {
 				if (!texture) {
 					BEGIN_FIELD("Texture");
 					{
-						ImGui::TextUnformatted("Drag Texture Here");
+						std::string placeholder = "Drag Texture Here";
+						ImGui::InputText("##TextureControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
 
@@ -297,7 +298,8 @@ void InspectorPanel::_draw() {
 				if (!font) {
 					BEGIN_FIELD("Font");
 					{
-						ImGui::TextUnformatted("Default Font");
+						std::string placeholder = "Default Font";
+						ImGui::InputText("##FontControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
 

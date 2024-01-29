@@ -1,6 +1,6 @@
 #include "scene/entity.h"
-#include "scene/transform.h"
 #include "core/uid.h"
+#include "scene/transform.h"
 
 RelationComponent& Entity::get_relation() {
 	return get_component<RelationComponent>();
@@ -66,7 +66,6 @@ bool Entity::is_child() const {
 }
 
 std::vector<Entity> Entity::get_children() const {
-	// TODO optimize this seems not so fast right now.
 	const std::vector<UID>& children_ids = get_relation().children_ids;
 
 	std::vector<Entity> children{};
@@ -76,7 +75,7 @@ std::vector<Entity> Entity::get_children() const {
 			continue;
 		}
 
-		children.push_back(entity);
+		children.emplace_back(entity);
 	}
 
 	return children;

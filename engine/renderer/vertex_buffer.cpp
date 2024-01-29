@@ -86,15 +86,14 @@ void BufferLayout::_calculate_offset_and_stride() {
 	}
 }
 
-VertexBuffer::VertexBuffer(uint32_t size) :
+VertexBuffer::VertexBuffer(uint64_t size) :
 		vbo(0) {
 	glCreateBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// TODO documentate this constructor and tell the client this defines as DYNAMIC_DRAW
 	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-VertexBuffer::VertexBuffer(const void* vertices, uint32_t size) :
+VertexBuffer::VertexBuffer(const void* vertices, uint64_t size) :
 		vbo(0) {
 	glCreateBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -113,7 +112,7 @@ void VertexBuffer::unbind() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void VertexBuffer::set_data(const void* data, uint32_t size) {
+void VertexBuffer::set_data(const void* data, uint64_t size) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }

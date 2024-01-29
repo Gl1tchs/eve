@@ -270,7 +270,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 
 	Json data;
 	if (!json_utils::read_file(path, data)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path.c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path.string().c_str());
 		return false;
 	}
 

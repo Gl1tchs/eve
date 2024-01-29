@@ -2,15 +2,14 @@
 
 #include <glad/glad.h>
 
-IndexBuffer::IndexBuffer(uint32_t size) :
+IndexBuffer::IndexBuffer(uint64_t size) :
 		ibo(0), count(0) {
 	glCreateBuffers(1, &ibo);
 	glBindBuffer(GL_ARRAY_BUFFER, ibo);
-	// TODO documentate this constructor and tell the client this defines as DYNAMIC_DRAW
 	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-IndexBuffer::IndexBuffer(const uint32_t* indices, uint32_t count) :
+IndexBuffer::IndexBuffer(const uint32_t* indices, uint64_t count) :
 		ibo(0), count(count) {
 	glCreateBuffers(1, &ibo);
 
@@ -33,11 +32,11 @@ void IndexBuffer::unbind() const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void IndexBuffer::set_data(const void* data, uint32_t size) const {
+void IndexBuffer::set_data(const void* data, uint64_t size) const {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 }
 
-uint32_t IndexBuffer::get_count() const {
+uint64_t IndexBuffer::get_count() const {
 	return count;
 }

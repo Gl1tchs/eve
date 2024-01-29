@@ -26,7 +26,7 @@ Window::Window(WindowCreateInfo info) {
 	window = glfwCreateWindow(info.w, info.h, info.title, nullptr, nullptr);
 	EVE_ASSERT_ENGINE(window);
 
-	//! TODO remove this if any other grapichs api implemented.
+	//? TODO remove this if any other grapichs api implemented.
 	glfwMakeContextCurrent(window);
 
 	// initialize event system

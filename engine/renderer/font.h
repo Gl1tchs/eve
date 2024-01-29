@@ -16,7 +16,7 @@ class Font final : public Asset {
 public:
 	EVE_IMPL_ASSET(AssetType::FONT)
 
-	Font(const std::string& path);
+	Font(const fs::path& path);
 	Font(const uint8_t* bytes, uint32_t length);
 
 	virtual ~Font() = default;

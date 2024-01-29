@@ -26,7 +26,6 @@ enum class TextureWrappingMode {
 
 struct TextureMetadata final {
 	// will be setted by texture importer
-	glm::ivec2 size = { 1, 1 };
 	TextureFormat format = TextureFormat::RGBA;
 	TextureFilteringMode min_filter = TextureFilteringMode::LINEAR;
 	TextureFilteringMode mag_filter = TextureFilteringMode::LINEAR;
@@ -40,14 +39,15 @@ public:
 	EVE_IMPL_ASSET(AssetType::TEXTURE)
 
 	Texture2D(const fs::path& path, bool flip_on_load = true);
-	Texture2D(const fs::path& path, const TextureMetadata& r_metadata, bool flip_on_load = true);
-	Texture2D(const TextureMetadata& metadata, const void* pixels = nullptr);
+	Texture2D(const fs::path& path, const TextureMetadata& metadata, bool flip_on_load = true);
+	Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size);
 
 	virtual ~Texture2D();
 
-	// TODO update metadata
+	const glm::ivec2& get_size() const;
 
 	const TextureMetadata& get_metadata() const;
+	void set_metadata(const TextureMetadata& metadata);
 
 	uint32_t get_renderer_id() const;
 
@@ -61,8 +61,10 @@ private:
 	void _gen_texture(const TextureMetadata& metadata, const void* pixels = nullptr);
 
 private:
-	TextureMetadata metadata;
 	uint32_t renderer_id;
+
+	TextureMetadata metadata;
+	glm::ivec2 size = { 0, 0 };
 };
 
 #endif
