@@ -32,6 +32,7 @@ struct ScopedBuffer {
 	~ScopedBuffer();
 
 	uint8_t* get_data();
+	const uint8_t* get_data() const;
 	const uint64_t& get_size() const;
 
 	template <typename T>
@@ -58,6 +59,7 @@ struct BufferArray {
 	}
 
 	inline uint8_t* get_data() { return buffer.data; }
+	inline const uint8_t* get_data() const { return buffer.data; }
 
 	inline const uint64_t& get_size() const { return buffer.size; }
 

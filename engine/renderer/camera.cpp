@@ -5,6 +5,6 @@ glm::mat4 OrthographicCamera::get_projection_matrix() const {
 			-zoom_level, zoom_level, near_clip, far_clip);
 }
 
-glm::mat4 OrthographicCamera::get_view_matrix(const TransformComponent& transform) {
+glm::mat4 OrthographicCamera::get_view_matrix(const TransformComponent& transform) const {
 	return glm::inverse(transform.get_transform_matrix());
 }

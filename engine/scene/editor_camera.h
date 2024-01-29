@@ -8,7 +8,7 @@ class EditorCamera : public OrthographicCamera {
 public:
 	EditorCamera();
 
-	glm::mat4 get_view_matrix();
+	glm::mat4 get_view_matrix() const;
 
 	void update(float ds);
 

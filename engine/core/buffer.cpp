@@ -39,6 +39,10 @@ uint8_t* ScopedBuffer::get_data() {
 	return buffer.data;
 }
 
+const uint8_t* ScopedBuffer::get_data() const {
+	return buffer.data;
+}
+
 const uint64_t& ScopedBuffer::get_size() const {
 	return buffer.size;
 }

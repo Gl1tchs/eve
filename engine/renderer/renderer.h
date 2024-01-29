@@ -12,6 +12,7 @@
 #include "renderer/texture.h"
 #include "renderer/uniform_buffer.h"
 #include "renderer/vertex_array.h"
+#include "scene/components.h"
 #include "scene/transform.h"
 
 constexpr uint64_t MAX_TEXTURE_COUNT = 32;
@@ -23,13 +24,9 @@ public:
 
 	void begin_pass(const CameraData& camera_data);
 
-	// DISCLAIMER
-	//	This won't set any camera data
-	//	do not try to access u_camera buffer
-	//	from shader it will return old passes value.
-	void begin_pass();
+	void end_pass() const;
 
-	void end_pass();
+	void draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id = -1);
 
 	void draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id = -1);
 
@@ -39,6 +36,10 @@ public:
 	void draw_quad(const TransformComponent& transform,
 			Ref<Texture2D> texture, const Color& color,
 			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
+
+	void draw_string(const TextRendererComponent& text_comp,
+			const TransformComponent& transform,
+			uint32_t entity_id = -1);
 
 	void draw_string(const std::string& text, const TransformComponent& transform,
 			const Color& fg_color,
@@ -57,7 +58,7 @@ public:
 private:
 	void _begin_batch();
 
-	void _flush();
+	void _flush() const;
 
 	void _next_batch();
 

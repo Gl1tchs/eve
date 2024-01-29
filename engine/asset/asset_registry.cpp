@@ -24,7 +24,6 @@ Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
 
 	const auto it = loaded_assets.find(handle);
 	if (it == loaded_assets.end()) {
-		EVE_LOG_ENGINE_ERROR("Asset handle of {} not found thus couln't be loaded.", handle.value);
 		return nullptr;
 	}
 

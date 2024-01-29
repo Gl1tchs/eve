@@ -10,7 +10,7 @@ EditorCamera::EditorCamera() :
 	last_mouse_pos = Input::get_mouse_position();
 }
 
-glm::mat4 EditorCamera::get_view_matrix() {
+glm::mat4 EditorCamera::get_view_matrix() const {
 	return OrthographicCamera::get_view_matrix(transform);
 }
 
@@ -27,7 +27,6 @@ void EditorCamera::update(float dt) {
 
 	zoom_level -= Input::get_scroll_offset().y * scroll_speed;
 	zoom_level = std::max(zoom_level, 0.5f);
-
 
 	// store last mouse pos to prevent instant rotations
 	last_mouse_pos = Input::get_mouse_position();

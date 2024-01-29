@@ -1,5 +1,6 @@
 #include "renderer/renderer.h"
 
+#include "asset/asset_registry.h"
 #include "core/color.h"
 #include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
@@ -110,12 +111,22 @@ void Renderer::begin_pass(const CameraData& camera_data) {
 	_begin_batch();
 }
 
-void Renderer::begin_pass() {
-	_begin_batch();
+void Renderer::end_pass() const {
+	_flush();
 }
 
-void Renderer::end_pass() {
-	_flush();
+void Renderer::draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id) {
+	Ref<Texture2D> texture = nullptr;
+	if (AssetRegistry::exists_as(sprite.texture, AssetType::TEXTURE)) {
+		texture = AssetRegistry::get<Texture2D>(sprite.texture);
+	}
+
+	draw_quad(
+			transform,
+			texture,
+			sprite.color,
+			sprite.tex_tiling,
+			entity_id);
 }
 
 void Renderer::draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id) {
@@ -152,6 +163,24 @@ void Renderer::draw_quad(const TransformComponent& transform,
 	}
 
 	quad_index_count += QUAD_INDEX_COUNT;
+}
+
+void Renderer::draw_string(const TextRendererComponent& text_comp,
+		const TransformComponent& transform,
+		uint32_t entity_id) {
+	Ref<Font> font = nullptr;
+	if (AssetRegistry::exists_as(text_comp.font, AssetType::FONT)) {
+		font = AssetRegistry::get<Font>(text_comp.font);
+	}
+
+	if (!font) {
+		font = Font::get_default();
+	}
+
+	draw_string(text_comp.text, font ? font : Font::get_default(),
+			transform, text_comp.fg_color, text_comp.bg_color,
+			text_comp.kerning, text_comp.line_spacing,
+			entity_id);
 }
 
 void Renderer::draw_string(const std::string& text, const TransformComponent& transform,
@@ -309,7 +338,7 @@ void Renderer::_begin_batch() {
 	texture_slot_index = 1;
 }
 
-void Renderer::_flush() {
+void Renderer::_flush() const {
 	if (line_vertices.get_count() > 0) {
 		line_vertex_buffer->set_data(line_vertices.get_data(), line_vertices.get_size());
 
