@@ -255,7 +255,7 @@ void InspectorPanel::_draw() {
 						ImGui::EndDragDropTarget();
 					}
 
-					ImGui::Columns();
+					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Texture");
 					{

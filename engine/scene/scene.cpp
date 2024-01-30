@@ -1,8 +1,8 @@
 #include "scene/scene.h"
 
+#include "asset/asset_registry.h"
 #include "core/json_utils.h"
 #include "core/uid.h"
-#include "nlohmann/json.hpp"
 #include "renderer/font.h"
 #include "scene/components.h"
 #include "scene/entity.h"
@@ -229,7 +229,7 @@ static Json serialize_entity(Entity& entity) {
 		const SpriteRendererComponent& sc = entity.get_component<SpriteRendererComponent>();
 
 		out["sprite_renderer_component"] = Json{
-			{ "texture", sc.texture },
+			{ "texture", AssetRegistry::exists_as(sc.texture, AssetType::TEXTURE) ? sc.texture : INVALID_UID },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
 		};
@@ -240,7 +240,7 @@ static Json serialize_entity(Entity& entity) {
 
 		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
-			{ "font", tc.font },
+			{ "font", AssetRegistry::exists_as(tc.font, AssetType::FONT) ? tc.font : INVALID_UID },
 			{ "fg_color", tc.fg_color },
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
@@ -350,6 +350,10 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 					deserialing_entity.add_component<SpriteRendererComponent>();
 
 			sprite_component.texture = sprite_comp_json["texture"].get<AssetHandle>();
+			if (!AssetRegistry::exists_as(sprite_component.texture, AssetType::TEXTURE)) {
+				sprite_component.texture = INVALID_UID;
+			}
+
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
@@ -359,7 +363,12 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 			auto& text_component = deserialing_entity.add_component<TextRendererComponent>();
 
 			text_component.text = text_comp_json["text"].get<std::string>();
+
 			text_component.font = text_comp_json["font"].get<AssetHandle>();
+			if (!AssetRegistry::exists_as(text_component.font, AssetType::FONT)) {
+				text_component.font = INVALID_UID;
+			}
+
 			text_component.fg_color = text_comp_json["fg_color"].get<Color>();
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();

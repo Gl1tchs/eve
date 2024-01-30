@@ -17,4 +17,5 @@
 - [ ]
 
 ## Asset
-- [ ] 
+- [ ] Do not get asset type from extension but from format
+- [ ] Load all assets on scene opening and register assets to the scene

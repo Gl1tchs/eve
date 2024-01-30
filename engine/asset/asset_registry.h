@@ -8,7 +8,9 @@ struct AssetImportData {
 	AssetType type;
 };
 
-using AssetRegistryMap = std::unordered_map<AssetHandle, Ref<Asset>>;
+using LoadedAssetRegistryMap = std::unordered_map<AssetHandle, Ref<Asset>>;
+
+using AssetRegistryMap = std::unordered_map<AssetHandle, AssetImportData>;
 
 class AssetRegistry {
 public:
@@ -26,6 +28,8 @@ public:
 
 	static Ref<Asset> get(const AssetHandle& handle);
 
+	static Ref<Asset> get(const std::string& path);
+
 	static AssetHandle subscribe(AssetImportData asset, AssetHandle handle = AssetHandle());
 
 	// FIXME
@@ -38,21 +42,29 @@ public:
 
 	static void remove(const AssetHandle& handle);
 
+	static void remove(const std::string& path);
+
 	static bool exists(const AssetHandle& handle);
 
 	static bool exists_as(const AssetHandle& handle, AssetType type);
 
 	static bool is_loaded(const AssetHandle& handle);
 
-	static AssetRegistryMap& get_loaded_assets();
+	static void on_asset_rename(const fs::path& old_path, const fs::path& new_path);
+
+	static AssetRegistryMap& get_assets();
+
+	static LoadedAssetRegistryMap& get_loaded_assets();
 
 	static void serialize(const fs::path& path);
 
 	static bool deserialize(const fs::path& path);
 
+	static AssetHandle get_handle_from_path(const std::string& path);
+
 private:
 	static std::unordered_map<AssetHandle, AssetImportData> assets;
-	static AssetRegistryMap loaded_assets;
+	static LoadedAssetRegistryMap loaded_assets;
 };
 
 #endif

@@ -1,10 +1,10 @@
 file(GLOB_RECURSE SOURCE_FILES "${EDITOR_DIR}/*.h" "${EDITOR_DIR}/*.cpp")
 
-add_executable(editor2d ${SOURCE_FILES})
+add_executable(editor ${SOURCE_FILES})
 
-target_precompile_headers(editor2d PUBLIC pch.h)
+target_precompile_headers(editor PUBLIC pch.h)
 
-target_include_directories(editor2d
+target_include_directories(editor
 PUBLIC
 	${EDITOR_DIR}
     ${ENGINE_DIR}
@@ -12,9 +12,10 @@ PUBLIC
 	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
 	${VENDOR_DIR}/imgui
+	${VENDOR_DIR}/filewatch
 )
 
-target_link_libraries(editor2d PRIVATE
+target_link_libraries(editor PRIVATE
     eve
 	imgui
 )

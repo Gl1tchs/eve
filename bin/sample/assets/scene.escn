@@ -1,5 +1,5 @@
 {
-	"scene": "sample/assets/scene.escn",
+	"scene": "scene",
 	"entities": [
 		{
 			"id": 12517815595370061652,

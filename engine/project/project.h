@@ -32,6 +32,8 @@ public:
 
 	static fs::path get_asset_path(std::string asset);
 
+	static std::string get_relative_asset_path(const std::string& path);
+
 	static Ref<Project> create(const fs::path& path);
 
 	static Ref<Project> load(const fs::path& path);

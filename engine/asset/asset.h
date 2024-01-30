@@ -20,6 +20,9 @@ enum class AssetType : uint8_t {
 
 std::string serialize_asset_type(const AssetType type);
 
+AssetType get_asset_type_from_extension(const std::string& extension);
+
+
 struct Asset {
 	AssetHandle handle;
 	std::string path;

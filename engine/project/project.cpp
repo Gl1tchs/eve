@@ -96,6 +96,29 @@ fs::path Project::get_asset_path(std::string asset) {
 	return asset;
 }
 
+std::string Project::get_relative_asset_path(const std::string& path) {
+	const auto project_dir = get_project_directory();
+	const auto asset_dir = get_asset_directory();
+
+	fs::path relative_path;
+
+	// Check if the path is inside the asset directory
+	if (path.compare(0, asset_dir.string().length(), asset_dir.string()) == 0) {
+		relative_path = fs::relative(path, asset_dir);
+		return "res://" + relative_path.string();
+	}
+
+	// Check if the path is inside the project directory
+	if (path.compare(0, project_dir.string().length(), project_dir.string()) ==
+			0) {
+		relative_path = fs::relative(path, project_dir);
+		return "prj://" + relative_path.string();
+	}
+
+	// If the path is not inside the project or asset directory, return the original path
+	return path;
+}
+
 Ref<Project> Project::create(const fs::path& path) {
 	ProjectConfig empty_config{};
 	Ref<Project> project = create_ref<Project>(path, empty_config);
