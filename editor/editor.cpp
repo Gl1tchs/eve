@@ -39,6 +39,7 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 
 	viewport = create_scope<ViewportPanel>(frame_buffer);
+	stats = create_scope<StatsPanel>(renderer);
 
 	hierarchy = create_ref<HierarchyPanel>();
 	inspector = create_ref<InspectorPanel>(hierarchy);
@@ -66,6 +67,7 @@ void EditorApplication::_on_update(float dt) {
 	}
 
 	// render image to frame buffer
+	renderer->reset_stats();
 
 	frame_buffer->bind();
 	RendererAPI::set_clear_color(COLOR_GRAY);
@@ -95,6 +97,8 @@ void EditorApplication::_on_imgui_update(float dt) {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	viewport->render();
 	ImGui::PopStyleVar();
+
+	stats->render();
 
 	hierarchy->render();
 	inspector->render();
@@ -164,6 +168,7 @@ void EditorApplication::_handle_entity_selection() {
 	}
 }
 
+// Application entrypoint
 Application* create_application(int argc, const char** argv) {
 	ApplicationCreateInfo info{};
 	info.name = "editor2d";

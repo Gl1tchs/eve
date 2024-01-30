@@ -2,6 +2,7 @@
 
 #include "asset/asset_registry.h"
 #include "core/color.h"
+#include "renderer.h"
 #include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/primitives/text.h"
@@ -111,7 +112,7 @@ void Renderer::begin_pass(const CameraData& camera_data) {
 	_begin_batch();
 }
 
-void Renderer::end_pass() const {
+void Renderer::end_pass() {
 	_flush();
 }
 
@@ -163,6 +164,10 @@ void Renderer::draw_quad(const TransformComponent& transform,
 	}
 
 	quad_index_count += QUAD_INDEX_COUNT;
+
+	stats.quad_count++;
+	stats.vertex_count += QUAD_VERTEX_COUNT;
+	stats.index_count += QUAD_INDEX_COUNT;
 }
 
 void Renderer::draw_string(const TextRendererComponent& text_comp,
@@ -309,6 +314,10 @@ void Renderer::draw_string(const std::string& text, Ref<Font> font, const Transf
 
 			x += fs_scale * advance + kerning;
 		}
+
+		stats.quad_count++;
+		stats.vertex_count += QUAD_VERTEX_COUNT;
+		stats.index_count += QUAD_INDEX_COUNT;
 	}
 }
 
@@ -324,6 +333,16 @@ void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& 
 	vertex.color = color;
 
 	line_vertices.add(vertex);
+
+	stats.vertex_count += 2;
+}
+
+const RendererStats& Renderer::get_stats() const {
+	return stats;
+}
+
+void Renderer::reset_stats() {
+	memset(&stats, 0, sizeof(RendererStats));
 }
 
 void Renderer::_begin_batch() {
@@ -338,12 +357,14 @@ void Renderer::_begin_batch() {
 	texture_slot_index = 1;
 }
 
-void Renderer::_flush() const {
+void Renderer::_flush() {
 	if (line_vertices.get_count() > 0) {
 		line_vertex_buffer->set_data(line_vertices.get_data(), line_vertices.get_size());
 
 		line_shader->bind();
 		RendererAPI::draw_lines(line_vertex_array, line_vertices.get_count());
+
+		stats.draw_calls++;
 	}
 
 	if (text_index_count > 0) {
@@ -355,6 +376,8 @@ void Renderer::_flush() const {
 
 		text_shader->bind();
 		RendererAPI::draw_indexed(text_vertex_array, text_index_count);
+
+		stats.draw_calls++;
 	}
 
 	if (quad_index_count > 0) {
@@ -366,6 +389,8 @@ void Renderer::_flush() const {
 
 		quad_shader->bind();
 		RendererAPI::draw_indexed(quad_vertex_array, quad_index_count);
+
+		stats.draw_calls++;
 	}
 }
 

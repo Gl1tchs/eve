@@ -4,7 +4,7 @@
 struct GLFWwindow;
 
 struct WindowCreateInfo {
-	const char* title = "eve2d game";
+	const char* title = "eve game";
 	uint32_t w = 1280;
 	uint32_t h = 768;
 };

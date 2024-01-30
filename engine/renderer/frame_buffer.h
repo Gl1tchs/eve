@@ -3,7 +3,7 @@
 
 #include "renderer/texture.h"
 
-enum class FrameBufferTextureFormat {
+enum class FrameBufferTextureFormat : uint16_t {
 	NONE = 0,
 	// Color
 	RED_INT,
@@ -15,25 +15,9 @@ enum class FrameBufferTextureFormat {
 	DEPTH = DEPTH24_STENCIL8
 };
 
-struct FrameBufferTextureSpecification {
-	FrameBufferTextureSpecification() = default;
-	FrameBufferTextureSpecification(FrameBufferTextureFormat format);
-
-	FrameBufferTextureFormat texture_format = FrameBufferTextureFormat::NONE;
-	// TODO filtering/wrap
-};
-
-struct FrameBufferAttachmentSpecification {
-	FrameBufferAttachmentSpecification() = default;
-	FrameBufferAttachmentSpecification(
-			std::initializer_list<FrameBufferTextureSpecification> attachments);
-
-	std::vector<FrameBufferTextureSpecification> attachments;
-};
-
 struct FrameBufferCreateInfo {
 	uint32_t width = 0, height = 0;
-	FrameBufferAttachmentSpecification attachments;
+	std::vector<FrameBufferTextureFormat> attachments;
 	uint32_t samples = 1;
 };
 
@@ -68,10 +52,10 @@ private:
 	uint32_t height;
 	uint32_t samples;
 
-	std::vector<FrameBufferTextureSpecification> color_attachment_specs;
-	FrameBufferTextureSpecification depth_attachment_spec;
+	std::vector<FrameBufferTextureFormat> color_attachments;
+	FrameBufferTextureFormat depth_attachments;
 
-	std::vector<uint32_t> color_attachments;
+	std::vector<uint32_t> color_attachment_ids;
 	uint32_t depth_attachment = 0;
 };
 

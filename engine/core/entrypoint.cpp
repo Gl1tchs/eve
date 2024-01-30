@@ -2,7 +2,7 @@
 #include "core/log.h"
 
 int main(int argc, const char** argv) {
-	Logger::init("eve2d.log");
+	Logger::init("eve.log");
 
 	// create application instance
 	Application* _application = create_application(argc, argv);

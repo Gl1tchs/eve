@@ -71,21 +71,13 @@ inline static bool is_depth_format(FrameBufferTextureFormat format) {
 	}
 }
 
-FrameBufferTextureSpecification::FrameBufferTextureSpecification(
-		FrameBufferTextureFormat format) :
-		texture_format(format) {}
-
-FrameBufferAttachmentSpecification::FrameBufferAttachmentSpecification(
-		std::initializer_list<FrameBufferTextureSpecification> attachments) :
-		attachments(attachments) {}
-
 FrameBuffer::FrameBuffer(const FrameBufferCreateInfo& info) :
 		fbo(0), width(info.width), height(info.height), samples(info.samples) {
-	for (auto attachment : info.attachments.attachments) {
-		if (!is_depth_format(attachment.texture_format)) {
-			color_attachment_specs.emplace_back(attachment);
+	for (auto attachment : info.attachments) {
+		if (!is_depth_format(attachment)) {
+			color_attachments.emplace_back(attachment);
 		} else {
-			depth_attachment_spec = attachment;
+			depth_attachments = attachment;
 		}
 	}
 
@@ -94,7 +86,7 @@ FrameBuffer::FrameBuffer(const FrameBufferCreateInfo& info) :
 
 FrameBuffer::~FrameBuffer() {
 	glDeleteFramebuffers(1, &fbo);
-	glDeleteTextures(color_attachments.size(), color_attachments.data());
+	glDeleteTextures(color_attachment_ids.size(), color_attachment_ids.data());
 	glDeleteTextures(1, &depth_attachment);
 }
 
@@ -121,7 +113,7 @@ void FrameBuffer::resize(int w, int h) {
 }
 
 void FrameBuffer::read_pixel(uint32_t index, uint32_t x, uint32_t y, FrameBufferTextureFormat format, void* pixel) {
-	EVE_ASSERT_ENGINE(index < color_attachments.size());
+	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + index);
 
@@ -140,16 +132,16 @@ void FrameBuffer::read_pixel(uint32_t index, uint32_t x, uint32_t y, FrameBuffer
 }
 
 void FrameBuffer::clear_attachment(uint32_t index, void* value) {
-	EVE_ASSERT_ENGINE(index < color_attachments.size());
-	auto& attachment_spec = color_attachment_specs[index];
+	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
+	const auto& attachment = color_attachments[index];
 
-	switch (attachment_spec.texture_format) {
+	switch (attachment) {
 		case FrameBufferTextureFormat::RED_INT: {
-			glClearTexImage(color_attachments[index], 0, GL_RED_INTEGER, GL_INT, value);
+			glClearTexImage(color_attachment_ids[index], 0, GL_RED_INTEGER, GL_INT, value);
 			break;
 		}
 		case FrameBufferTextureFormat::RGBA8: {
-			glClearTexImage(color_attachments[index], 0, GL_RGBA8, GL_FLOAT, value);
+			glClearTexImage(color_attachment_ids[index], 0, GL_RGBA8, GL_FLOAT, value);
 			break;
 		}
 		default:
@@ -158,8 +150,8 @@ void FrameBuffer::clear_attachment(uint32_t index, void* value) {
 }
 
 uint32_t FrameBuffer::get_color_attachment_renderer_id(uint32_t index) const {
-	EVE_ASSERT_ENGINE(index < color_attachments.size());
-	return color_attachments[index];
+	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
+	return color_attachment_ids[index];
 }
 
 glm::ivec2 FrameBuffer::get_size() const {
@@ -169,33 +161,33 @@ glm::ivec2 FrameBuffer::get_size() const {
 void FrameBuffer::_invalidate() {
 	if (fbo) {
 		glDeleteFramebuffers(1, &fbo);
-		glDeleteTextures(color_attachments.size(), color_attachments.data());
+		glDeleteTextures(color_attachment_ids.size(), color_attachment_ids.data());
 		glDeleteTextures(1, &depth_attachment);
 
-		color_attachments.clear();
+		color_attachment_ids.clear();
 		depth_attachment = 0;
 	}
 
 	glCreateFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	bool multisample = samples > 1;
+	const bool multisample = samples > 1;
 
-	if (color_attachment_specs.size()) {
-		color_attachments.resize(color_attachment_specs.size());
+	if (color_attachments.size()) {
+		color_attachment_ids.resize(color_attachments.size());
 
-		create_textures(multisample, color_attachments.data(),
-				color_attachments.size());
+		create_textures(multisample, color_attachment_ids.data(),
+				color_attachment_ids.size());
 
-		for (size_t i = 0; i < color_attachments.size(); i++) {
-			bind_texture(multisample, color_attachments[i]);
-			switch (color_attachment_specs[i].texture_format) {
+		for (size_t i = 0; i < color_attachment_ids.size(); i++) {
+			bind_texture(multisample, color_attachment_ids[i]);
+			switch (color_attachments[i]) {
 				case FrameBufferTextureFormat::RED_INT:
-					attach_color_texture(color_attachments[i], samples, GL_R32I,
+					attach_color_texture(color_attachment_ids[i], samples, GL_R32I,
 							GL_RED_INTEGER, width, height, i);
 					break;
 				case FrameBufferTextureFormat::RGBA8:
-					attach_color_texture(color_attachments[i], samples, GL_RGBA8,
+					attach_color_texture(color_attachment_ids[i], samples, GL_RGBA8,
 							GL_RGBA, width, height, i);
 					break;
 				default:
@@ -204,11 +196,11 @@ void FrameBuffer::_invalidate() {
 		}
 	}
 
-	if (depth_attachment_spec.texture_format !=
+	if (depth_attachments !=
 			FrameBufferTextureFormat::NONE) {
 		create_textures(multisample, &depth_attachment, 1);
 		bind_texture(multisample, depth_attachment);
-		switch (depth_attachment_spec.texture_format) {
+		switch (depth_attachments) {
 			case FrameBufferTextureFormat::DEPTH24_STENCIL8:
 				attach_depth_texture(depth_attachment, samples,
 						GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT,
@@ -224,12 +216,12 @@ void FrameBuffer::_invalidate() {
 		}
 	}
 
-	if (color_attachments.size() > 1) {
-		EVE_ASSERT_ENGINE(color_attachments.size() <= 4);
+	if (color_attachment_ids.size() > 1) {
+		EVE_ASSERT_ENGINE(color_attachment_ids.size() <= 4);
 		const uint32_t buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
 			GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(color_attachments.size(), buffers);
-	} else if (color_attachments.empty()) {
+		glDrawBuffers(color_attachment_ids.size(), buffers);
+	} else if (color_attachment_ids.empty()) {
 		// Only depth-pass
 		glDrawBuffer(GL_NONE);
 	}

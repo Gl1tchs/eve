@@ -15,6 +15,6 @@ PRIVATE
 )
 
 target_link_libraries(editor2d PRIVATE
-    eve2d
+    eve
 	imgui
 )

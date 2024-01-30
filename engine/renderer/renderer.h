@@ -17,6 +17,13 @@
 
 constexpr uint64_t MAX_TEXTURE_COUNT = 32;
 
+struct RendererStats {
+	uint32_t quad_count = 0;
+	uint32_t vertex_count = 0;
+	uint32_t index_count = 0;
+	uint32_t draw_calls = 0;
+};
+
 class Renderer final {
 public:
 	Renderer();
@@ -24,7 +31,7 @@ public:
 
 	void begin_pass(const CameraData& camera_data);
 
-	void end_pass() const;
+	void end_pass();
 
 	void draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id = -1);
 
@@ -55,16 +62,22 @@ public:
 
 	void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color = COLOR_WHITE);
 
+	const RendererStats& get_stats() const;
+
+	void reset_stats();
+
 private:
 	void _begin_batch();
 
-	void _flush() const;
+	void _flush();
 
 	void _next_batch();
 
 	float _find_texture_index(const Ref<Texture2D>& texture);
 
 private:
+	RendererStats stats;
+
 	// quad render data
 	Ref<VertexArray> quad_vertex_array;
 	Ref<VertexBuffer> quad_vertex_buffer;

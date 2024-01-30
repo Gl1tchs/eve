@@ -4,6 +4,7 @@
 #include "panels/console_panel.h"
 #include "panels/hierarchy_panel.h"
 #include "panels/inspector_panel.h"
+#include "panels/stats_panel.h"
 #include "panels/viewport_panel.h"
 #include "widgets/menu_bar.h"
 
@@ -44,6 +45,7 @@ private:
 	ConsolePanel console;
 
 	Scope<ViewportPanel> viewport;
+	Scope<StatsPanel> stats;
 	Ref<HierarchyPanel> hierarchy;
 	Ref<InspectorPanel> inspector;
 };

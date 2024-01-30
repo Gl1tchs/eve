@@ -9,11 +9,11 @@ list(APPEND SOURCE_FILES
   ${IMGUI_DIR}/backends/imgui_impl_glfw.h
 )
 
-add_library(eve2d ${SOURCE_FILES})
+add_library(eve ${SOURCE_FILES})
 
-target_precompile_headers(eve2d PUBLIC pch.h)
+target_precompile_headers(eve PUBLIC pch.h)
 
-target_include_directories(eve2d
+target_include_directories(eve
 PUBLIC
     ${ENGINE_DIR}
     ${VENDOR_DIR}/glm
@@ -28,7 +28,7 @@ PRIVATE
     ${VENDOR_DIR}/stb
 )
 
-target_link_libraries(eve2d
+target_link_libraries(eve
 PUBLIC
     glm::glm-header-only
     EnTT
@@ -39,4 +39,4 @@ PRIVATE
 	msdf-atlas-gen
 )
 
-target_compile_definitions(eve2d PRIVATE GLFW_INCLUDE_NONE)
+target_compile_definitions(eve PRIVATE GLFW_INCLUDE_NONE)
