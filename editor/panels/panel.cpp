@@ -52,7 +52,7 @@ void Panel::set_static(bool value) { statik = value; }
 
 bool Panel::is_active() const { return active; }
 
-void Panel::set_active(bool active) { active = active; };
+void Panel::set_active(bool _active) { active = _active; };
 
 bool Panel::is_focused() const { return focused; }
 

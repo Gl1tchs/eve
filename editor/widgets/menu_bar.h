@@ -4,9 +4,9 @@
 struct MenuItem {
 	std::string name;
 	std::string shortcut;
-	std::function<void(void)> callback;
+	std::function<void()> callback;
 
-	MenuItem(const std::string& name, std::function<void(void)> callback);
+	MenuItem(const std::string& name, std::function<void()> callback);
 
 	MenuItem(const std::string& name, const std::string& shortcut,
 			std::function<void(void)> callback);
@@ -16,7 +16,7 @@ struct Menu {
 	std::string name;
 	std::vector<MenuItem> items;
 
-	Menu(const std::string& name, std::initializer_list<MenuItem> items = {});
+	Menu(const std::string& name, std::initializer_list<MenuItem> items);
 
 	size_t get_size() const;
 

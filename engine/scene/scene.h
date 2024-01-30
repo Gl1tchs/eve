@@ -35,6 +35,10 @@ public:
 	void destroy(Entity entity);
 	void destroy(UID uid);
 
+	// will check if entity valid or not
+	bool exists(Entity entity) const;
+
+	// wont check entity validity but looks for the id
 	bool exists(UID uid) const;
 
 	Entity find_by_id(UID uid);

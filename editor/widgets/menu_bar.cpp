@@ -2,13 +2,13 @@
 
 #include <imgui.h>
 
-MenuItem::MenuItem(const std::string& name, std::function<void(void)> callback) :
-		name(name), shortcut(""), callback(callback) {
+MenuItem::MenuItem(const std::string& _name, std::function<void(void)> _callback) :
+		name(_name), shortcut(""), callback(_callback) {
 }
 
-MenuItem::MenuItem(const std::string& name, const std::string& shortcut,
-		std::function<void(void)> callback) :
-		name(name), shortcut(shortcut), callback(callback) {
+MenuItem::MenuItem(const std::string& _name, const std::string& _shortcut,
+		std::function<void()> _callback) :
+		name(_name), shortcut(_shortcut), callback(_callback) {
 }
 
 Menu::Menu(const std::string& name, std::initializer_list<MenuItem> items) :

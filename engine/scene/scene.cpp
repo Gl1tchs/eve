@@ -83,6 +83,14 @@ void Scene::destroy(UID uid) {
 	destroy(entity);
 }
 
+bool Scene::exists(Entity entity) const {
+	if (!entity.has_component<IdComponent>()) {
+		return false;
+	}
+
+	return entity_map.find(entity.get_uid()) != entity_map.end();
+}
+
 bool Scene::exists(UID uid) const {
 	return entity_map.find(uid) != entity_map.end();
 }

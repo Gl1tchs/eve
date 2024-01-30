@@ -243,30 +243,44 @@ void InspectorPanel::_draw() {
 						ImGui::InputText("##TextureControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
+
+					if (ImGui::BeginDragDropTarget()) {
+						if (const ImGuiPayload* payload =
+										ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
+							const AssetHandle handle = *(const AssetHandle*)payload->Data;
+							if (AssetRegistry::exists(handle)) {
+								sprite_comp.texture = handle;
+							}
+						}
+						ImGui::EndDragDropTarget();
+					}
+
+					ImGui::Columns();
 				} else {
 					BEGIN_FIELD("Texture");
 					{
 						ImGui::InputText("##TextureControl", &texture->path,
 								ImGuiInputTextFlags_ReadOnly);
+
+						if (ImGui::BeginDragDropTarget()) {
+							if (const ImGuiPayload* payload =
+											ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
+								const AssetHandle handle = *(const AssetHandle*)payload->Data;
+								if (AssetRegistry::exists(handle)) {
+									sprite_comp.texture = handle;
+								}
+							}
+							ImGui::EndDragDropTarget();
+						}
+
 						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							sprite_comp.texture = 0;
 						}
 					}
 					END_FIELD();
-				}
 
-				if (ImGui::BeginDragDropTarget()) {
-					if (const ImGuiPayload* payload =
-									ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
-						const AssetHandle handle = *(const AssetHandle*)payload->Data;
-						if (AssetRegistry::exists(handle)) {
-							sprite_comp.texture = handle;
-						}
-					}
-					ImGui::EndDragDropTarget();
+					ImGui::NextColumn();
 				}
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Color");
 				{
@@ -306,30 +320,44 @@ void InspectorPanel::_draw() {
 						ImGui::InputText("##FontControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
+
+					if (ImGui::BeginDragDropTarget()) {
+						if (const ImGuiPayload* payload =
+										ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
+							const AssetHandle handle = *(const AssetHandle*)payload->Data;
+							if (AssetRegistry::exists(handle)) {
+								text_comp.font = handle;
+							}
+						}
+						ImGui::EndDragDropTarget();
+					}
+
+					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Font");
 					{
 						ImGui::InputText("##FontControl", &font->path,
 								ImGuiInputTextFlags_ReadOnly);
+
+						if (ImGui::BeginDragDropTarget()) {
+							if (const ImGuiPayload* payload =
+											ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
+								const AssetHandle handle = *(const AssetHandle*)payload->Data;
+								if (AssetRegistry::exists(handle)) {
+									text_comp.font = handle;
+								}
+							}
+							ImGui::EndDragDropTarget();
+						}
+
 						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							text_comp.font = 0;
 						}
 					}
 					END_FIELD();
-				}
 
-				if (ImGui::BeginDragDropTarget()) {
-					if (const ImGuiPayload* payload =
-									ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
-						const AssetHandle handle = *(const AssetHandle*)payload->Data;
-						if (AssetRegistry::exists(handle)) {
-							text_comp.font = handle;
-						}
-					}
-					ImGui::EndDragDropTarget();
+					ImGui::NextColumn();
 				}
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Foreground Color");
 				{

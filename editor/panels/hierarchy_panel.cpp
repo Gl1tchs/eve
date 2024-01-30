@@ -18,7 +18,7 @@ void HierarchyPanel::set_selected_entity(Entity entity) {
 
 Entity HierarchyPanel::get_selected_entity() {
 	if (selected_entity &&
-			!SceneManager::get_active()->exists(selected_entity.get_uid())) {
+			!SceneManager::get_active()->exists(selected_entity)) {
 		return INVALID_ENTITY;
 	}
 
@@ -102,6 +102,8 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 
 		ImGui::PopStyleVar();
 
+		_draw_entity_context_menu(entity);
+
 		// Drag and drop source and target to change relations.
 		_draw_entity_drag_drop_src(entity);
 		_draw_entity_drag_drop_target(entity);
@@ -110,10 +112,12 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 
 		bool node_open = ImGui::TreeNodeEx(
 				hierarchy_name.c_str(),
-				ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_OpenOnArrow |
+				ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
 						(is_selected ? ImGuiTreeNodeFlags_Selected : 0));
 
 		ImGui::PopStyleVar();
+
+		_draw_entity_context_menu(entity);
 
 		// Drag and drop source and target to change relations.
 		_draw_entity_drag_drop_src(entity);
@@ -136,8 +140,6 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 			ImGui::TreePop();
 		}
 	}
-
-	_draw_entity_context_menu(entity);
 
 	ImGui::PopID();
 }

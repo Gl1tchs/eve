@@ -119,12 +119,19 @@ void EditorApplication::_setup_menubar() {
 
 	Menu view_menu{
 		"View",
-		{ { "Viewport",
-				  [this]() { viewport->set_active(true); } },
+		{
+				{ "Viewport",
+						[this]() { viewport->set_active(true); } },
 				{ "Hierarchy",
 						[this]() { hierarchy->set_active(true); } },
-				{ "Console", [this]() { console.set_active(true); } } }
+				{ "Inspector",
+						[this]() { inspector->set_active(true); } },
+				{ "Content Browser", [this]() { content_browser.set_active(true); } },
+				{ "Console", [this]() { console.set_active(true); } },
+				{ "Stats", [this]() { stats->set_active(true); } },
+		}
 	};
+
 	menubar.push_menu(view_menu);
 }
 
