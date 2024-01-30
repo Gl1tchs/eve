@@ -1,13 +1,13 @@
 #include "asset/asset.h"
 
-std::string deserialize_asset_type(const AssetType type) {
+std::string serialize_asset_type(const AssetType type) {
 	switch (type) {
 		case AssetType::TEXTURE:
-			return "texture";
+			return "TEXTURE";
 		case AssetType::FONT:
-			return "font";
+			return "FONT";
 		case AssetType::SCENE:
-			return "scene";
+			return "SCENE";
 		default:
 			return "";
 	}

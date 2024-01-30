@@ -2,6 +2,7 @@
 
 #include "asset/asset_registry.h"
 #include "core/json_utils.h"
+#include "project.h"
 
 inline static Ref<Project> s_active_project = nullptr;
 
@@ -129,4 +130,8 @@ void Project::save_active(const fs::path& path) {
 
 	// serialize asset registry
 	AssetRegistry::serialize(get_asset_registry_path());
+}
+
+Ref<Project> Project::get_active() {
+	return s_active_project;
 }

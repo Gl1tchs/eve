@@ -24,7 +24,7 @@ Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
 		return nullptr;
 	}
 
-	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "texture");
+	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "TEXTURE");
 
 	const std::string asset_path = json["path"].get<std::string>();
 	const fs::path asset_path_abs = Project::get_asset_path(asset_path);
@@ -50,7 +50,7 @@ Ref<Font> AssetLoader::load_font(const fs::path& path) {
 		return nullptr;
 	}
 
-	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "font");
+	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "FONT");
 
 	const std::string asset_path = json["path"].get<std::string>();
 	const fs::path asset_path_abs = Project::get_asset_path(asset_path);

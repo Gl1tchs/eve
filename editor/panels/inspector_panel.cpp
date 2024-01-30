@@ -92,14 +92,6 @@ inline static void draw_component(const std::string& name, Entity entity,
 	ImGui::PopID();
 }
 
-#define BEGIN_FIELD(name)         \
-	ImGui::TextUnformatted(name); \
-	ImGui::NextColumn();          \
-	ImGui::PushItemWidth(ImGui::GetColumnWidth(1) - 10.0f);
-
-#define END_FIELD() \
-	ImGui::PopItemWidth();
-
 InspectorPanel::InspectorPanel(Ref<HierarchyPanel> hierarchy) :
 		hierarchy(hierarchy) {}
 
@@ -142,6 +134,17 @@ void InspectorPanel::_draw() {
 	}
 
 	// draw component controls
+
+#define BEGIN_FIELD(name)                                           \
+	{                                                               \
+		const float field_width = ImGui::GetColumnWidth(1) - 10.0f; \
+		ImGui::TextUnformatted(name);                               \
+		ImGui::NextColumn();                                        \
+		ImGui::PushItemWidth(field_width);
+
+#define END_FIELD()        \
+	ImGui::PopItemWidth(); \
+	}
 
 	draw_component<TransformComponent>("Transform", selected_entity,
 			[](TransformComponent& transform) {
@@ -240,17 +243,16 @@ void InspectorPanel::_draw() {
 						ImGui::InputText("##TextureControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Texture");
 					{
 						ImGui::InputText("##TextureControl", &texture->path,
 								ImGuiInputTextFlags_ReadOnly);
+						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
+							sprite_comp.texture = 0;
+						}
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				}
 
 				if (ImGui::BeginDragDropTarget()) {
@@ -263,6 +265,8 @@ void InspectorPanel::_draw() {
 					}
 					ImGui::EndDragDropTarget();
 				}
+
+				ImGui::NextColumn();
 
 				BEGIN_FIELD("Color");
 				{
@@ -302,17 +306,16 @@ void InspectorPanel::_draw() {
 						ImGui::InputText("##FontControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Font");
 					{
 						ImGui::InputText("##FontControl", &font->path,
 								ImGuiInputTextFlags_ReadOnly);
+						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
+							text_comp.font = 0;
+						}
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				}
 
 				if (ImGui::BeginDragDropTarget()) {
@@ -325,6 +328,8 @@ void InspectorPanel::_draw() {
 					}
 					ImGui::EndDragDropTarget();
 				}
+
+				ImGui::NextColumn();
 
 				BEGIN_FIELD("Foreground Color");
 				{

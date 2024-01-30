@@ -2,6 +2,7 @@
 #define EDITOR_H
 
 #include "panels/console_panel.h"
+#include "panels/content_browser.h"
 #include "panels/hierarchy_panel.h"
 #include "panels/inspector_panel.h"
 #include "panels/stats_panel.h"
@@ -42,6 +43,7 @@ private:
 
 	// panels and widgets
 	MenuBar menubar;
+	ContentBrowserPanel content_browser;
 	ConsolePanel console;
 
 	Scope<ViewportPanel> viewport;

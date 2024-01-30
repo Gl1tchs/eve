@@ -103,6 +103,7 @@ void EditorApplication::_on_imgui_update(float dt) {
 	hierarchy->render();
 	inspector->render();
 
+	content_browser.render();
 	console.render();
 
 	DockSpace::end();

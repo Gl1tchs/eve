@@ -1,6 +1,6 @@
 {
 	"path" : "res://texture.png",
-	"type" : "texture",
+	"type" : "TEXTURE",
 	"metadata" : {
 		"min_filter" : "linear",
 		"mag_filter" : "linear",

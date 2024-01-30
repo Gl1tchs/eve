@@ -18,7 +18,7 @@ enum class AssetType : uint8_t {
 	SCENE
 };
 
-std::string deserialize_asset_type(const AssetType type);
+std::string serialize_asset_type(const AssetType type);
 
 struct Asset {
 	AssetHandle handle;

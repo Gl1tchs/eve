@@ -46,7 +46,7 @@ ImGuiLayer::ImGuiLayer(Ref<Window> window) :
 	io.Fonts->AddFontFromMemoryTTF(
 			(void*)FONT_AWESOME_TTF_DATA,
 			FONT_AWESOME_TTF_LENGTH,
-			16.0f, &font_cfg, icon_ranges);
+			12.0f, &font_cfg, icon_ranges);
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(window->get_native_window(), true);
