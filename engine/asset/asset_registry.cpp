@@ -1,12 +1,83 @@
 #include "asset/asset_registry.h"
 
 #include "asset/asset_loader.h"
-#include "asset_registry.h"
-#include "core/json_utils.h"
 #include "project/project.h"
-#include "scene/scene_manager.h"
 
-LoadedAssetRegistryMap AssetRegistry::loaded_assets = {};
+#include <FileWatch.hpp>
+
+// necessarry to not get compiler error with the EVE_LOG__ERROR();
+#undef ERROR
+
+inline static void on_file_change(const fs::path& path_rel, const filewatch::Event change_type) {
+	static fs::path s_old_path;
+
+	// skip metadata files
+	if (path_rel.extension() == ".meta") {
+		return;
+	}
+
+	const fs::path path = Project::get_asset_directory() / path_rel;
+	const std::string relative_path = Project::get_relative_asset_path(path.string());
+
+	const AssetType type = get_asset_type_from_extension(path.extension().string());
+
+	// if filename changed apply it
+	switch (change_type) {
+		case filewatch::Event::added: {
+			// if (type == AssetType::NONE) {
+			// 	break;
+			// }
+
+			// AssetRegistry::load(path.string(), type);
+			break;
+		}
+		case filewatch::Event::renamed_old: {
+			s_old_path = path;
+			break;
+		}
+		case filewatch::Event::renamed_new: {
+			AssetRegistry::on_asset_rename(s_old_path, path);
+			break;
+		}
+		case filewatch::Event::modified: {
+			break;
+		}
+		case filewatch::Event::removed: {
+			if (type == AssetType::NONE || fs::exists(path)) {
+				break;
+			}
+
+			// if the removed type is scene and the scene is still running
+			// it would stay existing as long as we dont exit
+			AssetRegistry::unload(path.string());
+
+			if (type != AssetType::SCENE) {
+				const fs::path meta_path = path.string() + ".meta";
+				if (fs::exists(meta_path)) {
+					fs::remove(meta_path);
+				}
+			}
+
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+inline static LoadedAssetRegistryMap loaded_assets = {};
+
+inline static Ref<filewatch::FileWatch<std::string>> s_watcher;
+
+void AssetRegistry::init() {
+	if (s_watcher) {
+		s_watcher.reset();
+	}
+
+	s_watcher = create_ref<filewatch::FileWatch<std::string>>(
+			Project::get_asset_directory().string(),
+			on_file_change);
+}
 
 Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
 	const auto it = loaded_assets.find(handle);
@@ -44,7 +115,7 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type) {
 	}
 
 	if (!asset) {
-		EVE_LOG_ENGINE_ERROR("Unable to load asset from: {}.", path);
+		EVE_LOG_ENGINE_ERROR("Unable to load asset from: {0}.", path_abs.string());
 		return INVALID_UID;
 	}
 

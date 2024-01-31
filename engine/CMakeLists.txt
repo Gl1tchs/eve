@@ -26,6 +26,7 @@ PRIVATE
     ${VENDOR_DIR}/glfw/include
     ${VENDOR_DIR}/imgui
     ${VENDOR_DIR}/stb
+	${VENDOR_DIR}/filewatch
 )
 
 target_link_libraries(eve

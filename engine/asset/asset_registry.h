@@ -7,7 +7,7 @@ using LoadedAssetRegistryMap = std::unordered_map<AssetHandle, Ref<Asset>>;
 
 class AssetRegistry {
 public:
-	AssetRegistry() = default;
+	static void init();
 
 	template <typename T>
 	static Ref<T> get(const AssetHandle& handle) {
@@ -37,9 +37,6 @@ public:
 	static void on_asset_rename(const fs::path& old_path, const fs::path& new_path);
 
 	static LoadedAssetRegistryMap& get_loaded_assets();
-
-private:
-	static LoadedAssetRegistryMap loaded_assets;
 };
 
 #endif

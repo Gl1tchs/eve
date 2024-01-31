@@ -86,19 +86,19 @@ private:
 			std::format(__VA_ARGS__))
 
 #define EVE_LOG_CLIENT_TRACE(...)                    \
-	Logger::log(LogSender::kClient, LogLevel::TRACE, \
+	Logger::log(LogSender::CLIENT, LogLevel::TRACE, \
 			std::format(__VA_ARGS__))
 #define EVE_LOG_CLIENT_INFO(...)                    \
-	Logger::log(LogSender::kClient, LogLevel::INFO, \
+	Logger::log(LogSender::CLIENT, LogLevel::INFO, \
 			std::format(__VA_ARGS__))
 #define EVE_LOG_CLIENT_WARNING(...)                    \
-	Logger::log(LogSender::kClient, LogLevel::WARNING, \
+	Logger::log(LogSender::CLIENT, LogLevel::WARNING, \
 			std::format(__VA_ARGS__))
 #define EVE_LOG_CLIENT_ERROR(...)                    \
-	Logger::log(LogSender::kClient, LogLevel::ERROR, \
+	Logger::log(LogSender::CLIENT, LogLevel::ERROR, \
 			std::format(__VA_ARGS__))
 #define EVE_LOG_CLIENT_FATAL(...)                    \
-	Logger::log(LogSender::kClient, LogLevel::FATAL, \
+	Logger::log(LogSender::CLIENT, LogLevel::FATAL, \
 			std::format(__VA_ARGS__))
 
 #endif

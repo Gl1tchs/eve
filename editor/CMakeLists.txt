@@ -12,7 +12,6 @@ PUBLIC
 	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
 	${VENDOR_DIR}/imgui
-	${VENDOR_DIR}/filewatch
 )
 
 target_link_libraries(editor PRIVATE

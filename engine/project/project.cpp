@@ -34,6 +34,9 @@ Project::Project(const fs::path& path, const ProjectConfig& config) :
 		path(path), config(config) {
 }
 
+Project::~Project() {
+}
+
 const std::string& Project::get_name() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
@@ -117,6 +120,8 @@ Ref<Project> Project::create(const fs::path& path) {
 
 	s_active_project = project;
 
+	AssetRegistry::init();
+
 	return project;
 }
 
@@ -128,6 +133,8 @@ Ref<Project> Project::load(const fs::path& path) {
 	}
 
 	s_active_project = create_ref<Project>(path, config);
+
+	AssetRegistry::init();
 
 	return s_active_project;
 }

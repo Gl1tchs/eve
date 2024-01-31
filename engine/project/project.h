@@ -16,6 +16,7 @@ struct ProjectConfig {
 class Project {
 public:
 	Project(const fs::path& path, const ProjectConfig& config);
+	~Project();
 
 	static const std::string& get_name();
 

@@ -8,64 +8,6 @@
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
-#include <FileWatch.hpp>
-
-inline static void on_file_change(const fs::path& path_rel, const filewatch::Event change_type) {
-	static fs::path s_old_path;
-
-	// skip metadata files
-	if (path_rel.extension() == ".meta") {
-		return;
-	}
-
-	const fs::path path = Project::get_asset_directory() / path_rel;
-	const std::string relative_path = Project::get_relative_asset_path(path.string());
-
-	const AssetType type = get_asset_type_from_extension(path.extension().string());
-
-	// if filename changed apply it
-	switch (change_type) {
-		case filewatch::Event::added: {
-			// if (type == AssetType::NONE) {
-			// 	break;
-			// }
-
-			// AssetRegistry::load(path.string(), type);
-			break;
-		}
-		case filewatch::Event::renamed_old: {
-			s_old_path = path;
-			break;
-		}
-		case filewatch::Event::renamed_new: {
-			AssetRegistry::on_asset_rename(s_old_path, path);
-			break;
-		}
-		case filewatch::Event::modified: {
-			break;
-		}
-		case filewatch::Event::removed: {
-			if (type == AssetType::NONE || fs::exists(path)) {
-				break;
-			}
-
-			// if the removed type is scene and the scene is still running
-			// it would stay existing as long as we dont exit
-			AssetRegistry::unload(path.string());
-
-			if (type != AssetType::SCENE) {
-				const fs::path meta_path = path.string() + ".meta";
-				if (fs::exists(meta_path)) {
-					fs::remove(meta_path);
-				}
-			}
-
-			break;
-		}
-		default:
-			break;
-	}
-}
 
 ContentBrowserPanel::ContentBrowserPanel() {
 	set_flags(ImGuiWindowFlags_HorizontalScrollbar);
@@ -83,9 +25,6 @@ void ContentBrowserPanel::_draw() {
 	if (asset_directory.empty()) {
 		return;
 	}
-
-	static filewatch::FileWatch<std::string>
-			watcher(asset_directory.string(), on_file_change);
 
 	if (ImGui::TreeNodeEx("res://", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen)) {
 		idx = 0;
