@@ -1,5 +1,6 @@
 {
-	"scene": "scene",
+	"uid" : 4416864070139396018,
+	"name": "scene",
 	"entities": [
 		{
 			"id": 12517815595370061652,
@@ -24,7 +25,7 @@
 			},
 			"text_renderer_component": {
 				"text": "Hello, Workbench!",
-				"font": 3218595271423152695,
+				"font": "res://workbench.ttf",
 				"fg_color": [
 					1.0,
 					1.0,
@@ -64,7 +65,7 @@
 			},
 			"text_renderer_component": {
 				"text": "Hello, Roboto!",
-				"font": 0,
+				"font": "",
 				"fg_color": [
 					1.0,
 					1.0,
@@ -103,7 +104,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,

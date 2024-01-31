@@ -10,9 +10,8 @@ Ref<Font> Font::s_default_font = nullptr;
 
 inline static uint32_t s_memory_counter = 1;
 
-inline static Ref<Texture2D> create_and_cache_atlas(const std::string& font_name, float font_size,
-		const std::vector<msdf_atlas::GlyphGeometry>& glyphs, const msdf_atlas::FontGeometry& font_geometry,
-		uint32_t width, uint32_t height) {
+inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas::GlyphGeometry>& glyphs,
+		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height) {
 	msdf_atlas::GeneratorAttributes attributes;
 	attributes.config.overlapSupport = true;
 	attributes.scanlinePass = true;
@@ -50,12 +49,12 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		uint32_t begin, end;
 	};
 
-	static const CharsetRange charset_ranges[] = {
+	static constexpr CharsetRange s_charset_ranges[] = {
 		{ 0x0020, 0x00FF }
 	};
 
 	msdf_atlas::Charset charset;
-	for (CharsetRange range : charset_ranges) {
+	for (CharsetRange range : s_charset_ranges) {
 		for (uint32_t c = range.begin; c <= range.end; c++) {
 			charset.add(c);
 		}
@@ -95,8 +94,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		glyph.edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyph_seed);
 	}
 
-	return create_and_cache_atlas(
-			name, (float)em_size, data->glyphs, data->font_geometry, width, height);
+	return create_and_cache_atlas(data->glyphs, data->font_geometry, width, height);
 }
 
 Font::Font(const fs::path& path) {

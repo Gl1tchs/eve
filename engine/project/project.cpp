@@ -10,7 +10,6 @@ void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path)
 	Json out{
 		{ "name", config.name },
 		{ "asset_directory", config.asset_directory },
-		{ "asset_registry", config.asset_registry },
 		{ "starting_scene", config.starting_scene },
 	};
 
@@ -26,8 +25,7 @@ bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 
 	config.name = json["name"].get<std::string>();
 	config.asset_directory = json["asset_directory"].get<std::string>();
-	config.asset_registry = json["asset_registry"].get<std::string>();
-	config.starting_scene = json["starting_scene"].get<AssetHandle>();
+	config.starting_scene = json["starting_scene"].get<std::string>();
 
 	return true;
 }
@@ -60,13 +58,7 @@ fs::path Project::get_asset_directory() {
 	return get_project_directory() / s_active_project->config.asset_directory;
 }
 
-fs::path Project::get_asset_registry_path() {
-	EVE_ASSERT_ENGINE(s_active_project);
-
-	return get_asset_path(s_active_project->config.asset_registry);
-}
-
-AssetHandle Project::get_starting_scene_handle() {
+std::string Project::get_starting_scene_path() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
 	return s_active_project->config.starting_scene;
@@ -137,9 +129,6 @@ Ref<Project> Project::load(const fs::path& path) {
 
 	s_active_project = create_ref<Project>(path, config);
 
-	// deserialize asset registry
-	AssetRegistry::deserialize(get_asset_registry_path());
-
 	return s_active_project;
 }
 
@@ -150,9 +139,6 @@ void Project::save_active(const fs::path& path) {
 	ProjectConfig::serialize(config, path);
 
 	s_active_project->path = path;
-
-	// serialize asset registry
-	AssetRegistry::serialize(get_asset_registry_path());
 }
 
 Ref<Project> Project::get_active() {

@@ -22,7 +22,6 @@ std::string serialize_asset_type(const AssetType type);
 
 AssetType get_asset_type_from_extension(const std::string& extension);
 
-
 struct Asset {
 	AssetHandle handle;
 	std::string path;
@@ -31,5 +30,13 @@ struct Asset {
 
 	virtual AssetType get_type() const = 0;
 };
+
+NLOHMANN_JSON_SERIALIZE_ENUM(AssetType,
+		{
+				{ AssetType::NONE, "none" },
+				{ AssetType::TEXTURE, "texture" },
+				{ AssetType::FONT, "font" },
+				{ AssetType::SCENE, "scene" },
+		});
 
 #endif

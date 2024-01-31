@@ -248,7 +248,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (AssetRegistry::exists(handle)) {
+							if (AssetRegistry::is_loaded(handle)) {
 								sprite_comp.texture = handle;
 							}
 						}
@@ -266,7 +266,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (AssetRegistry::exists(handle)) {
+								if (AssetRegistry::is_loaded(handle)) {
 									sprite_comp.texture = handle;
 								}
 							}
@@ -325,7 +325,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (AssetRegistry::exists(handle)) {
+							if (AssetRegistry::is_loaded(handle)) {
 								text_comp.font = handle;
 							}
 						}
@@ -343,7 +343,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (AssetRegistry::exists(handle)) {
+								if (AssetRegistry::is_loaded(handle)) {
 									text_comp.font = handle;
 								}
 							}

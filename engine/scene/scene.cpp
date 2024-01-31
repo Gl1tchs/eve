@@ -3,6 +3,7 @@
 #include "asset/asset_registry.h"
 #include "core/json_utils.h"
 #include "core/uid.h"
+#include "project/project.h"
 #include "renderer/font.h"
 #include "scene/components.h"
 #include "scene/entity.h"
@@ -228,8 +229,10 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<SpriteRendererComponent>()) {
 		const SpriteRendererComponent& sc = entity.get_component<SpriteRendererComponent>();
 
+		const auto texture = AssetRegistry::get<Texture2D>(sc.texture);
+
 		out["sprite_renderer_component"] = Json{
-			{ "texture", AssetRegistry::exists_as(sc.texture, AssetType::TEXTURE) ? sc.texture : INVALID_UID },
+			{ "texture", texture ? texture->path : "" },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
 		};
@@ -238,9 +241,11 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<TextRendererComponent>()) {
 		const TextRendererComponent& tc = entity.get_component<TextRendererComponent>();
 
+		const auto font = AssetRegistry::get<Font>(tc.font);
+
 		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
-			{ "font", AssetRegistry::exists_as(tc.font, AssetType::FONT) ? tc.font : INVALID_UID },
+			{ "font", font ? font->path : "" },
 			{ "fg_color", tc.fg_color },
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
@@ -253,7 +258,8 @@ static Json serialize_entity(Entity& entity) {
 
 void Scene::serialize(Ref<Scene> scene, const fs::path& path) {
 	Json scene_json;
-	scene_json["scene"] = path;
+	scene_json["uid"] = scene->handle;
+	scene_json["name"] = path;
 	scene_json["entities"] = Json::array();
 
 	scene->view<entt::entity>().each([&](auto entity_id) {
@@ -282,11 +288,9 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 		return false;
 	}
 
-	if (!data.contains("scene")) {
-		return false;
-	}
-
-	scene->name = data["scene"].get<std::string>();
+	scene->handle = data["uid"].get<AssetHandle>();
+	scene->name = data["name"].get<std::string>();
+	scene->path = Project::get_relative_asset_path(path.string());
 
 	if (!data.contains("entities")) {
 		return false;
@@ -349,9 +353,13 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 			auto& sprite_component =
 					deserialing_entity.add_component<SpriteRendererComponent>();
 
-			sprite_component.texture = sprite_comp_json["texture"].get<AssetHandle>();
-			if (!AssetRegistry::exists_as(sprite_component.texture, AssetType::TEXTURE)) {
-				sprite_component.texture = INVALID_UID;
+			const std::string texture_path = sprite_comp_json["texture"].get<std::string>();
+
+			sprite_component.texture = INVALID_UID;
+			if (fs::exists(Project::get_asset_path(texture_path))) {
+				if (AssetHandle handle = AssetRegistry::load(texture_path, AssetType::TEXTURE); handle) {
+					sprite_component.texture = handle;
+				}
 			}
 
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
@@ -364,9 +372,13 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 
 			text_component.text = text_comp_json["text"].get<std::string>();
 
-			text_component.font = text_comp_json["font"].get<AssetHandle>();
-			if (!AssetRegistry::exists_as(text_component.font, AssetType::FONT)) {
-				text_component.font = INVALID_UID;
+			const std::string font_path = text_comp_json["font"].get<std::string>();
+
+			text_component.font = INVALID_UID;
+			if (fs::exists(Project::get_asset_path(font_path))) {
+				if (AssetHandle handle = AssetRegistry::load(font_path, AssetType::FONT); handle) {
+					text_component.font = handle;
+				}
 			}
 
 			text_component.fg_color = text_comp_json["fg_color"].get<Color>();

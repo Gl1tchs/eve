@@ -6,23 +6,9 @@
 #include "project/project.h"
 #include "scene/scene_manager.h"
 
-NLOHMANN_JSON_SERIALIZE_ENUM(AssetType,
-		{
-				{ AssetType::NONE, "none" },
-				{ AssetType::TEXTURE, "texture" },
-				{ AssetType::FONT, "font" },
-				{ AssetType::SCENE, "scene" },
-		});
-
-std::unordered_map<AssetHandle, AssetImportData> AssetRegistry::assets = {};
 LoadedAssetRegistryMap AssetRegistry::loaded_assets = {};
 
 Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
-	if (!is_loaded(handle) && exists(handle)) {
-		const AssetImportData& data = assets.at(handle);
-		load(data.path, data.type, handle);
-	}
-
 	const auto it = loaded_assets.find(handle);
 	if (it == loaded_assets.end()) {
 		return nullptr;
@@ -31,24 +17,15 @@ Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
 	return it->second;
 }
 
-Ref<Asset> AssetRegistry::get(const std::string& path) {
-	const AssetHandle handle = get_handle_from_path(path);
-	if (!handle) {
-		return nullptr;
-	}
-
-	return get(handle);
-}
-
-AssetHandle AssetRegistry::subscribe(AssetImportData asset, AssetHandle handle) {
-	assets[handle] = asset;
-	return handle;
-}
-
-AssetHandle AssetRegistry::load(const std::string& path, AssetType type, AssetHandle handle) {
+AssetHandle AssetRegistry::load(const std::string& path, AssetType type) {
 	const fs::path path_abs = Project::get_asset_path(path);
 	if (!fs::exists(path_abs)) {
 		return INVALID_UID;
+	}
+
+	AssetHandle handle = get_handle_from_path(path_abs.string());
+	if (loaded_assets.find(handle) != loaded_assets.end()) {
+		return handle;
 	}
 
 	Ref<Asset> asset = nullptr;
@@ -71,12 +48,12 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type, AssetHa
 		return INVALID_UID;
 	}
 
-	asset->handle = handle;
-	asset->path = path;
+	// unload if already has that id to reload
+	unload(asset->handle);
 
 	loaded_assets[asset->handle] = asset;
 
-	return handle;
+	return asset->handle;
 }
 
 void AssetRegistry::unload(const AssetHandle& handle) {
@@ -88,128 +65,70 @@ void AssetRegistry::unload(const AssetHandle& handle) {
 	loaded_assets.erase(it);
 }
 
-void AssetRegistry::unload_all() {
-	loaded_assets.clear();
-}
-
-void AssetRegistry::remove(const AssetHandle& handle) {
-	const auto it = assets.find(handle);
-	if (it == assets.end()) {
-		return;
-	}
-
-	assets.erase(it);
+void AssetRegistry::unload(const std::string& path) {
+	AssetHandle handle = get_handle_from_path(path);
 	unload(handle);
 }
 
-void AssetRegistry::remove(const std::string& path) {
-	const AssetHandle handle = get_handle_from_path(path);
-	if (!handle) {
-		return;
-	}
-
-	remove(handle);
-}
-
-bool AssetRegistry::exists(const AssetHandle& handle) {
-	const auto it = assets.find(handle);
-	if (it == assets.end()) {
-		return false;
-	}
-
-	return fs::exists(Project::get_asset_path(it->second.path));
-}
-
-bool AssetRegistry::exists_as(const AssetHandle& handle, const AssetType type) {
-	const auto it = assets.find(handle);
-	if (it == assets.end()) {
-		return false;
-	}
-
-	if (it->second.type != type) {
-		return false;
-	}
-
-	return fs::exists(Project::get_asset_path(it->second.path));
+void AssetRegistry::unload_all() {
+	loaded_assets.clear();
 }
 
 bool AssetRegistry::is_loaded(const AssetHandle& handle) {
 	return loaded_assets.find(handle) != loaded_assets.end();
 }
 
-void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& new_path) {
-	const auto it = std::find_if(assets.begin(), assets.end(), [old_path](const auto& pair) {
-		return old_path == Project::get_asset_path(pair.second.path);
-	});
-	if (it == assets.end()) {
-		return;
+AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
+	const fs::path path_abs = Project::get_asset_path(path);
+
+	const AssetType type = get_asset_type_from_extension(path_abs.extension().string());
+
+	const fs::path asset_path = (type == AssetType::SCENE)
+			? path_abs
+			: path_abs.string() + ".meta";
+
+	Json json{};
+	if (!json_utils::read_file(asset_path, json)) {
+		return INVALID_UID;
 	}
 
+	if (!json["uid"].is_number()) {
+		return INVALID_UID;
+	}
+
+	return json["uid"].get<AssetHandle>();
+}
+
+void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& new_path) {
 	const std::string old_path_rel = Project::get_relative_asset_path(old_path.string());
 	const std::string new_path_rel = Project::get_relative_asset_path(new_path.string());
 
-	it->second.path = new_path_rel;
+	const AssetType type = get_asset_type_from_extension(new_path.extension().string());
+	if (type == AssetType::SCENE) {
+		return;
+	}
 
-	if (is_loaded(it->first)) {
-		Ref<Asset> asset = loaded_assets.at(it->first);
+	const fs::path asset_path_old = old_path.string() + ".meta";
+	const fs::path asset_path_new = new_path.string() + ".meta";
+
+	fs::rename(asset_path_old, asset_path_new);
+
+	Json json{};
+	if (!json_utils::read_file(asset_path_new, json)) {
+		return;
+	}
+
+	AssetHandle handle = json["uid"].get<AssetHandle>();
+	if (is_loaded(handle)) {
+		Ref<Asset> asset = loaded_assets.at(handle);
 		asset->path = new_path_rel;
 	}
-}
 
-AssetRegistryMap& AssetRegistry::get_assets() {
-	return assets;
+	json["path"] = Project::get_relative_asset_path(new_path.string());
+
+	json_utils::write_file(asset_path_new, json);
 }
 
 LoadedAssetRegistryMap& AssetRegistry::get_loaded_assets() {
 	return loaded_assets;
-}
-
-void AssetRegistry::serialize(const fs::path& path) {
-	Json out = Json::array();
-
-	for (const auto& [handle, asset] : assets) {
-		out.push_back(Json{
-				{ "handle", handle.value },
-				{ "path", asset.path },
-				{ "type", asset.type } });
-	}
-
-	json_utils::write_file(path, out);
-}
-
-bool AssetRegistry::deserialize(const fs::path& path) {
-	assets.clear();
-	loaded_assets.clear();
-
-	Json json{};
-	if (!json_utils::read_file(path, json)) {
-		EVE_LOG_ENGINE_ERROR("Unable to deserialize asset registry to {}", path.string());
-		return false;
-	}
-
-	for (const auto& asset_json : json) {
-		const std::string path = asset_json["path"].get<std::string>();
-		if (!fs::exists(Project::get_asset_path(path))) {
-			continue;
-		}
-
-		const AssetHandle handle = asset_json["handle"].get<uint64_t>();
-		const AssetType type = asset_json["type"].get<AssetType>();
-
-		assets[handle] = { path, type };
-	}
-
-	return true;
-}
-
-AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
-	const auto it = std::find_if(assets.begin(), assets.end(), [path](const auto& pair) {
-		return path == pair.second.path;
-	});
-
-	if (it == assets.end()) {
-		return INVALID_UID;
-	}
-
-	return it->first;
 }

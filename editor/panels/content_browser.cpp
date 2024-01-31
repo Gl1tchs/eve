@@ -13,6 +13,11 @@
 inline static void on_file_change(const fs::path& path_rel, const filewatch::Event change_type) {
 	static fs::path s_old_path;
 
+	// skip metadata files
+	if (path_rel.extension() == ".meta") {
+		return;
+	}
+
 	const fs::path path = Project::get_asset_directory() / path_rel;
 	const std::string relative_path = Project::get_relative_asset_path(path.string());
 
@@ -21,14 +26,11 @@ inline static void on_file_change(const fs::path& path_rel, const filewatch::Eve
 	// if filename changed apply it
 	switch (change_type) {
 		case filewatch::Event::added: {
-			if (type == AssetType::NONE) {
-				break;
-			}
+			// if (type == AssetType::NONE) {
+			// 	break;
+			// }
 
-			AssetImportData import_data;
-			import_data.path = relative_path;
-			import_data.type = type;
-			AssetRegistry::subscribe(import_data);
+			// AssetRegistry::load(path.string(), type);
 			break;
 		}
 		case filewatch::Event::renamed_old: {
@@ -49,7 +51,14 @@ inline static void on_file_change(const fs::path& path_rel, const filewatch::Eve
 
 			// if the removed type is scene and the scene is still running
 			// it would stay existing as long as we dont exit
-			AssetRegistry::remove(relative_path);
+			AssetRegistry::unload(path.string());
+
+			if (type != AssetType::SCENE) {
+				const fs::path meta_path = path.string() + ".meta";
+				if (fs::exists(meta_path)) {
+					fs::remove(meta_path);
+				}
+			}
 
 			break;
 		}
@@ -69,8 +78,6 @@ void ContentBrowserPanel::_draw() {
 	if (!Project::get_active()) {
 		return;
 	}
-
-	_refresh_asset_tree();
 
 	const fs::path asset_directory = Project::get_asset_directory();
 	if (asset_directory.empty()) {
@@ -105,6 +112,12 @@ void ContentBrowserPanel::_draw() {
 }
 
 void ContentBrowserPanel::_draw_file(const fs::path& path) {
+	// hide .meta files
+	// TODO make this a filter and make user define other filters
+	if (path.extension() == ".meta") {
+		return;
+	}
+
 	const std::string filename = path.filename().string();
 
 	ImGui::PushID(idx);
@@ -112,14 +125,13 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 	const bool is_selected = selected_idx == idx;
 	const bool is_renaming = renaming_idx == idx;
 
+	// is file an asset or not
 	if (!fs::is_directory(path)) {
-		// is file an asset or not
-		const auto it = asset_paths.find(path);
-		const bool is_asset =
-				it != asset_paths.end();
+		const AssetHandle handle = AssetRegistry::get_handle_from_path(path.string());
+		const bool is_loaded = handle && AssetRegistry::is_loaded(handle);
 
-		const std::string label = std::format("{}  {}", is_asset ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O, filename);
 		if (!is_renaming) {
+			const std::string label = std::format("{1}  {0}", filename, (is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
 			if (ImGui::Selectable(label.c_str(), is_selected)) {
 				selected_idx = is_selected ? -1 : idx;
 			}
@@ -129,17 +141,17 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 			_draw_rename_file_dialog(path);
 		}
 
-		if (is_asset) {
+		if (is_loaded) {
 			if (ImGui::BeginDragDropSource()) {
-				const AssetData& data = it->second;
+				const AssetType type = get_asset_type_from_extension(path.extension().string());
 
 				const std::string payload_name =
-						"DND_PAYLOAD_" + serialize_asset_type(data.type);
+						"DND_PAYLOAD_" + serialize_asset_type(type);
 
-				ImGui::SetDragDropPayload(payload_name.c_str(), &data.handle,
+				ImGui::SetDragDropPayload(payload_name.c_str(), &handle,
 						sizeof(AssetHandle));
 
-				ImGui::SetTooltip("%s", serialize_asset_type(data.type));
+				ImGui::SetTooltip("%s", serialize_asset_type(type));
 
 				ImGui::EndDragDropSource();
 			}
@@ -173,19 +185,6 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 	idx++;
 }
 
-void ContentBrowserPanel::_refresh_asset_tree() {
-	asset_paths.clear();
-
-	// TODO optimize this
-	const AssetRegistryMap& asset_registry = AssetRegistry::get_assets();
-	for (const auto& [handle, asset] : asset_registry) {
-		asset_paths[Project::get_asset_path(asset.path)] = {
-			AssetRegistry::get_handle_from_path(asset.path),
-			asset.type
-		};
-	}
-}
-
 void ContentBrowserPanel::_draw_rename_file_dialog(const fs::path& path) {
 	// focus keyboard here
 	if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
@@ -212,12 +211,17 @@ void ContentBrowserPanel::_draw_rename_file_dialog(const fs::path& path) {
 void ContentBrowserPanel::_draw_popup_context(const fs::path& path) {
 	if (ImGui::BeginPopupContextItem()) {
 		// import if not asset
-		if (!_is_asset(path) && ImGui::MenuItem("Import")) {
-			AssetImportData import_data;
-			import_data.path = Project::get_relative_asset_path(path.string());
-			import_data.type = get_asset_type_from_extension(path.extension().string());
+		const AssetType type = get_asset_type_from_extension(path.extension().string());
 
-			AssetRegistry::subscribe(import_data);
+		if (type != AssetType::NONE && ImGui::MenuItem("Load")) {
+			AssetRegistry::load(
+					Project::get_relative_asset_path(path.string()),
+					type);
+		}
+
+		if (const AssetHandle handle = AssetRegistry::get_handle_from_path(path.string());
+				AssetRegistry::is_loaded(handle) && ImGui::MenuItem("Unload")) {
+			AssetRegistry::unload(handle);
 		}
 
 		if (ImGui::MenuItem("Rename")) {
@@ -232,6 +236,6 @@ void ContentBrowserPanel::_draw_popup_context(const fs::path& path) {
 	}
 }
 
-bool ContentBrowserPanel::_is_asset(const fs::path& path) const {
-	return asset_paths.find(path) != asset_paths.end();
+bool ContentBrowserPanel::_is_asset_file(const fs::path& path) {
+	return get_asset_type_from_extension(path.extension().string()) != AssetType::NONE;
 }

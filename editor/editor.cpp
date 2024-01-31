@@ -49,13 +49,13 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 
 void EditorApplication::_on_start() {
 	Project::load("sample/sample.eve");
-	SceneManager::set_active(Project::get_starting_scene_handle());
+	SceneManager::load_scene(Project::get_starting_scene_path());
 }
 
 void EditorApplication::_on_update(float dt) {
 	static bool pressed = false;
 	if (!pressed && Input::is_key_pressed(KeyCode::SPACE)) {
-		SceneManager::set_active(2173008177704578963);
+		SceneManager::load_scene("res://scene2.escn");
 		pressed = true;
 	}
 

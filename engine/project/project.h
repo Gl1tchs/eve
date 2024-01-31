@@ -6,8 +6,7 @@
 struct ProjectConfig {
 	std::string name;
 	fs::path asset_directory;
-	std::string asset_registry;
-	AssetHandle starting_scene;
+	std::string starting_scene;
 
 	static void serialize(const ProjectConfig& config, const fs::path& path);
 
@@ -26,9 +25,7 @@ public:
 
 	static fs::path get_asset_directory();
 
-	static fs::path get_asset_registry_path();
-
-	static AssetHandle get_starting_scene_handle();
+	static std::string get_starting_scene_path();
 
 	static fs::path get_asset_path(std::string asset);
 

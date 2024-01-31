@@ -117,10 +117,7 @@ void Renderer::end_pass() {
 }
 
 void Renderer::draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id) {
-	Ref<Texture2D> texture = nullptr;
-	if (AssetRegistry::exists_as(sprite.texture, AssetType::TEXTURE)) {
-		texture = AssetRegistry::get<Texture2D>(sprite.texture);
-	}
+	Ref<Texture2D> texture = AssetRegistry::get<Texture2D>(sprite.texture);
 
 	draw_quad(
 			transform,
@@ -173,11 +170,7 @@ void Renderer::draw_quad(const TransformComponent& transform,
 void Renderer::draw_string(const TextRendererComponent& text_comp,
 		const TransformComponent& transform,
 		uint32_t entity_id) {
-	Ref<Font> font = nullptr;
-	if (AssetRegistry::exists_as(text_comp.font, AssetType::FONT)) {
-		font = AssetRegistry::get<Font>(text_comp.font);
-	}
-
+	Ref<Font> font = AssetRegistry::get<Font>(text_comp.font);
 	if (!font) {
 		font = Font::get_default();
 	}

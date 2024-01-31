@@ -1,5 +1,6 @@
 {
-	"scene": "scene2",
+	"uid": 2173008177704578963,
+	"name": "scene2",
 	"entities": [
 		{
 			"id": 18111309655060901945,
@@ -24,7 +25,7 @@
 			},
 			"text_renderer_component": {
 				"text": "lorem ipsum\ndolor sit amet",
-				"font": 0,
+				"font": "",
 				"fg_color": [
 					0.0,
 					1.0,
@@ -63,7 +64,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 1,
 				"color": [
 					1.0,
@@ -99,7 +100,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 1,
 				"color": [
 					1.0,
@@ -135,7 +136,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -171,7 +172,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -207,7 +208,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -243,7 +244,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -279,7 +280,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -315,7 +316,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -351,7 +352,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -387,7 +388,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -423,7 +424,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -459,7 +460,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -495,7 +496,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -531,7 +532,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -567,7 +568,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -603,7 +604,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -639,7 +640,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -675,7 +676,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -711,7 +712,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -747,7 +748,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -783,7 +784,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -819,7 +820,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -855,7 +856,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					1.0,
@@ -891,7 +892,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -927,7 +928,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -963,7 +964,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -999,7 +1000,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1035,7 +1036,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1071,7 +1072,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1107,7 +1108,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1143,7 +1144,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1179,7 +1180,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1215,7 +1216,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1251,7 +1252,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1287,7 +1288,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1323,7 +1324,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1359,7 +1360,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1395,7 +1396,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1431,7 +1432,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1467,7 +1468,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1503,7 +1504,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1539,7 +1540,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1575,7 +1576,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1611,7 +1612,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9523809552192688,
@@ -1647,7 +1648,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1683,7 +1684,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1719,7 +1720,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1755,7 +1756,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1791,7 +1792,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1827,7 +1828,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1863,7 +1864,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1899,7 +1900,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1935,7 +1936,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -1971,7 +1972,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2007,7 +2008,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2043,7 +2044,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2079,7 +2080,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2115,7 +2116,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2151,7 +2152,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2187,7 +2188,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2223,7 +2224,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2259,7 +2260,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2295,7 +2296,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2331,7 +2332,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2367,7 +2368,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.9047619104385376,
@@ -2403,7 +2404,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2439,7 +2440,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2475,7 +2476,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2511,7 +2512,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2547,7 +2548,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2583,7 +2584,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2619,7 +2620,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2655,7 +2656,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2691,7 +2692,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2727,7 +2728,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2763,7 +2764,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2799,7 +2800,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2835,7 +2836,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2871,7 +2872,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2907,7 +2908,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2943,7 +2944,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -2979,7 +2980,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -3015,7 +3016,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -3051,7 +3052,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -3087,7 +3088,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -3123,7 +3124,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8571428656578064,
@@ -3159,7 +3160,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3195,7 +3196,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3231,7 +3232,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3267,7 +3268,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3303,7 +3304,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3339,7 +3340,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3375,7 +3376,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3411,7 +3412,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3447,7 +3448,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3483,7 +3484,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3519,7 +3520,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3555,7 +3556,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3591,7 +3592,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3627,7 +3628,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3663,7 +3664,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3699,7 +3700,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3735,7 +3736,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3771,7 +3772,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3807,7 +3808,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3843,7 +3844,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3879,7 +3880,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.8095238208770752,
@@ -3915,7 +3916,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -3951,7 +3952,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -3987,7 +3988,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4023,7 +4024,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4059,7 +4060,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4095,7 +4096,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4131,7 +4132,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4167,7 +4168,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4203,7 +4204,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4239,7 +4240,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4275,7 +4276,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4311,7 +4312,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4347,7 +4348,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4383,7 +4384,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4419,7 +4420,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4455,7 +4456,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4491,7 +4492,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4527,7 +4528,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4563,7 +4564,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4599,7 +4600,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4635,7 +4636,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.761904776096344,
@@ -4671,7 +4672,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4707,7 +4708,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4743,7 +4744,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4779,7 +4780,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4815,7 +4816,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4851,7 +4852,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4887,7 +4888,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4923,7 +4924,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4959,7 +4960,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -4995,7 +4996,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5031,7 +5032,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5067,7 +5068,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5103,7 +5104,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5139,7 +5140,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5175,7 +5176,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5211,7 +5212,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5247,7 +5248,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5283,7 +5284,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5319,7 +5320,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5355,7 +5356,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5391,7 +5392,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.7142857313156128,
@@ -5427,7 +5428,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5463,7 +5464,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5499,7 +5500,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5535,7 +5536,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5571,7 +5572,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5607,7 +5608,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5643,7 +5644,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5679,7 +5680,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5715,7 +5716,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5751,7 +5752,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5787,7 +5788,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5823,7 +5824,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5859,7 +5860,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5895,7 +5896,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5931,7 +5932,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -5967,7 +5968,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6003,7 +6004,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6039,7 +6040,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6075,7 +6076,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6111,7 +6112,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6147,7 +6148,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6666666865348816,
@@ -6183,7 +6184,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6219,7 +6220,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6255,7 +6256,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6291,7 +6292,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6327,7 +6328,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6363,7 +6364,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6399,7 +6400,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6435,7 +6436,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6471,7 +6472,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6507,7 +6508,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6543,7 +6544,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6579,7 +6580,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6615,7 +6616,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6651,7 +6652,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6687,7 +6688,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6723,7 +6724,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6759,7 +6760,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6795,7 +6796,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6831,7 +6832,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6867,7 +6868,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6903,7 +6904,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.6190476417541504,
@@ -6939,7 +6940,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -6975,7 +6976,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7011,7 +7012,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7047,7 +7048,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7083,7 +7084,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7119,7 +7120,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7155,7 +7156,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7191,7 +7192,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7227,7 +7228,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7263,7 +7264,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7299,7 +7300,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7335,7 +7336,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7371,7 +7372,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7407,7 +7408,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7443,7 +7444,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7479,7 +7480,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7515,7 +7516,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7551,7 +7552,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7587,7 +7588,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7623,7 +7624,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7659,7 +7660,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.5714285969734192,
@@ -7695,7 +7696,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7731,7 +7732,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7767,7 +7768,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7803,7 +7804,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7839,7 +7840,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7875,7 +7876,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7911,7 +7912,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7947,7 +7948,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -7983,7 +7984,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8019,7 +8020,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8055,7 +8056,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8091,7 +8092,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8127,7 +8128,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8163,7 +8164,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8199,7 +8200,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8235,7 +8236,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8271,7 +8272,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8307,7 +8308,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8343,7 +8344,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8379,7 +8380,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8415,7 +8416,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.523809552192688,
@@ -8451,7 +8452,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8487,7 +8488,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8523,7 +8524,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8559,7 +8560,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8595,7 +8596,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8631,7 +8632,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8667,7 +8668,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8703,7 +8704,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8739,7 +8740,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8775,7 +8776,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8811,7 +8812,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8847,7 +8848,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8883,7 +8884,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8919,7 +8920,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8955,7 +8956,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -8991,7 +8992,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9027,7 +9028,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9063,7 +9064,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9099,7 +9100,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9135,7 +9136,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9171,7 +9172,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4761904776096344,
@@ -9207,7 +9208,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9243,7 +9244,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9279,7 +9280,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9315,7 +9316,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9351,7 +9352,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9387,7 +9388,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9423,7 +9424,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9459,7 +9460,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9495,7 +9496,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9531,7 +9532,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9567,7 +9568,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9603,7 +9604,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9639,7 +9640,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9675,7 +9676,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9711,7 +9712,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9747,7 +9748,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9783,7 +9784,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9819,7 +9820,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9855,7 +9856,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9891,7 +9892,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9927,7 +9928,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.4285714328289032,
@@ -9963,7 +9964,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -9999,7 +10000,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10035,7 +10036,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10071,7 +10072,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10107,7 +10108,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10143,7 +10144,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10179,7 +10180,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10215,7 +10216,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10251,7 +10252,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10287,7 +10288,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10323,7 +10324,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10359,7 +10360,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10395,7 +10396,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10431,7 +10432,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10467,7 +10468,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10503,7 +10504,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10539,7 +10540,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10575,7 +10576,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10611,7 +10612,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10647,7 +10648,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10683,7 +10684,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.380952388048172,
@@ -10719,7 +10720,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10755,7 +10756,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10791,7 +10792,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10827,7 +10828,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10863,7 +10864,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10899,7 +10900,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10935,7 +10936,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -10971,7 +10972,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11007,7 +11008,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11043,7 +11044,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11079,7 +11080,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11115,7 +11116,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11151,7 +11152,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11187,7 +11188,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11223,7 +11224,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11259,7 +11260,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11295,7 +11296,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11331,7 +11332,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11367,7 +11368,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11403,7 +11404,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11439,7 +11440,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.3333333432674408,
@@ -11475,7 +11476,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11511,7 +11512,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11547,7 +11548,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11583,7 +11584,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11619,7 +11620,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11655,7 +11656,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11691,7 +11692,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11727,7 +11728,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11763,7 +11764,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11799,7 +11800,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11835,7 +11836,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11871,7 +11872,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11907,7 +11908,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11943,7 +11944,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -11979,7 +11980,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12015,7 +12016,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12051,7 +12052,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12087,7 +12088,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12123,7 +12124,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12159,7 +12160,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12195,7 +12196,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2857142984867096,
@@ -12231,7 +12232,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12267,7 +12268,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12303,7 +12304,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12339,7 +12340,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12375,7 +12376,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12411,7 +12412,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12447,7 +12448,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12483,7 +12484,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12519,7 +12520,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12555,7 +12556,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12591,7 +12592,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12627,7 +12628,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12663,7 +12664,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12699,7 +12700,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12735,7 +12736,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12771,7 +12772,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12807,7 +12808,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12843,7 +12844,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12879,7 +12880,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12915,7 +12916,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12951,7 +12952,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.2380952388048172,
@@ -12987,7 +12988,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13023,7 +13024,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13059,7 +13060,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13095,7 +13096,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13131,7 +13132,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13167,7 +13168,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13203,7 +13204,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13239,7 +13240,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13275,7 +13276,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13311,7 +13312,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13347,7 +13348,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13383,7 +13384,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13419,7 +13420,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13455,7 +13456,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13491,7 +13492,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13527,7 +13528,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13563,7 +13564,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13599,7 +13600,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13635,7 +13636,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13671,7 +13672,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13707,7 +13708,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.190476194024086,
@@ -13743,7 +13744,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13779,7 +13780,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13815,7 +13816,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13851,7 +13852,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13887,7 +13888,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13923,7 +13924,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13959,7 +13960,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -13995,7 +13996,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14031,7 +14032,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14067,7 +14068,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14103,7 +14104,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14139,7 +14140,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14175,7 +14176,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14211,7 +14212,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14247,7 +14248,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14283,7 +14284,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14319,7 +14320,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14355,7 +14356,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14391,7 +14392,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14427,7 +14428,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14463,7 +14464,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.1428571492433548,
@@ -14499,7 +14500,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14535,7 +14536,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14571,7 +14572,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14607,7 +14608,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14643,7 +14644,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14679,7 +14680,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14715,7 +14716,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14751,7 +14752,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14787,7 +14788,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14823,7 +14824,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14859,7 +14860,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14895,7 +14896,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14931,7 +14932,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -14967,7 +14968,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15003,7 +15004,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15039,7 +15040,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15075,7 +15076,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15111,7 +15112,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15147,7 +15148,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15183,7 +15184,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15219,7 +15220,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.095238097012043,
@@ -15255,7 +15256,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15291,7 +15292,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15327,7 +15328,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15363,7 +15364,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15399,7 +15400,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15435,7 +15436,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15471,7 +15472,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15507,7 +15508,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15543,7 +15544,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15579,7 +15580,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15615,7 +15616,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15651,7 +15652,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15687,7 +15688,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15723,7 +15724,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15759,7 +15760,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15795,7 +15796,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15831,7 +15832,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15867,7 +15868,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15903,7 +15904,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15939,7 +15940,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,
@@ -15975,7 +15976,7 @@
 				]
 			},
 			"sprite_renderer_component": {
-				"texture": 14893956255418369223,
+				"texture": "res://texture.png",
 				"z_index": 0,
 				"color": [
 					0.0476190485060215,

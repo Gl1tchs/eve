@@ -6,8 +6,9 @@
 
 class SceneManager {
 public:
-	// FIXME
-	//	Make an async version
+	static void load_scene(const std::string& path);
+
+	// TODO	Make an async version
 	static void set_active(AssetHandle handle);
 	static Ref<Scene> get_active();
 
