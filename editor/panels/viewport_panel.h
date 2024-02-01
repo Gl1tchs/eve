@@ -10,16 +10,18 @@ class ViewportPanel : public Panel {
 	EVE_IMPL_PANEL("Viewport")
 
 public:
-	ViewportPanel(Ref<FrameBuffer> frame_buffer);
+	ViewportPanel();
 
-	glm::vec2 get_min_bounds();
-	glm::vec2 get_max_bounds();
+	void set_render_texture_id(uint32_t renderer_id);
+
+	const glm::vec2& get_min_bounds() const;
+	const glm::vec2& get_max_bounds() const;
 
 protected:
 	void _draw() override;
 
 private:
-	Ref<FrameBuffer> frame_buffer;
+	uint32_t texture_id = 0;
 
 	glm::vec2 viewport_min_bounds{};
 	glm::vec2 viewport_max_bounds{};

@@ -27,6 +27,8 @@ struct RendererAPI {
 	static void set_clear_color(const Color& color);
 	static void clear(uint16_t bits = BUFFER_BITS_COLOR);
 
+	static void set_depth_testing(bool enable);
+
 	static void draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count);
 	static void draw_indexed(const Ref<VertexArray>& vertex_array,
 			uint32_t index_count = 0);
@@ -43,6 +45,8 @@ struct RendererAPI {
 	static void set_depth_func(DepthFunc func = DepthFunc::LESS);
 
 	static void set_active_texture(uint8_t index = 0);
+
+	static void bind_texture(uint32_t renderer_id);
 };
 
 #endif

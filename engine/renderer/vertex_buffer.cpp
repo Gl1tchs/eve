@@ -121,6 +121,6 @@ const BufferLayout& VertexBuffer::get_layout() {
 	return layout;
 }
 
-void VertexBuffer::set_layout(const BufferLayout& r_layout) {
-	layout = r_layout;
+void VertexBuffer::set_layout(const BufferLayout& _layout) {
+	layout = _layout;
 }

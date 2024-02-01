@@ -84,7 +84,7 @@ void SceneRenderer::_render_scene(const CameraData& data) {
 		scene->view<TransformComponent, TextRendererComponent>().each(
 				[this](entt::entity entity_id, const TransformComponent& transform,
 						const TextRendererComponent& text_component) {
-					renderer->draw_string(text_component, transform, (uint32_t)entity_id);
+					renderer->draw_text(text_component, transform, (uint32_t)entity_id);
 				});
 	}
 	renderer->end_pass();

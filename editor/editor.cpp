@@ -38,7 +38,9 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 	fb_info.height = 768;
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 
-	viewport = create_scope<ViewportPanel>(frame_buffer);
+	post_processor = create_ref<PostProcessor>();
+
+	viewport = create_scope<ViewportPanel>();
 	stats = create_scope<StatsPanel>(renderer);
 
 	hierarchy = create_ref<HierarchyPanel>();
@@ -70,6 +72,9 @@ void EditorApplication::_on_update(float dt) {
 	renderer->reset_stats();
 
 	frame_buffer->bind();
+
+	RendererAPI::set_depth_testing(true);
+
 	RendererAPI::set_clear_color(COLOR_GRAY);
 	RendererAPI::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
 
@@ -82,6 +87,8 @@ void EditorApplication::_on_update(float dt) {
 	_handle_entity_selection();
 
 	frame_buffer->unbind();
+
+	post_processor->process(post_process_effects, frame_buffer);
 }
 
 void EditorApplication::_on_imgui_update(float dt) {
@@ -94,7 +101,173 @@ void EditorApplication::_on_imgui_update(float dt) {
 		return;
 	}
 
+	//! TODO move this to its own panel and add serialization
+	ImGui::Begin("Post Processing");
+
+	ImGui::Columns(2, nullptr, false);
+
+	PostProcessorSettings& settings = post_processor->get_settings();
+
+	{
+		ImGui::SeparatorText("Gray Scale");
+
+		ImGui::NextColumn();
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Enabled");
+		ImGui::NextColumn();
+
+		static bool is_gray_scale = false;
+		if (ImGui::Checkbox("##GrayScaleEnabled", &is_gray_scale)) {
+			if (is_gray_scale) {
+				post_process_effects |= POST_PROCESSING_EFFECT_GRAY_SCALE;
+			} else {
+				post_process_effects ^= POST_PROCESSING_EFFECT_GRAY_SCALE;
+			}
+		}
+
+		ImGui::NextColumn();
+	}
+
+	{
+		ImGui::SeparatorText("Chromatic Aberration");
+
+		ImGui::NextColumn();
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Enabled");
+		ImGui::NextColumn();
+
+		static bool is_chromatic_aberration = false;
+		if (ImGui::Checkbox("##ChromaticAberrationEnabled", &is_chromatic_aberration)) {
+			if (is_chromatic_aberration) {
+				post_process_effects |= POST_PROCESSING_EFFECT_CHROMATIC_ABERRATION;
+			} else {
+				post_process_effects ^= POST_PROCESSING_EFFECT_CHROMATIC_ABERRATION;
+			}
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Offset");
+		ImGui::NextColumn();
+		ImGui::DragFloat3("##Offset", &settings.chromatic_aberration.red_offset, 0.001f, -1.0f, 1.0f);
+
+		ImGui::NextColumn();
+	}
+
+	{
+		ImGui::SeparatorText("Blur");
+
+		ImGui::NextColumn();
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Enabled");
+		ImGui::NextColumn();
+
+		static bool is_blur = false;
+		if (ImGui::Checkbox("##BlurEnabled", &is_blur)) {
+			if (is_blur) {
+				post_process_effects |= POST_PROCESSING_EFFECT_BLUR;
+			} else {
+				post_process_effects ^= POST_PROCESSING_EFFECT_BLUR;
+			}
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Size");
+		ImGui::NextColumn();
+		ImGui::DragScalar("##Size", ImGuiDataType_U32, &settings.blur.size);
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Seperation");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Seperation",
+				&settings.blur.seperation, 0.1f, 1.0f, std::numeric_limits<float>::max());
+
+		ImGui::NextColumn();
+	}
+
+	{
+		ImGui::SeparatorText("Sharpen");
+
+		ImGui::NextColumn();
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Enabled");
+		ImGui::NextColumn();
+
+		static bool is_sharpen = false;
+		if (ImGui::Checkbox("##SharpenEnabled", &is_sharpen)) {
+			if (is_sharpen) {
+				post_process_effects |= POST_PROCESSING_EFFECT_SHARPEN;
+			} else {
+				post_process_effects ^= POST_PROCESSING_EFFECT_SHARPEN;
+			}
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Amount");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Amount", &settings.sharpen.amount, 0.01f);
+
+		ImGui::NextColumn();
+	}
+
+	{
+		ImGui::SeparatorText("Vignette");
+
+		ImGui::NextColumn();
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Enabled");
+		ImGui::NextColumn();
+
+		static bool is_vignette = false;
+		if (ImGui::Checkbox("##VignetteEnabled", &is_vignette)) {
+			if (is_vignette) {
+				post_process_effects |= POST_PROCESSING_EFFECT_VIGNETTE;
+			} else {
+				post_process_effects ^= POST_PROCESSING_EFFECT_VIGNETTE;
+			}
+		}
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Inner");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Inner", &settings.vignette.inner, 0.01f);
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Outer");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Outer", &settings.vignette.outer, 0.01f);
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Strengh");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Strengh", &settings.vignette.strength, 0.01f);
+
+		ImGui::NextColumn();
+
+		ImGui::TextUnformatted("Curvature");
+		ImGui::NextColumn();
+		ImGui::DragFloat("##Curvature", &settings.vignette.curvature, 0.01f);
+
+		ImGui::NextColumn();
+	}
+
+	ImGui::Columns();
+
+	ImGui::End();
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+	viewport->set_render_texture_id(post_processor->get_frame_buffer_renderer_id());
 	viewport->render();
 	ImGui::PopStyleVar();
 

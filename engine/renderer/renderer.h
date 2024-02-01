@@ -3,17 +3,19 @@
 
 #include "core/buffer.h"
 #include "core/color.h"
-#include "renderer/camera.h"
-#include "renderer/font.h"
 #include "renderer/primitives/line.h"
 #include "renderer/primitives/quad.h"
 #include "renderer/primitives/text.h"
 #include "renderer/shader.h"
-#include "renderer/texture.h"
 #include "renderer/uniform_buffer.h"
 #include "renderer/vertex_array.h"
-#include "scene/components.h"
 #include "scene/transform.h"
+
+class CameraData;
+class SpriteRendererComponent;
+class TextRendererComponent;
+class Font;
+class Texture2D;
 
 constexpr uint64_t MAX_TEXTURE_COUNT = 32;
 
@@ -44,23 +46,26 @@ public:
 			Ref<Texture2D> texture, const Color& color,
 			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
 
-	void draw_string(const TextRendererComponent& text_comp,
+	void draw_text(const TextRendererComponent& text_comp,
 			const TransformComponent& transform,
 			uint32_t entity_id = -1);
 
-	void draw_string(const std::string& text, const TransformComponent& transform,
+	void draw_text(const std::string& text, const TransformComponent& transform,
 			const Color& fg_color,
 			const Color& bg_color,
 			float kerning, float line_spacing, uint32_t entity_id = -1);
 
-	// FIXME
-	//  If camera zooms out characters are breaking down.
-	void draw_string(const std::string& text, Ref<Font> font,
+	// TODO If camera zooms out characters are breaking down.
+	void draw_text(const std::string& text, Ref<Font> font,
 			const TransformComponent& transform, const Color& fg_color,
 			const Color& bg_color,
 			float kerning, float line_spacing, uint32_t entity_id = -1);
 
+	void draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color = COLOR_WHITE);
+
 	void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color = COLOR_WHITE);
+
+	void draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color = COLOR_WHITE);
 
 	const RendererStats& get_stats() const;
 

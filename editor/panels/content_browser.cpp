@@ -61,8 +61,8 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 
 	ImGui::PushID(idx);
 
-	const bool is_selected = selected_idx == idx;
-	const bool is_renaming = renaming_idx == idx;
+	const bool is_selected = (selected_idx == idx);
+	const bool is_renaming = (renaming_idx == idx);
 
 	// is file an asset or not
 	if (!fs::is_directory(path)) {

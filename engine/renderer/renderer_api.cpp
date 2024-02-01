@@ -1,5 +1,6 @@
 #include "renderer/renderer_api.h"
 
+#include "renderer_api.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -14,7 +15,7 @@ void RendererAPI::init() {
 	int32_t status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	EVE_ASSERT_ENGINE(status, "Failed to initialize Glad!");
 
-#ifdef _DEBUG
+#ifdef EVE_DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(opengl_message_callback, nullptr);
 #endif
@@ -49,6 +50,14 @@ void RendererAPI::clear(uint16_t bits) {
 	}
 
 	glClear(flags);
+}
+
+void RendererAPI::set_depth_testing(bool enable) {
+	if (enable) {
+		glEnable(GL_DEPTH_TEST);
+	} else {
+		glDisable(GL_DEPTH_TEST);
+	}
 }
 
 void RendererAPI::draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
@@ -114,6 +123,10 @@ void RendererAPI::set_depth_func(DepthFunc func) {
 
 void RendererAPI::set_active_texture(uint8_t index) {
 	glActiveTexture(GL_TEXTURE0 + index);
+}
+
+void RendererAPI::bind_texture(uint32_t renderer_id) {
+	glBindTexture(GL_TEXTURE_2D, renderer_id);
 }
 
 void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,

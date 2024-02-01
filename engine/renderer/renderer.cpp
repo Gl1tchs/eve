@@ -1,13 +1,12 @@
 #include "renderer/renderer.h"
 
 #include "asset/asset_registry.h"
-#include "core/color.h"
-#include "renderer.h"
-#include "renderer/primitives/line.h"
-#include "renderer/primitives/quad.h"
-#include "renderer/primitives/text.h"
+#include "renderer/camera.h"
+#include "renderer/font.h"
 #include "renderer/renderer_api.h"
+#include "renderer/texture.h"
 #include "renderer/vertex_buffer.h"
+#include "scene/components.h"
 
 Renderer::Renderer() {
 	RendererAPI::init();
@@ -167,7 +166,7 @@ void Renderer::draw_quad(const TransformComponent& transform,
 	stats.index_count += QUAD_INDEX_COUNT;
 }
 
-void Renderer::draw_string(const TextRendererComponent& text_comp,
+void Renderer::draw_text(const TextRendererComponent& text_comp,
 		const TransformComponent& transform,
 		uint32_t entity_id) {
 	Ref<Font> font = AssetRegistry::get<Font>(text_comp.font);
@@ -175,20 +174,20 @@ void Renderer::draw_string(const TextRendererComponent& text_comp,
 		font = Font::get_default();
 	}
 
-	draw_string(text_comp.text, font ? font : Font::get_default(),
+	draw_text(text_comp.text, font ? font : Font::get_default(),
 			transform, text_comp.fg_color, text_comp.bg_color,
 			text_comp.kerning, text_comp.line_spacing,
 			entity_id);
 }
 
-void Renderer::draw_string(const std::string& text, const TransformComponent& transform,
+void Renderer::draw_text(const std::string& text, const TransformComponent& transform,
 		const Color& fg_color,
 		const Color& bg_color,
 		float kerning, float line_spacing, uint32_t entity_id) {
-	draw_string(text, nullptr, transform, fg_color, bg_color, kerning, line_spacing, entity_id);
+	draw_text(text, nullptr, transform, fg_color, bg_color, kerning, line_spacing, entity_id);
 }
 
-void Renderer::draw_string(const std::string& text, Ref<Font> font, const TransformComponent& transform,
+void Renderer::draw_text(const std::string& text, Ref<Font> font, const TransformComponent& transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing, uint32_t entity_id) {
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();
@@ -314,6 +313,10 @@ void Renderer::draw_string(const std::string& text, Ref<Font> font, const Transf
 	}
 }
 
+void Renderer::draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color) {
+	draw_line({ p0.x, p0.y, 0 }, { p1.x, p1.y, 0 }, color);
+}
+
 void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color) {
 	LineVertex vertex;
 
@@ -328,6 +331,13 @@ void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& 
 	line_vertices.add(vertex);
 
 	stats.vertex_count += 2;
+}
+
+void Renderer::draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color) {
+	draw_line(min, { min.x, max.y }, color);
+	draw_line({ min.x, max.y }, max, color);
+	draw_line(max, { max.x, min.y }, color);
+	draw_line({ max.x, min.y }, min, color);
 }
 
 const RendererStats& Renderer::get_stats() const {

@@ -17,7 +17,7 @@
 - [ ]
 
 ## Asset
-- [ ] [more refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
+- [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
 - [ ] Change occurencies of entities when an asset renamed or removed
 - [ ] Do not get asset type from extension but from format
 - [ ] Load all assets on scene opening and register assets to the scene

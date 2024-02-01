@@ -5,12 +5,12 @@ A yet another cross platform game engine which is easy to use and performant.
 ## Features
 
 - 2D Renderer
+- Asset System
 - (Coming Soon) 2D Physics
 - (Coming Soon) Scripting
 - (Coming Soon) Animations
 - (Coming Soon) Particle System
 - (Coming Soon) VFX
-- (Coming Soon) Asset System
 - (Coming Soon) Cinematics
 - (Coming Soon) Audio
 - (Coming Soon) Localization

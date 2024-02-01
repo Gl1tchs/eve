@@ -14,6 +14,8 @@
 #include "scene/editor_camera.h"
 #include "scene/scene_renderer.h"
 
+#include "renderer/post_processor.h"
+
 class EditorApplication : public Application {
 public:
 	EditorApplication(const ApplicationCreateInfo& info);
@@ -40,6 +42,11 @@ private:
 	Ref<EditorCamera> editor_camera;
 
 	Ref<FrameBuffer> frame_buffer;
+
+	//! TODO move this inside of the renderer
+	Ref<PostProcessor> post_processor;
+	//! TODO move this into its own panel or global setting
+	uint16_t post_process_effects = 0;
 
 	// panels and widgets
 	MenuBar menubar;

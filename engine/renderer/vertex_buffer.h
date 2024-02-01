@@ -70,7 +70,7 @@ public:
 	void set_data(const void* data, uint64_t size);
 
 	const BufferLayout& get_layout();
-	void set_layout(const BufferLayout& r_layout);
+	void set_layout(const BufferLayout& _layout);
 
 private:
 	uint32_t vbo;
