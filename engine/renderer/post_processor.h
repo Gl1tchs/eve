@@ -6,55 +6,60 @@ class Shader;
 class Texture2D;
 class VertexArray;
 
-enum PostProcessingEffect : uint16_t {
-	POST_PROCESSING_EFFECT_NONE = 0,
-	POST_PROCESSING_EFFECT_GRAY_SCALE = 1 << 0,
-	POST_PROCESSING_EFFECT_CHROMATIC_ABERRATION = 1 << 1,
-	POST_PROCESSING_EFFECT_BLUR = 1 << 2,
-	POST_PROCESSING_EFFECT_SHARPEN = 1 << 3,
-	POST_PROCESSING_EFFECT_VIGNETTE = 1 << 4,
-};
+struct PostProcessingVolume {
+	struct GrayScaleSettings {
+		bool enabled = false;
+	};
 
-struct PostProcessorSettings {
 	struct ChromaticAberrationSettings {
+		bool enabled = false;
 		float red_offset = 0.009f;
 		float green_offset = 0.006f;
 		float blue_offset = -0.006f;
 	};
 
 	struct BlurSettings {
+		bool enabled = false;
 		uint32_t size = 2;
 		// seperation value of shader between 1 and infinity
 		float seperation = 2.0f;
 	};
 
 	struct SharpenSettings {
+		bool enabled = false;
 		float amount = 0.8;
 	};
 
 	struct VignetteSettings {
+		bool enabled = false;
 		float inner = 0.5f;
 		float outer = 1.2f;
 		float strength = 0.8f;
 		float curvature = 0.5f;
 	};
 
+	//! TODO implement this beheaviour
+	bool is_global = true;
+	GrayScaleSettings gray_scale{};
 	ChromaticAberrationSettings chromatic_aberration{};
 	BlurSettings blur{};
 	SharpenSettings sharpen{};
 	VignetteSettings vignette{};
+
+	inline bool is_any_effect_provided() const {
+		return gray_scale.enabled || chromatic_aberration.enabled || blur.enabled || sharpen.enabled || vignette.enabled;
+	}
 };
 
 class PostProcessor {
 public:
 	PostProcessor();
 
-	void process(uint16_t effects, const Ref<FrameBuffer>& screen_buffer);
+	bool process(const Ref<FrameBuffer>& screen_buffer, const PostProcessingVolume& _volume);
+
+	Ref<FrameBuffer> get_frame_buffer();
 
 	uint32_t get_frame_buffer_renderer_id() const;
-
-	PostProcessorSettings& get_settings();
-	void set_settings(const PostProcessorSettings& _settings);
 
 private:
 	void _process_gray_scale(uint32_t texture_id);
@@ -70,7 +75,7 @@ private:
 	void _process_empty(uint32_t screen_texture);
 
 private:
-	PostProcessorSettings settings{};
+	PostProcessingVolume volume{};
 
 	Ref<FrameBuffer> frame_buffer;
 

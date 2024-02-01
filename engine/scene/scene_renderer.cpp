@@ -2,6 +2,9 @@
 
 #include "asset/asset_registry.h"
 #include "core/color.h"
+#include "renderer/frame_buffer.h"
+#include "renderer/post_processor.h"
+#include "renderer/renderer_api.h"
 #include "renderer/texture.h"
 #include "scene/components.h"
 #include "scene/entity.h"
@@ -10,6 +13,17 @@
 
 SceneRenderer::SceneRenderer(Ref<Renderer> renderer) :
 		renderer(renderer), viewport_size(0, 0) {
+	FrameBufferCreateInfo fb_info;
+	fb_info.attachments = {
+		FrameBufferTextureFormat::RGBA8,
+		FrameBufferTextureFormat::RED_INT,
+		FrameBufferTextureFormat::DEPTH24_STENCIL8,
+	};
+	fb_info.width = 1280;
+	fb_info.height = 768;
+	frame_buffer = create_ref<FrameBuffer>(fb_info);
+
+	post_processor = create_ref<PostProcessor>();
 }
 
 void SceneRenderer::render_runtime(float ds) {
@@ -36,6 +50,8 @@ void SceneRenderer::render_runtime(float ds) {
 			cc.camera.get_projection_matrix(), tc.get_position() };
 
 		_render_scene(data);
+
+		_post_process();
 	}
 }
 
@@ -50,15 +66,24 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 		editor_camera->get_transform().get_position() };
 
 	_render_scene(data);
+
+	// TODO if scene_settings.show_post_processing
+	_post_process();
 }
 
 void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
-	const auto scene = SceneManager::get_active();
-	if (!scene) {
+	if (viewport_size == size) {
 		return;
 	}
 
 	viewport_size = size;
+
+	frame_buffer->resize(viewport_size.x, viewport_size.y);
+
+	const auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
 
 	scene->view<CameraComponent>().each(
 			[size](entt::entity, CameraComponent& cc) {
@@ -70,22 +95,86 @@ void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
 			});
 }
 
-void SceneRenderer::_render_scene(const CameraData& data) {
+void SceneRenderer::push_beheaviour(const RenderBeheaviourTickFormat format, const RenderFunc& function) {
+	switch (format) {
+		case RenderBeheaviourTickFormat::BEFORE_RENDER:
+			before_render_functions.push_back(function);
+			break;
+		case RenderBeheaviourTickFormat::ON_RENDER:
+			on_render_functions.push_back(function);
+			break;
+		case RenderBeheaviourTickFormat::AFTER_RENDER:
+			after_render_functions.push_back(function);
+			break;
+		default:
+			break;
+	}
+}
+
+uint32_t SceneRenderer::get_final_texture_id() const {
+	return post_processed
+			? post_processor->get_frame_buffer_renderer_id()
+			: frame_buffer->get_color_attachment_renderer_id(0);
+}
+
+void SceneRenderer::_render_scene(const CameraData& camera_data) {
 	const auto scene = SceneManager::get_active();
 
-	renderer->begin_pass(data);
-	{
-		scene->view<TransformComponent, SpriteRendererComponent>().each(
-				[this](entt::entity entity_id, const TransformComponent& transform,
-						const SpriteRendererComponent& sprite) {
-					renderer->draw_sprite(sprite, transform, (uint32_t)entity_id);
-				});
+	renderer->reset_stats();
 
-		scene->view<TransformComponent, TextRendererComponent>().each(
-				[this](entt::entity entity_id, const TransformComponent& transform,
-						const TextRendererComponent& text_component) {
-					renderer->draw_text(text_component, transform, (uint32_t)entity_id);
-				});
+	frame_buffer->bind();
+	{
+		RendererAPI::set_depth_testing(true);
+
+		RendererAPI::set_clear_color(COLOR_GRAY);
+		RendererAPI::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
+
+		int attachment_data = -1;
+		frame_buffer->clear_attachment(1, &attachment_data);
+
+		for (const auto function : before_render_functions) {
+			function(frame_buffer);
+		}
+
+		renderer->begin_pass(camera_data);
+		{
+			scene->view<TransformComponent, SpriteRendererComponent>().each(
+					[this](entt::entity entity_id, const TransformComponent& transform,
+							const SpriteRendererComponent& sprite) {
+						renderer->draw_sprite(sprite, transform, (uint32_t)entity_id);
+					});
+
+			scene->view<TransformComponent, TextRendererComponent>().each(
+					[this](entt::entity entity_id, const TransformComponent& transform,
+							const TextRendererComponent& text_component) {
+						renderer->draw_text(text_component, transform, (uint32_t)entity_id);
+					});
+
+			for (const auto function : on_render_functions) {
+				function(frame_buffer);
+			}
+		}
+		renderer->end_pass();
+
+		for (const auto function : after_render_functions) {
+			function(frame_buffer);
+		}
 	}
-	renderer->end_pass();
+
+	frame_buffer->unbind();
+}
+
+void SceneRenderer::_post_process() {
+	post_processed = false;
+
+	const auto scene = SceneManager::get_active();
+
+	auto view = scene->view<PostProcessingVolume>();
+	for (const entt::entity entity_id : view) {
+		const PostProcessingVolume& volume = scene->get_component<PostProcessingVolume>(entity_id);
+		// TODO implement local effects
+		if (volume.is_global) {
+			post_processed = post_processor->process(frame_buffer, volume);
+		}
+	}
 }

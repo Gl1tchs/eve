@@ -129,6 +129,7 @@ void InspectorPanel::_draw() {
 		display_add_component_entry<SpriteRendererComponent>(selected_entity,
 				"Sprite Renderer");
 		display_add_component_entry<TextRendererComponent>(selected_entity, "Model");
+		display_add_component_entry<PostProcessingVolume>(selected_entity, "Post Process Volume");
 
 		ImGui::EndPopup();
 	}
@@ -137,6 +138,8 @@ void InspectorPanel::_draw() {
 
 #define BEGIN_FIELD(name)                                           \
 	{                                                               \
+		ImGui::Columns(2, nullptr, false);                          \
+		ImGui::SetColumnWidth(0, 75);                               \
 		const float field_width = ImGui::GetColumnWidth(1) - 10.0f; \
 		ImGui::TextUnformatted(name);                               \
 		ImGui::NextColumn();                                        \
@@ -144,6 +147,7 @@ void InspectorPanel::_draw() {
 
 #define END_FIELD()        \
 	ImGui::PopItemWidth(); \
+	ImGui::Columns();      \
 	}
 
 	draw_component<TransformComponent>("Transform", selected_entity,
@@ -155,16 +159,12 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 
-				ImGui::NextColumn();
-
 				BEGIN_FIELD("Rotation");
 				{
 					ImGui::DragFloat3("##RotationControl",
 							glm::value_ptr(transform.local_rotation), 0.1f);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Scale");
 				{
@@ -185,15 +185,11 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 
-				ImGui::NextColumn();
-
 				BEGIN_FIELD("Near Clip");
 				{
 					ImGui::DragFloat("##NearClipControl", &camera.near_clip);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Far Clip");
 				{
@@ -201,15 +197,11 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 
-				ImGui::NextColumn();
-
 				BEGIN_FIELD("Is Primary");
 				{
 					ImGui::Checkbox("##IsPrimaryControl", &camera_comp.is_primary);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Is Fixed");
 				{
@@ -218,8 +210,6 @@ void InspectorPanel::_draw() {
 				END_FIELD();
 
 				if (camera_comp.is_fixed_aspect_ratio) {
-					ImGui::NextColumn();
-
 					BEGIN_FIELD("Aspect Ratio");
 					{
 						ImGui::DragFloat("##AspectRatioControl", &camera_comp.camera.aspect_ratio, 0.05f);
@@ -254,8 +244,6 @@ void InspectorPanel::_draw() {
 						}
 						ImGui::EndDragDropTarget();
 					}
-
-					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Texture");
 					{
@@ -278,8 +266,6 @@ void InspectorPanel::_draw() {
 						}
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				}
 
 				BEGIN_FIELD("Color");
@@ -287,8 +273,6 @@ void InspectorPanel::_draw() {
 					ImGui::ColorEdit4("##ColorControl", &sprite_comp.color.r);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Tiling");
 				{
@@ -305,8 +289,6 @@ void InspectorPanel::_draw() {
 					ImGui::InputTextMultiline("##TextControl", &text_comp.text);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				Ref<Font> font =
 						text_comp.font != 0
@@ -331,8 +313,6 @@ void InspectorPanel::_draw() {
 						}
 						ImGui::EndDragDropTarget();
 					}
-
-					ImGui::NextColumn();
 				} else {
 					BEGIN_FIELD("Font");
 					{
@@ -355,8 +335,6 @@ void InspectorPanel::_draw() {
 						}
 					}
 					END_FIELD();
-
-					ImGui::NextColumn();
 				}
 
 				BEGIN_FIELD("Foreground Color");
@@ -365,15 +343,11 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 
-				ImGui::NextColumn();
-
 				BEGIN_FIELD("Background Color");
 				{
 					ImGui::ColorEdit4("##BackgroundColorControl", &text_comp.bg_color.r);
 				}
 				END_FIELD();
-
-				ImGui::NextColumn();
 
 				BEGIN_FIELD("Kerning");
 				{
@@ -381,14 +355,114 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 
-				ImGui::NextColumn();
-
 				BEGIN_FIELD("Line Spacing");
 				{
 					ImGui::DragFloat("##LineSpacingControl", &text_comp.line_spacing);
 				}
 				END_FIELD();
 			});
+
+	draw_component<PostProcessingVolume>("Post Processing Volume", selected_entity, [](PostProcessingVolume& volume) {
+		ImGui::Columns();
+		if (ImGui::TreeNode("Gray Scale")) {
+			BEGIN_FIELD("Enabled");
+			{
+				ImGui::Checkbox("##GrayScaleEnabled", &volume.gray_scale.enabled);
+			}
+			END_FIELD();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Chromatic Aberration")) {
+			BEGIN_FIELD("Enabled");
+			{
+				ImGui::Checkbox("##ChromaticAberrationEnabled", &volume.chromatic_aberration.enabled);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Offset");
+			{
+				ImGui::DragFloat3("##ChromaticAberrationOffset", &volume.chromatic_aberration.red_offset, 0.001f, -1.0f, 1.0f);
+			}
+			END_FIELD();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Blur")) {
+			BEGIN_FIELD("Enabled");
+			{
+				ImGui::Checkbox("##BlurEnabled", &volume.blur.enabled);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Size");
+			{
+				ImGui::DragScalar("##BlurSize", ImGuiDataType_U32, &volume.blur.size);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Seperation");
+			{
+				ImGui::DragFloat("##BlurSeperation",
+						&volume.blur.seperation, 0.1f, 1.0f, std::numeric_limits<float>::max());
+			}
+			END_FIELD();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Sharpen")) {
+			BEGIN_FIELD("Enabled");
+			{
+				ImGui::Checkbox("##SharpenEnabled", &volume.sharpen.enabled);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Amount");
+			{
+				ImGui::DragFloat("##SharpenAmount", &volume.sharpen.amount, 0.01f);
+			}
+			END_FIELD();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("Vignette")) {
+			BEGIN_FIELD("Enabled");
+			{
+				ImGui::Checkbox("##VignetteEnabled", &volume.vignette.enabled);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Inner");
+			{
+				ImGui::DragFloat("##VignetteInner", &volume.vignette.inner, 0.01f);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Outer");
+			{
+				ImGui::DragFloat("##VignetteOuter", &volume.vignette.outer, 0.01f);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Strengh");
+			{
+				ImGui::DragFloat("##VignetteStrengh", &volume.vignette.strength, 0.01f);
+			}
+			END_FIELD();
+
+			BEGIN_FIELD("Curvature");
+			{
+				ImGui::DragFloat("##VignetteCurvature", &volume.vignette.curvature, 0.01f);
+			}
+			END_FIELD();
+
+			ImGui::TreePop();
+		}
+	});
 
 	ImGui::PopID();
 }

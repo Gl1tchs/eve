@@ -43,9 +43,17 @@ PostProcessor::PostProcessor() {
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 }
 
-void PostProcessor::process(uint16_t effects, const Ref<FrameBuffer>& screen_buffer) {
+bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer, const PostProcessingVolume& _volume) {
+	volume = _volume;
+
+	if (!volume.is_any_effect_provided()) {
+		return false;
+	}
+
 	const auto screen_size = screen_buffer->get_size();
-	frame_buffer->resize(screen_size.x, screen_size.y);
+	if (screen_size != frame_buffer->get_size()) {
+		frame_buffer->resize(screen_size.x, screen_size.y);
+	}
 
 	frame_buffer->bind();
 
@@ -58,59 +66,52 @@ void PostProcessor::process(uint16_t effects, const Ref<FrameBuffer>& screen_buf
 	effect_provided = false;
 
 	// TODO maybe calculate everything seperatly then add the values
-	if (effects & POST_PROCESSING_EFFECT_GRAY_SCALE) {
+	if (volume.gray_scale.enabled) {
 		_process_gray_scale(last_texture_id);
 
 		last_texture_id = get_frame_buffer_renderer_id();
 		effect_provided = true;
 	}
 
-	if (effects & POST_PROCESSING_EFFECT_CHROMATIC_ABERRATION) {
+	if (volume.chromatic_aberration.enabled) {
 		_process_chromatic_aberration(last_texture_id);
 
 		last_texture_id = get_frame_buffer_renderer_id();
 		effect_provided = true;
 	}
 
-	if (effects & POST_PROCESSING_EFFECT_BLUR) {
+	if (volume.blur.enabled) {
 		_process_blur(last_texture_id);
 
 		last_texture_id = get_frame_buffer_renderer_id();
 		effect_provided = true;
 	}
 
-	if (effects & POST_PROCESSING_EFFECT_SHARPEN) {
+	if (volume.sharpen.enabled) {
 		_process_sharpen(last_texture_id);
 
 		last_texture_id = get_frame_buffer_renderer_id();
 		effect_provided = true;
 	}
 
-	if (effects & POST_PROCESSING_EFFECT_VIGNETTE) {
+	if (volume.vignette.enabled) {
 		_process_vignette(last_texture_id);
 
 		last_texture_id = get_frame_buffer_renderer_id();
 		effect_provided = true;
 	}
 
-	// if no effects provided draw default screen shader
-	if (!effect_provided) {
-		_process_empty(last_texture_id);
-	}
-
 	frame_buffer->unbind();
+
+	return true;
+}
+
+Ref<FrameBuffer> PostProcessor::get_frame_buffer() {
+	return frame_buffer;
 }
 
 uint32_t PostProcessor::get_frame_buffer_renderer_id() const {
 	return frame_buffer->get_color_attachment_renderer_id(0);
-}
-
-PostProcessorSettings& PostProcessor::get_settings() {
-	return settings;
-}
-
-void PostProcessor::set_settings(const PostProcessorSettings& _settings) {
-	settings = _settings;
 }
 
 void PostProcessor::_process_gray_scale(uint32_t texture_id) {
@@ -123,9 +124,11 @@ void PostProcessor::_process_gray_scale(uint32_t texture_id) {
 void PostProcessor::_process_chromatic_aberration(uint32_t texture_id) {
 	chromatic_aberration_shader->bind();
 
-	glm::vec3 offset;
-	static_assert(sizeof(glm::vec3) == sizeof(PostProcessorSettings::ChromaticAberrationSettings));
-	memcpy(&offset, &settings.chromatic_aberration, sizeof(glm::vec3));
+	glm::vec3 offset{
+		volume.chromatic_aberration.red_offset,
+		volume.chromatic_aberration.green_offset,
+		volume.chromatic_aberration.blue_offset
+	};
 
 	chromatic_aberration_shader->set_uniform("u_offset", offset);
 
@@ -136,8 +139,8 @@ void PostProcessor::_process_chromatic_aberration(uint32_t texture_id) {
 void PostProcessor::_process_blur(uint32_t texture_id) {
 	blur_shader->bind();
 
-	blur_shader->set_uniform("u_size", (int)settings.blur.size);
-	blur_shader->set_uniform("u_seperation", settings.blur.seperation);
+	blur_shader->set_uniform("u_size", (int)volume.blur.size);
+	blur_shader->set_uniform("u_seperation", volume.blur.seperation);
 
 	RendererAPI::bind_texture(texture_id);
 	RendererAPI::draw_arrays(vertex_array, 6);
@@ -146,7 +149,7 @@ void PostProcessor::_process_blur(uint32_t texture_id) {
 void PostProcessor::_process_sharpen(uint32_t texture_id) {
 	sharpen_shader->bind();
 
-	sharpen_shader->set_uniform("u_amount", settings.sharpen.amount);
+	sharpen_shader->set_uniform("u_amount", volume.sharpen.amount);
 
 	RendererAPI::bind_texture(texture_id);
 	RendererAPI::draw_arrays(vertex_array, 6);
@@ -155,10 +158,10 @@ void PostProcessor::_process_sharpen(uint32_t texture_id) {
 void PostProcessor::_process_vignette(uint32_t texture_id) {
 	vignette_shader->bind();
 
-	vignette_shader->set_uniform("u_inner", settings.vignette.inner);
-	vignette_shader->set_uniform("u_outer", settings.vignette.outer);
-	vignette_shader->set_uniform("u_strength", settings.vignette.strength);
-	vignette_shader->set_uniform("u_curvature", settings.vignette.curvature);
+	vignette_shader->set_uniform("u_inner", volume.vignette.inner);
+	vignette_shader->set_uniform("u_outer", volume.vignette.outer);
+	vignette_shader->set_uniform("u_strength", volume.vignette.strength);
+	vignette_shader->set_uniform("u_curvature", volume.vignette.curvature);
 
 	RendererAPI::bind_texture(texture_id);
 	RendererAPI::draw_arrays(vertex_array, 6);

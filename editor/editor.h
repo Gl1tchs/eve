@@ -10,11 +10,8 @@
 #include "widgets/menu_bar.h"
 
 #include "core/application.h"
-#include "renderer/frame_buffer.h"
 #include "scene/editor_camera.h"
 #include "scene/scene_renderer.h"
-
-#include "renderer/post_processor.h"
 
 class EditorApplication : public Application {
 public:
@@ -35,25 +32,18 @@ private:
 
 	void _on_viewport_resize();
 
-	void _handle_entity_selection();
+	void _handle_entity_selection(Ref<FrameBuffer> frame_buffer);
 
 private:
 	Ref<SceneRenderer> scene_renderer;
 	Ref<EditorCamera> editor_camera;
 
-	Ref<FrameBuffer> frame_buffer;
-
-	//! TODO move this inside of the renderer
-	Ref<PostProcessor> post_processor;
-	//! TODO move this into its own panel or global setting
-	uint16_t post_process_effects = 0;
-
 	// panels and widgets
 	MenuBar menubar;
 	ContentBrowserPanel content_browser;
 	ConsolePanel console;
+	ViewportPanel viewport;
 
-	Scope<ViewportPanel> viewport;
 	Scope<StatsPanel> stats;
 	Ref<HierarchyPanel> hierarchy;
 	Ref<InspectorPanel> inspector;
