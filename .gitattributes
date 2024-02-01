@@ -2,6 +2,7 @@
 *.h linguist-language=cpp
 *.inc linguist-language=cpp
 vendor/* linguist-vendored
+engine/data/* linguist-vendored
 
 # Normalize EOL for all files that Git considers text files
 * text=auto eol=lf
