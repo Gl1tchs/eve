@@ -50,5 +50,8 @@
 bin/*
 !bin/shaders
 !bin/res
-!bin/sample
 !bin/imgui.ini
+
+# Test project files
+!bin/sample
+!bin/demo

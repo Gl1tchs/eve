@@ -31,17 +31,9 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 }
 
 void EditorApplication::_on_start() {
-	Project::load("sample/sample.eve");
-	SceneManager::load_scene(Project::get_starting_scene_path());
 }
 
 void EditorApplication::_on_update(float dt) {
-	static bool pressed = false;
-	if (!pressed && Input::is_key_pressed(KeyCode::SPACE)) {
-		SceneManager::load_scene("res://scene2.escn");
-		pressed = true;
-	}
-
 	// resize
 	_on_viewport_resize();
 
@@ -85,9 +77,12 @@ void EditorApplication::_on_destroy() {
 void EditorApplication::_setup_menubar() {
 	Menu file_menu{
 		"File",
-		{ { "Exit", "Ctrl+Shift+Q", BIND_FUNC(_quit) },
+		{
+				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
 				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
-				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) } }
+				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) },
+				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(_quit) },
+		}
 	};
 	menubar.push_menu(file_menu);
 
@@ -148,7 +143,7 @@ void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) 
 }
 
 void EditorApplication::_save_active_scene() {
-	auto scene = SceneManager::get_active();
+	const auto& scene = SceneManager::get_active();
 	if (!scene) {
 		return;
 	}
@@ -161,7 +156,7 @@ void EditorApplication::_save_active_scene() {
 }
 
 void EditorApplication::_save_active_scene_as() {
-	auto scene = SceneManager::get_active();
+	const auto& scene = SceneManager::get_active();
 	if (!scene) {
 		return;
 	}
@@ -176,6 +171,24 @@ void EditorApplication::_save_active_scene_as() {
 	}
 
 	Scene::serialize(scene, path);
+}
+
+void EditorApplication::_open_project() {
+	const char* filter_patterns[1] = { "*.eve" };
+	const char* path = tinyfd_openFileDialog(
+			"Open Project", "", 1, filter_patterns, "Eve Project Files", 0);
+
+	if (!path) {
+		EVE_LOG_ENGINE_ERROR("Unable to open project from path.");
+		return;
+	}
+
+	if (Ref<Project> project = Project::load(fs::path(path)); project) {
+		hierarchy->set_selected_entity(INVALID_ENTITY);
+
+		// load the first scene
+		SceneManager::load_scene(project->get_starting_scene_path());
+	}
 }
 
 // Application entrypoint

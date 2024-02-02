@@ -1,6 +1,7 @@
 #include "panels/viewport_panel.h"
 
-#include "viewport_panel.h"
+#include "scene/scene_manager.h"
+
 #include <imgui.h>
 
 ViewportPanel::ViewportPanel() {
@@ -27,4 +28,16 @@ void ViewportPanel::_draw() {
 
 	ImGui::Image(reinterpret_cast<void*>(texture_id),
 			ImVec2{ get_size().x, get_size().y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+	// load scenes just by droping into viewport
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload =
+						ImGui::AcceptDragDropPayload("DND_PAYLOAD_SCENE")) {
+			const char* recv_path = static_cast<const char*>(payload->Data);
+
+			SceneManager::load_scene(recv_path);
+		}
+
+		ImGui::EndDragDropTarget();
+	}
 }

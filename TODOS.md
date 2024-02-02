@@ -7,9 +7,14 @@
 - [ ] Localization
 
 ## Editor
-- [ ] Content browser panel.
+- [x] Open Project
+- [ ] Hierarchy entity search and sorting
+- [ ] New Scene
+- [ ] Texture viewer / metadata inspector
+- [x] Content browser panel.
 
 ## Renderer
+- [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations
 

@@ -80,10 +80,22 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 			_draw_rename_file_dialog(path);
 		}
 
-		if (is_loaded) {
-			if (ImGui::BeginDragDropSource()) {
-				const AssetType type = get_asset_type_from_extension(path.extension().string());
+		const AssetType type = get_asset_type_from_extension(path.extension().string());
 
+		// make scenes importable just by dragging into viewport
+		if (!is_loaded && type == AssetType::SCENE) {
+			if (ImGui::BeginDragDropSource()) {
+				const std::string path_str = path.string();
+
+				ImGui::SetDragDropPayload("DND_PAYLOAD_SCENE", path_str.data(),
+						path_str.size());
+
+				ImGui::SetTooltip("%s", "SCENE");
+
+				ImGui::EndDragDropSource();
+			}
+		} else if (is_loaded && type != AssetType::SCENE) {
+			if (ImGui::BeginDragDropSource()) {
 				const std::string payload_name =
 						"DND_PAYLOAD_" + serialize_asset_type(type);
 
@@ -152,7 +164,8 @@ void ContentBrowserPanel::_draw_popup_context(const fs::path& path) {
 		// import if not asset
 		const AssetType type = get_asset_type_from_extension(path.extension().string());
 
-		if (type != AssetType::NONE && ImGui::MenuItem("Load")) {
+		// do not let scenes to be imported here
+		if ((type != AssetType::NONE && type != AssetType::SCENE) && ImGui::MenuItem("Load")) {
 			AssetRegistry::load(
 					Project::get_relative_asset_path(path.string()),
 					type);

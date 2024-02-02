@@ -40,6 +40,8 @@ private:
 
 	void _save_active_scene_as();
 
+	void _open_project();
+
 private:
 	Ref<SceneRenderer> scene_renderer;
 	Ref<EditorCamera> editor_camera;

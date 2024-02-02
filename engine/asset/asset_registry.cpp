@@ -65,7 +65,7 @@ inline static void on_file_change(const fs::path& path_rel, const filewatch::Eve
 	}
 }
 
-inline static LoadedAssetRegistryMap loaded_assets = {};
+inline static LoadedAssetRegistryMap s_loaded_assets = {};
 
 inline static Ref<filewatch::FileWatch<std::string>> s_watcher;
 
@@ -80,8 +80,8 @@ void AssetRegistry::init() {
 }
 
 Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
-	const auto it = loaded_assets.find(handle);
-	if (it == loaded_assets.end()) {
+	const auto it = s_loaded_assets.find(handle);
+	if (it == s_loaded_assets.end()) {
 		return nullptr;
 	}
 
@@ -95,7 +95,7 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type) {
 	}
 
 	AssetHandle handle = get_handle_from_path(path_abs.string());
-	if (loaded_assets.find(handle) != loaded_assets.end()) {
+	if (s_loaded_assets.find(handle) != s_loaded_assets.end()) {
 		return handle;
 	}
 
@@ -122,18 +122,18 @@ AssetHandle AssetRegistry::load(const std::string& path, AssetType type) {
 	// unload if already has that id to reload
 	unload(asset->handle);
 
-	loaded_assets[asset->handle] = asset;
+	s_loaded_assets[asset->handle] = asset;
 
 	return asset->handle;
 }
 
 void AssetRegistry::unload(const AssetHandle& handle) {
-	const auto it = loaded_assets.find(handle);
-	if (it == loaded_assets.end()) {
+	const auto it = s_loaded_assets.find(handle);
+	if (it == s_loaded_assets.end()) {
 		return;
 	}
 
-	loaded_assets.erase(it);
+	s_loaded_assets.erase(it);
 }
 
 void AssetRegistry::unload(const std::string& path) {
@@ -142,11 +142,11 @@ void AssetRegistry::unload(const std::string& path) {
 }
 
 void AssetRegistry::unload_all() {
-	loaded_assets.clear();
+	s_loaded_assets.clear();
 }
 
 bool AssetRegistry::is_loaded(const AssetHandle& handle) {
-	return loaded_assets.find(handle) != loaded_assets.end();
+	return s_loaded_assets.find(handle) != s_loaded_assets.end();
 }
 
 AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
@@ -191,7 +191,7 @@ void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& ne
 
 	AssetHandle handle = json["uid"].get<AssetHandle>();
 	if (is_loaded(handle)) {
-		Ref<Asset> asset = loaded_assets.at(handle);
+		Ref<Asset> asset = s_loaded_assets.at(handle);
 		asset->path = new_path_rel;
 	}
 
@@ -201,5 +201,5 @@ void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& ne
 }
 
 LoadedAssetRegistryMap& AssetRegistry::get_loaded_assets() {
-	return loaded_assets;
+	return s_loaded_assets;
 }
