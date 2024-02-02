@@ -19,7 +19,7 @@ Application::Application(const ApplicationCreateInfo& info) {
 	event::subscribe<WindowCloseEvent>(
 			[this](const auto& _event) { running = false; });
 
-	renderer = create_ref<Renderer>();
+	Renderer::init();
 }
 
 Application::~Application() {
@@ -29,6 +29,8 @@ Application::~Application() {
 	if (Font::s_default_font) {
 		Font::s_default_font.reset();
 	}
+
+	Renderer::shutdown();
 }
 
 void Application::run() {

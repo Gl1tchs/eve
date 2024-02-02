@@ -4,15 +4,16 @@
 #include "core/color.h"
 #include "renderer/frame_buffer.h"
 #include "renderer/post_processor.h"
-#include "renderer/renderer_api.h"
+#include "renderer/render_command.h"
+#include "renderer/renderer.h"
 #include "renderer/texture.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
 #include "scene/transform.h"
 
-SceneRenderer::SceneRenderer(Ref<Renderer> renderer) :
-		renderer(renderer), viewport_size(0, 0) {
+SceneRenderer::SceneRenderer() :
+		viewport_size(0, 0) {
 	FrameBufferCreateInfo fb_info;
 	fb_info.attachments = {
 		FrameBufferTextureFormat::RGBA8,
@@ -95,15 +96,15 @@ void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
 			});
 }
 
-void SceneRenderer::push_beheaviour(const RenderBeheaviourTickFormat format, const RenderFunc& function) {
+void SceneRenderer::submit(const RenderFuncTickFormat format, const RenderFunc& function) {
 	switch (format) {
-		case RenderBeheaviourTickFormat::BEFORE_RENDER:
+		case RenderFuncTickFormat::BEFORE_RENDER:
 			before_render_functions.push_back(function);
 			break;
-		case RenderBeheaviourTickFormat::ON_RENDER:
+		case RenderFuncTickFormat::ON_RENDER:
 			on_render_functions.push_back(function);
 			break;
-		case RenderBeheaviourTickFormat::AFTER_RENDER:
+		case RenderFuncTickFormat::AFTER_RENDER:
 			after_render_functions.push_back(function);
 			break;
 		default:
@@ -120,14 +121,14 @@ uint32_t SceneRenderer::get_final_texture_id() const {
 void SceneRenderer::_render_scene(const CameraData& camera_data) {
 	const auto scene = SceneManager::get_active();
 
-	renderer->reset_stats();
+	Renderer::reset_stats();
 
 	frame_buffer->bind();
 	{
-		RendererAPI::set_depth_testing(true);
+		RenderCommand::set_depth_testing(true);
 
-		RendererAPI::set_clear_color(COLOR_GRAY);
-		RendererAPI::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
+		RenderCommand::set_clear_color(COLOR_GRAY);
+		RenderCommand::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
 
 		int attachment_data = -1;
 		frame_buffer->clear_attachment(1, &attachment_data);
@@ -136,25 +137,25 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 			function(frame_buffer);
 		}
 
-		renderer->begin_pass(camera_data);
+		Renderer::begin_pass(camera_data);
 		{
 			scene->view<TransformComponent, SpriteRendererComponent>().each(
 					[this](entt::entity entity_id, const TransformComponent& transform,
 							const SpriteRendererComponent& sprite) {
-						renderer->draw_sprite(sprite, transform, (uint32_t)entity_id);
+						Renderer::draw_sprite(sprite, transform, (uint32_t)entity_id);
 					});
 
 			scene->view<TransformComponent, TextRendererComponent>().each(
 					[this](entt::entity entity_id, const TransformComponent& transform,
 							const TextRendererComponent& text_component) {
-						renderer->draw_text(text_component, transform, (uint32_t)entity_id);
+						Renderer::draw_text(text_component, transform, (uint32_t)entity_id);
 					});
 
 			for (const auto function : on_render_functions) {
 				function(frame_buffer);
 			}
 		}
-		renderer->end_pass();
+		Renderer::end_pass();
 
 		for (const auto function : after_render_functions) {
 			function(frame_buffer);

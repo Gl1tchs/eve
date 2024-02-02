@@ -31,7 +31,6 @@ protected:
 	static Application* s_instance;
 
 	Ref<Window> window;
-	Ref<Renderer> renderer;
 
 	inline virtual void _on_start() {}
 

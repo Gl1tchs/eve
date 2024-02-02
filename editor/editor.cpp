@@ -16,16 +16,14 @@
 
 EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 		Application(info) {
-	stats = create_scope<StatsPanel>(renderer);
-
 	hierarchy = create_ref<HierarchyPanel>();
 	inspector = create_ref<InspectorPanel>(hierarchy);
 
 	editor_camera = create_ref<EditorCamera>();
-	scene_renderer = create_ref<SceneRenderer>(renderer);
+	scene_renderer = create_ref<SceneRenderer>();
 
 	// bind entity selection beheaviour
-	scene_renderer->push_beheaviour(RenderBeheaviourTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
+	scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
 
 	_setup_menubar();
 }
@@ -60,13 +58,12 @@ void EditorApplication::_on_imgui_update(float dt) {
 	viewport.render();
 	ImGui::PopStyleVar();
 
-	stats->render();
-
 	hierarchy->render();
 	inspector->render();
 
 	content_browser.render();
 	console.render();
+	stats.render();
 
 	DockSpace::end();
 }
@@ -97,7 +94,7 @@ void EditorApplication::_setup_menubar() {
 						[this]() { inspector->set_active(true); } },
 				{ "Content Browser", [this]() { content_browser.set_active(true); } },
 				{ "Console", [this]() { console.set_active(true); } },
-				{ "Stats", [this]() { stats->set_active(true); } },
+				{ "Stats", [this]() { stats.set_active(true); } },
 		}
 	};
 

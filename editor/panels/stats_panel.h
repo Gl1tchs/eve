@@ -9,14 +9,11 @@ class StatsPanel : public Panel {
 	EVE_IMPL_PANEL("Stats")
 
 public:
-	StatsPanel(const Ref<Renderer>& renderer);
+	StatsPanel() = default;
 	virtual ~StatsPanel() = default;
 
 protected:
 	void _draw() override;
-
-private:
-	Ref<Renderer> renderer;
 };
 
 #endif

@@ -5,7 +5,7 @@
 
 using LoadedAssetRegistryMap = std::unordered_map<AssetHandle, Ref<Asset>>;
 
-class AssetRegistry {
+class AssetRegistry final {
 public:
 	static void init();
 

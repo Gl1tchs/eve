@@ -1,5 +1,5 @@
-#ifndef RENDERER_API_H
-#define RENDERER_API_H
+#ifndef RENDERER_COMMAND_H
+#define RENDERER_COMMAND_H
 
 #include "core/color.h"
 #include "renderer/vertex_array.h"
@@ -20,7 +20,7 @@ enum class PolygonMode { FILL,
 	LINE,
 	POINT };
 
-struct RendererAPI {
+struct RenderCommand {
 	static void init();
 
 	static void set_viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h);

@@ -4,15 +4,11 @@
 
 #include <imgui.h>
 
-StatsPanel::StatsPanel(const Ref<Renderer>& _renderer) :
-		renderer(_renderer) {
-}
-
 void StatsPanel::_draw() {
 	ImGui::Columns(2, nullptr, false);
 
 	if (ImGui::TreeNodeEx("Render Stats", ImGuiTreeNodeFlags_DefaultOpen)) {
-		RendererStats stats = renderer->get_stats();
+		RendererStats stats = Renderer::get_stats();
 
 		ImGui::NextColumn();
 		ImGui::NextColumn();

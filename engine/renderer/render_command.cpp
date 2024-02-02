@@ -1,6 +1,5 @@
-#include "renderer/renderer_api.h"
+#include "renderer/render_command.h"
 
-#include "renderer_api.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -10,7 +9,7 @@ static void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 		const char* message,
 		const void* user_param);
 
-void RendererAPI::init() {
+void RenderCommand::init() {
 	// TODO if you add different window classes update this
 	int32_t status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	EVE_ASSERT_ENGINE(status, "Failed to initialize Glad!");
@@ -30,15 +29,15 @@ void RendererAPI::init() {
 	glDepthFunc(GL_LESS);
 }
 
-void RendererAPI::set_viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
+void RenderCommand::set_viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
 	glViewport(x, y, w, h);
 }
 
-void RendererAPI::set_clear_color(const Color& color) {
+void RenderCommand::set_clear_color(const Color& color) {
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void RendererAPI::clear(uint16_t bits) {
+void RenderCommand::clear(uint16_t bits) {
 	uint16_t flags = 0;
 
 	if (bits & BUFFER_BITS_COLOR) {
@@ -52,7 +51,7 @@ void RendererAPI::clear(uint16_t bits) {
 	glClear(flags);
 }
 
-void RendererAPI::set_depth_testing(bool enable) {
+void RenderCommand::set_depth_testing(bool enable) {
 	if (enable) {
 		glEnable(GL_DEPTH_TEST);
 	} else {
@@ -60,34 +59,34 @@ void RendererAPI::set_depth_testing(bool enable) {
 	}
 }
 
-void RendererAPI::draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
+void RenderCommand::draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
 
-void RendererAPI::draw_indexed(const Ref<VertexArray>& vertex_array, uint32_t index_count) {
+void RenderCommand::draw_indexed(const Ref<VertexArray>& vertex_array, uint32_t index_count) {
 	vertex_array->bind();
 	uint32_t count =
 			index_count ? index_count : vertex_array->get_index_buffer()->get_count();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 
-void RendererAPI::draw_lines(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
+void RenderCommand::draw_lines(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_LINES, 0, vertex_count);
 }
 
-void RendererAPI::draw_arrays_instanced(const Ref<VertexArray>& vertex_array,
+void RenderCommand::draw_arrays_instanced(const Ref<VertexArray>& vertex_array,
 		uint32_t vertex_count, uint32_t instance_count) {
 	vertex_array->bind();
 	glDrawArraysInstanced(GL_TRIANGLES, 0, vertex_count, instance_count);
 }
 
-void RendererAPI::set_line_width(float width) {
+void RenderCommand::set_line_width(float width) {
 	glLineWidth(width);
 }
 
-void RendererAPI::set_polygon_mode(PolygonMode mode) {
+void RenderCommand::set_polygon_mode(PolygonMode mode) {
 	switch (mode) {
 		case PolygonMode::FILL:
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -104,7 +103,7 @@ void RendererAPI::set_polygon_mode(PolygonMode mode) {
 	}
 }
 
-void RendererAPI::set_depth_func(DepthFunc func) {
+void RenderCommand::set_depth_func(DepthFunc func) {
 	int gl_func;
 	switch (func) {
 		case DepthFunc::LESS:
@@ -121,11 +120,11 @@ void RendererAPI::set_depth_func(DepthFunc func) {
 	glDepthFunc(gl_func);
 }
 
-void RendererAPI::set_active_texture(uint8_t index) {
+void RenderCommand::set_active_texture(uint8_t index) {
 	glActiveTexture(GL_TEXTURE0 + index);
 }
 
-void RendererAPI::bind_texture(uint32_t renderer_id) {
+void RenderCommand::bind_texture(uint32_t renderer_id) {
 	glBindTexture(GL_TEXTURE_2D, renderer_id);
 }
 

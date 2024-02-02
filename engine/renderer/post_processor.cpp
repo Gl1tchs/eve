@@ -2,7 +2,7 @@
 
 #include "post_processor.h"
 #include "renderer/frame_buffer.h"
-#include "renderer/renderer_api.h"
+#include "renderer/render_command.h"
 #include "renderer/shader.h"
 #include "renderer/texture.h"
 #include "renderer/vertex_array.h"
@@ -54,10 +54,10 @@ bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer, const PostPro
 
 	frame_buffer->bind();
 
-	RendererAPI::set_depth_testing(false);
+	RenderCommand::set_depth_testing(false);
 
-	RendererAPI::set_clear_color(COLOR_GRAY);
-	RendererAPI::clear(BUFFER_BITS_COLOR);
+	RenderCommand::set_clear_color(COLOR_GRAY);
+	RenderCommand::clear(BUFFER_BITS_COLOR);
 
 	last_texture_id = screen_buffer->get_color_attachment_renderer_id(0);
 	effect_provided = false;
@@ -154,6 +154,6 @@ void PostProcessor::_process_vignette() {
 }
 
 void PostProcessor::_draw_screen_quad() {
-	RendererAPI::bind_texture(last_texture_id);
-	RendererAPI::draw_arrays(vertex_array, 6);
+	RenderCommand::bind_texture(last_texture_id);
+	RenderCommand::draw_arrays(vertex_array, 6);
 }

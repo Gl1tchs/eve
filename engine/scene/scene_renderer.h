@@ -2,13 +2,12 @@
 #define SCENE_RENDERER_H
 
 #include "core/window.h"
-#include "renderer/renderer.h"
 #include "scene/editor_camera.h"
 
 class FrameBuffer;
 class PostProcessor;
 
-enum class RenderBeheaviourTickFormat {
+enum class RenderFuncTickFormat {
 	BEFORE_RENDER,
 	ON_RENDER,
 	AFTER_RENDER
@@ -18,7 +17,7 @@ typedef std::function<void(const Ref<FrameBuffer>&)> RenderFunc;
 
 class SceneRenderer {
 public:
-	SceneRenderer(Ref<Renderer> renderer);
+	SceneRenderer();
 
 	void render_runtime(float dt);
 
@@ -26,7 +25,7 @@ public:
 
 	void on_viewport_resize(glm::uvec2 size);
 
-	void push_beheaviour(const RenderBeheaviourTickFormat format, const RenderFunc& function);
+	void submit(const RenderFuncTickFormat format, const RenderFunc& function);
 
 	uint32_t get_final_texture_id() const;
 
@@ -36,7 +35,6 @@ private:
 	void _post_process();
 
 private:
-	Ref<Renderer> renderer;
 	Ref<FrameBuffer> frame_buffer;
 
 	Ref<PostProcessor> post_processor;

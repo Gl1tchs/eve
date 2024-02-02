@@ -33,7 +33,6 @@ private:
 	void _on_viewport_resize();
 
 	// scene controls
-
 	void _handle_entity_selection(Ref<FrameBuffer> frame_buffer);
 
 	void _save_active_scene();
@@ -51,8 +50,8 @@ private:
 	ContentBrowserPanel content_browser;
 	ConsolePanel console;
 	ViewportPanel viewport;
+	StatsPanel stats;
 
-	Scope<StatsPanel> stats;
 	Ref<HierarchyPanel> hierarchy;
 	Ref<InspectorPanel> inspector;
 };
