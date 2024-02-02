@@ -253,13 +253,44 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
+	if (entity.has_component<PostProcessVolume>()) {
+		const PostProcessVolume& volume = entity.get_component<PostProcessVolume>();
+
+		out["post_process_volume"] = Json{
+			{ "is_global", volume.is_global },
+			{ "gray_scale", Json{ { "enabled", volume.gray_scale.enabled } } },
+			{ "chromatic_aberration", Json{
+											  { "enabled", volume.chromatic_aberration.enabled },
+											  { "offset", volume.chromatic_aberration.offset },
+									  } },
+			{ "blur", Json{
+							  { "enabled", volume.blur.enabled },
+							  { "size", volume.blur.size },
+							  { "seperation", volume.blur.seperation },
+					  } },
+			{ "sharpen", Json{
+								 { "enabled", volume.sharpen.enabled },
+								 { "amount", volume.sharpen.amount },
+						 } },
+			{ "vignette", Json{
+								  { "enabled", volume.vignette.enabled },
+								  { "inner", volume.vignette.inner },
+								  { "outer", volume.vignette.outer },
+								  { "strength", volume.vignette.strength },
+								  { "curvature", volume.vignette.curvature },
+						  } }
+		};
+	}
+
 	return out;
 }
 
-void Scene::serialize(Ref<Scene> scene, const fs::path& path) {
+void Scene::serialize(Ref<Scene> scene, std::string path) {
+	path = Project::get_asset_path(path).string();
+
 	Json scene_json;
 	scene_json["uid"] = scene->handle;
-	scene_json["name"] = path;
+	scene_json["name"] = scene->name;
 	scene_json["entities"] = Json::array();
 
 	scene->view<entt::entity>().each([&](auto entity_id) {
@@ -275,7 +306,9 @@ void Scene::serialize(Ref<Scene> scene, const fs::path& path) {
 	json_utils::write_file(path, scene_json);
 }
 
-bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
+bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
+	path = Project::get_asset_path(path).string();
+
 	if (!scene->entity_map.empty()) {
 		EVE_LOG_ENGINE_WARNING("Given scene to deserialize is not empty.\nClearing the data...");
 		scene->entity_map.clear();
@@ -284,13 +317,13 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 
 	Json data;
 	if (!json_utils::read_file(path, data)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path.string().c_str());
+		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path);
 		return false;
 	}
 
 	scene->handle = data["uid"].get<AssetHandle>();
 	scene->name = data["name"].get<std::string>();
-	scene->path = Project::get_relative_asset_path(path.string());
+	scene->path = Project::get_relative_asset_path(path);
 
 	if (!data.contains("entities")) {
 		return false;
@@ -319,7 +352,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 			}
 		}
 
-		if (auto transform_json = entity_json["transform_component"];
+		if (const auto& transform_json = entity_json["transform_component"];
 				!transform_json.is_null()) {
 			auto& tc = deserialing_entity.get_component<TransformComponent>();
 
@@ -328,27 +361,29 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 			tc.local_scale = transform_json["local_scale"].get<glm::vec3>();
 		}
 
-		if (auto camera_comp_json = entity_json["camera_component"];
+		if (const auto& camera_comp_json = entity_json["camera_component"];
 				!camera_comp_json.is_null()) {
 			auto& camera_component =
 					deserialing_entity.add_component<CameraComponent>();
 
-			auto camera_json = camera_comp_json["camera"];
-			camera_component.camera.aspect_ratio =
-					camera_json["aspect_ratio"].get<float>();
-			camera_component.camera.zoom_level =
-					camera_json["zoom_level"].get<float>();
-			camera_component.camera.near_clip =
-					camera_json["near_clip"].get<float>();
-			camera_component.camera.far_clip =
-					camera_json["far_clip"].get<float>();
+			{
+				const auto& camera_json = camera_comp_json["camera"];
+				camera_component.camera.aspect_ratio =
+						camera_json["aspect_ratio"].get<float>();
+				camera_component.camera.zoom_level =
+						camera_json["zoom_level"].get<float>();
+				camera_component.camera.near_clip =
+						camera_json["near_clip"].get<float>();
+				camera_component.camera.far_clip =
+						camera_json["far_clip"].get<float>();
+			}
 
 			camera_component.is_primary = camera_comp_json["is_primary"].get<bool>();
 			camera_component.is_fixed_aspect_ratio =
 					camera_comp_json["is_fixed_aspect_ratio"].get<bool>();
 		}
 
-		if (auto sprite_comp_json = entity_json["sprite_renderer_component"];
+		if (const auto& sprite_comp_json = entity_json["sprite_renderer_component"];
 				!sprite_comp_json.is_null()) {
 			auto& sprite_component =
 					deserialing_entity.add_component<SpriteRendererComponent>();
@@ -367,7 +402,7 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
 		}
 
-		if (auto text_comp_json = entity_json["text_renderer_component"]; !text_comp_json.is_null()) {
+		if (const auto& text_comp_json = entity_json["text_renderer_component"]; !text_comp_json.is_null()) {
 			auto& text_component = deserialing_entity.add_component<TextRendererComponent>();
 
 			text_component.text = text_comp_json["text"].get<std::string>();
@@ -385,6 +420,44 @@ bool Scene::deserialize(Ref<Scene>& scene, const fs::path& path) {
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();
 			text_component.line_spacing = text_comp_json["line_spacing"].get<float>();
+		}
+
+		if (const auto& post_process_json = entity_json["post_process_volume"]; !post_process_json.is_null()) {
+			auto& post_process_volume = deserialing_entity.add_component<PostProcessVolume>();
+
+			post_process_volume.is_global = post_process_json["is_global"].get<bool>();
+			{
+				const auto& gray_scale_json = post_process_json["gray_scale"];
+				post_process_volume.gray_scale.enabled = gray_scale_json["enabled"].get<bool>();
+			}
+			{
+				const auto& chromatic_aberration_json = post_process_json["chromatic_aberration"];
+
+				post_process_volume.chromatic_aberration.enabled = chromatic_aberration_json["enabled"].get<bool>();
+				post_process_volume.chromatic_aberration.offset = chromatic_aberration_json["offset"].get<glm::vec3>();
+			}
+			{
+				const auto& blur_json = post_process_json["blur"];
+
+				post_process_volume.blur.enabled = blur_json["enabled"].get<bool>();
+				post_process_volume.blur.size = blur_json["size"].get<uint32_t>();
+				post_process_volume.blur.seperation = blur_json["seperation"].get<float>();
+			}
+			{
+				const auto& sharpen_json = post_process_json["sharpen"];
+
+				post_process_volume.sharpen.enabled = sharpen_json["enabled"].get<bool>();
+				post_process_volume.sharpen.amount = sharpen_json["amount"].get<float>();
+			}
+			{
+				const auto& vignette_json = post_process_json["vignette"];
+
+				post_process_volume.vignette.enabled = vignette_json["enabled"].get<bool>();
+				post_process_volume.vignette.inner = vignette_json["inner"].get<float>();
+				post_process_volume.vignette.outer = vignette_json["outer"].get<float>();
+				post_process_volume.vignette.strength = vignette_json["strength"].get<float>();
+				post_process_volume.vignette.curvature = vignette_json["curvature"].get<float>();
+			}
 		}
 	}
 

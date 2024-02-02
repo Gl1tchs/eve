@@ -128,8 +128,8 @@ void InspectorPanel::_draw() {
 		display_add_component_entry<CameraComponent>(selected_entity, "Camera");
 		display_add_component_entry<SpriteRendererComponent>(selected_entity,
 				"Sprite Renderer");
-		display_add_component_entry<TextRendererComponent>(selected_entity, "Model");
-		display_add_component_entry<PostProcessingVolume>(selected_entity, "Post Process Volume");
+		display_add_component_entry<TextRendererComponent>(selected_entity, "Text Renderer");
+		display_add_component_entry<PostProcessVolume>(selected_entity, "Post Process Volume");
 
 		ImGui::EndPopup();
 	}
@@ -362,7 +362,7 @@ void InspectorPanel::_draw() {
 				END_FIELD();
 			});
 
-	draw_component<PostProcessingVolume>("Post Processing Volume", selected_entity, [](PostProcessingVolume& volume) {
+	draw_component<PostProcessVolume>("Post Processing Volume", selected_entity, [](PostProcessVolume& volume) {
 		ImGui::Columns();
 		if (ImGui::TreeNode("Gray Scale")) {
 			BEGIN_FIELD("Enabled");
@@ -383,7 +383,7 @@ void InspectorPanel::_draw() {
 
 			BEGIN_FIELD("Offset");
 			{
-				ImGui::DragFloat3("##ChromaticAberrationOffset", &volume.chromatic_aberration.red_offset, 0.001f, -1.0f, 1.0f);
+				ImGui::DragFloat3("##ChromaticAberrationOffset", glm::value_ptr(volume.chromatic_aberration.offset), 0.001f, -1.0f, 1.0f);
 			}
 			END_FIELD();
 

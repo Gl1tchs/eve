@@ -33,6 +33,6 @@ template <typename... Component>
 struct ComponentGroup {};
 
 using AllComponents =
-		ComponentGroup<PostProcessingVolume, TransformComponent, CameraComponent, SpriteRendererComponent, TextRendererComponent>;
+		ComponentGroup<TransformComponent, CameraComponent, SpriteRendererComponent, TextRendererComponent, PostProcessVolume>;
 
 #endif

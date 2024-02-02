@@ -37,7 +37,7 @@ void HierarchyPanel::_draw() {
 		selected_entity = Entity{ selected_entity.handle, scene.get() };
 	}
 
-	ImGui::Text("scene: %s", scene->name.c_str());
+	ImGui::TextUnformatted(scene->name.c_str());
 
 	ImGui::SameLine(ImGui::GetContentRegionMax().x -
 			(ImGui::CalcTextSize(ICON_FA_PLUS).x +

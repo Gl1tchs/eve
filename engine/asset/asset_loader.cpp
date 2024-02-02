@@ -124,7 +124,7 @@ Ref<Font> AssetLoader::load_font(const fs::path& path) {
 
 Ref<Scene> AssetLoader::load_scene(const fs::path& path) {
 	Ref<Scene> scene = create_ref<Scene>();
-	if (!Scene::deserialize(scene, path)) {
+	if (!Scene::deserialize(scene, path.string())) {
 		return nullptr;
 	}
 

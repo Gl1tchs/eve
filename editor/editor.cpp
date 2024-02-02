@@ -12,6 +12,7 @@
 #include "scene/scene_manager.h"
 
 #include <imgui.h>
+#include <tinyfiledialogs.h>
 
 EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 		Application(info) {
@@ -82,8 +83,12 @@ void EditorApplication::_on_destroy() {
 }
 
 void EditorApplication::_setup_menubar() {
-	Menu file_menu{ "File",
-		{ { "Exit", "Ctrl+Shift+Q", [this]() { _quit(); } } } };
+	Menu file_menu{
+		"File",
+		{ { "Exit", "Ctrl+Shift+Q", BIND_FUNC(_quit) },
+				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
+				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) } }
+	};
 	menubar.push_menu(file_menu);
 
 	Menu view_menu{
@@ -140,6 +145,37 @@ void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) 
 			hierarchy->set_selected_entity(hovered_entity);
 		}
 	}
+}
+
+void EditorApplication::_save_active_scene() {
+	auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
+
+	if (!scene->path.empty()) {
+		Scene::serialize(scene, scene->path);
+	} else {
+		_save_active_scene_as();
+	}
+}
+
+void EditorApplication::_save_active_scene_as() {
+	auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
+
+	const char* filter_patterns[1] = { "*.escn" };
+	const char* path = tinyfd_saveFileDialog("Save Scene", "scene.escn", 1,
+			filter_patterns, "Eve Scene Files");
+
+	if (!path) {
+		EVE_LOG_ENGINE_ERROR("Unable to save scene to path.");
+		return;
+	}
+
+	Scene::serialize(scene, path);
 }
 
 // Application entrypoint

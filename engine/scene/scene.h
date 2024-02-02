@@ -91,9 +91,9 @@ public:
 	//  component group will be copied.
 	void copy_to(Ref<Scene> dst);
 
-	static void serialize(Ref<Scene> scene, const fs::path& path);
+	static void serialize(Ref<Scene> scene, std::string path);
 
-	static bool deserialize(Ref<Scene>& scene, const fs::path& path);
+	static bool deserialize(Ref<Scene>& scene, std::string path);
 
 private:
 	std::string name;

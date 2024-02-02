@@ -6,16 +6,14 @@ class Shader;
 class Texture2D;
 class VertexArray;
 
-struct PostProcessingVolume {
+struct PostProcessVolume {
 	struct GrayScaleSettings {
 		bool enabled = false;
 	};
 
 	struct ChromaticAberrationSettings {
 		bool enabled = false;
-		float red_offset = 0.009f;
-		float green_offset = 0.006f;
-		float blue_offset = -0.006f;
+		glm::vec3 offset = { 0.009f, 0.006f, -0.006f };
 	};
 
 	struct BlurSettings {
@@ -55,33 +53,32 @@ class PostProcessor {
 public:
 	PostProcessor();
 
-	bool process(const Ref<FrameBuffer>& screen_buffer, const PostProcessingVolume& _volume);
+	bool process(const Ref<FrameBuffer>& screen_buffer, const PostProcessVolume& _volume);
 
 	Ref<FrameBuffer> get_frame_buffer();
 
 	uint32_t get_frame_buffer_renderer_id() const;
 
 private:
-	void _process_gray_scale(uint32_t texture_id);
+	void _process_gray_scale();
 
-	void _process_chromatic_aberration(uint32_t texture_id);
+	void _process_chromatic_aberration();
 
-	void _process_blur(uint32_t texture_id);
+	void _process_blur();
 
-	void _process_sharpen(uint32_t texture_id);
+	void _process_sharpen();
 
-	void _process_vignette(uint32_t texture_id);
+	void _process_vignette();
 
-	void _process_empty(uint32_t screen_texture);
+	void _draw_screen_quad();
 
 private:
-	PostProcessingVolume volume{};
+	PostProcessVolume volume{};
 
 	Ref<FrameBuffer> frame_buffer;
 
 	Ref<VertexArray> vertex_array;
 
-	Ref<Shader> screen_shader;
 	Ref<Shader> gray_scale_shader;
 	Ref<Shader> chromatic_aberration_shader;
 	Ref<Shader> blur_shader;

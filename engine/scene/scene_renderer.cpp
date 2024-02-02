@@ -169,9 +169,9 @@ void SceneRenderer::_post_process() {
 
 	const auto scene = SceneManager::get_active();
 
-	auto view = scene->view<PostProcessingVolume>();
+	auto view = scene->view<PostProcessVolume>();
 	for (const entt::entity entity_id : view) {
-		const PostProcessingVolume& volume = scene->get_component<PostProcessingVolume>(entity_id);
+		const PostProcessVolume& volume = scene->get_component<PostProcessVolume>(entity_id);
 		// TODO implement local effects
 		if (volume.is_global) {
 			post_processed = post_processor->process(frame_buffer, volume);

@@ -32,7 +32,13 @@ private:
 
 	void _on_viewport_resize();
 
+	// scene controls
+
 	void _handle_entity_selection(Ref<FrameBuffer> frame_buffer);
+
+	void _save_active_scene();
+
+	void _save_active_scene_as();
 
 private:
 	Ref<SceneRenderer> scene_renderer;
