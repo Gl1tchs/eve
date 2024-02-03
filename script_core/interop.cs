@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
+using static EveEngine.PostProcessVolume;
+using System.Runtime.InteropServices;
 
 namespace EveEngine
 {
@@ -160,6 +162,105 @@ namespace EveEngine
 		internal extern static string script_component_get_class_name(ulong entityId);
 
 		#endregion
+		#region SpriteRendererComponent
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static ulong sprite_renderer_component_get_texture(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_texture(ulong entityId, ulong handle);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_get_color(ulong entityId, out Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_color(ulong entityId, ref Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_get_tex_tiling(ulong entityId, out Vector2 texTiling);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_tex_tiling(ulong entityId, ref Vector2 texTiling);
+
+		#endregion
+		#region TextRendererComponent
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static string text_renderer_component_get_text(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_text(ulong entityId, string text);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static ulong text_renderer_component_get_font(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_font(ulong entityId, ulong fontHandle);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_get_fg_color(ulong entityId, out Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_fg_color(ulong entityId, ref Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_get_bg_color(ulong entityId, out Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_bg_color(ulong entityId, ref Color color);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static float text_renderer_component_get_kerning(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_kerning(ulong entityId, float kerning);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static float text_renderer_component_get_line_spacing(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_line_spacing(ulong entityId, float lineSpacing);
+
+		#endregion
+		#region PostProcessVolume
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static bool post_process_volume_component_get_is_global(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_is_global(ulong entityId, bool value);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_get_gray_scale(ulong entityId, out GrayScaleSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_gray_scale(ulong entityId, ref GrayScaleSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_get_chromatic_aberration(ulong entityId, out ChromaticAberrationSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_chromatic_aberration(ulong entityId, ref ChromaticAberrationSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_get_blur(ulong entityId, out BlurSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_blur(ulong entityId, ref BlurSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_get_sharpen(ulong entityId, out SharpenSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_sharpen(ulong entityId, ref SharpenSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_get_vignette(ulong entityId, out VignetteSettings settings);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void post_process_volume_component_set_vignette(ulong entityId, ref VignetteSettings settings);
+
+		#endregion
 		#region SceneManager
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
@@ -185,6 +286,15 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal extern static void input_get_scroll_offset(out Vector2 offset);
+
+		#endregion
+		#region AssetRegistry
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static ulong asset_registry_load(string path, AssetType type);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void asset_registry_unload(ulong handle);
 
 		#endregion
 	}

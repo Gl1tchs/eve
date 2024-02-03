@@ -40,6 +40,26 @@
         ],
         "kerning": 0.0,
         "line_spacing": 0.0
+      },
+      "script_component": {
+        "class_name": "Sample.Text",
+        "script_fields": [
+          {
+            "name": "text",
+            "type": "None",
+            "data": null
+          },
+          {
+            "name": "color",
+            "type": "Color",
+            "data": [
+              1.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ]
       }
     },
     {
@@ -116,9 +136,44 @@
           1.0
         ]
       },
+      "post_process_volume": {
+        "is_global": true,
+        "gray_scale": {
+          "enabled": false
+        },
+        "chromatic_aberration": {
+          "enabled": false,
+          "offset": [
+            0.008999999612569809,
+            0.006000000052154064,
+            -0.006000000052154064
+          ]
+        },
+        "blur": {
+          "enabled": false,
+          "size": 2,
+          "seperation": 2.0
+        },
+        "sharpen": {
+          "enabled": false,
+          "amount": 0.800000011920929
+        },
+        "vignette": {
+          "enabled": false,
+          "inner": 0.5,
+          "outer": 1.2000000476837158,
+          "strength": 0.800000011920929,
+          "curvature": 0.5
+        }
+      },
       "script_component": {
         "class_name": "Sample.MyEntity",
         "script_fields": [
+          {
+            "name": "Camera",
+            "type": "Entity",
+            "data": 8959252701979587220
+          },
           {
             "name": "Speed",
             "type": "Float",
@@ -150,8 +205,8 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 1.5032119750976563,
-          "zoom_level": 1.0,
+          "aspect_ratio": 1.674698829650879,
+          "zoom_level": 3.0,
           "near_clip": -1.0,
           "far_clip": 1.0
         },

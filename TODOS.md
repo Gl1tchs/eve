@@ -1,5 +1,8 @@
 ## eve Todo List
 
+## Bugs
+- [ ] Runtime camera aspect ratio not changing properly.
+
 ## General
 - [ ] Box2D physics.
 - [ ] Cross platform scripting.
@@ -18,8 +21,8 @@
 - [ ] Texture atlasses.
 - [ ] Animations
 
-## Scene
-- [ ]
+## Scripting
+- [ ] String script fields
 
 ## Asset
 - [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)

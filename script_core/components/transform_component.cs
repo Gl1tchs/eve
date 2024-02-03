@@ -8,7 +8,7 @@ namespace EveEngine
 		/// <summary>
 		/// Parent transform of current's
 		/// </summary>
-		public TransformComponent? Parent
+		public TransformComponent Parent
 		{
 			get
 			{

@@ -8,6 +8,6 @@ namespace EveEngine
 		/// <summary>
 		/// Entity object which is attached to the component.
 		/// </summary>
-		public Entity? Entity { get; internal set; }
+		public Entity Entity { get; internal set; }
 	}
 }

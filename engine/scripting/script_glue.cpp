@@ -1,9 +1,11 @@
 #include "scripting/script_glue.h"
 
+#include "asset/asset_registry.h"
 #include "core/application.h"
 #include "core/color.h"
 #include "core/event_system.h"
 #include "core/input.h"
+#include "renderer/post_processor.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene.h"
@@ -380,6 +382,205 @@ inline static MonoString* script_component_get_class_name(UID entity_id) {
 }
 
 #pragma endregion
+#pragma region SpriteRendererComponent
+
+inline static uint64_t sprite_renderer_component_get_texture(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<SpriteRendererComponent>().texture;
+}
+
+inline static void sprite_renderer_component_set_texture(UID entity_id, AssetHandle texture) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRendererComponent>().texture = texture;
+}
+
+inline static void sprite_renderer_component_get_color(UID entity_id, Color* out_color) {
+	Entity entity = get_entity(entity_id);
+
+	*out_color = entity.get_component<SpriteRendererComponent>().color;
+}
+
+inline static void sprite_renderer_component_set_color(UID entity_id, Color* color) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRendererComponent>().color = *color;
+}
+
+inline static void sprite_renderer_component_get_tex_tiling(UID entity_id, glm::vec2* out_tex_tiling) {
+	Entity entity = get_entity(entity_id);
+
+	*out_tex_tiling = entity.get_component<SpriteRendererComponent>().tex_tiling;
+}
+
+inline static void sprite_renderer_component_set_tex_tiling(UID entity_id, glm::vec2* tex_tiling) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRendererComponent>().tex_tiling = *tex_tiling;
+}
+
+#pragma endregion
+#pragma region TextRendererComponent
+
+inline static std::string text_renderer_component_get_text(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<TextRendererComponent>().text;
+}
+
+inline static void text_renderer_component_set_text(UID entity_id, MonoString* text) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().text = mono_string_to_string(text);
+}
+
+inline static UID text_renderer_component_get_font(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<TextRendererComponent>().font;
+}
+
+inline static void text_renderer_component_set_font(UID entity_id, UID font_handle) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().font = font_handle;
+}
+
+inline static void text_renderer_component_get_fg_color(UID entity_id, Color* out_color) {
+	Entity entity = get_entity(entity_id);
+
+	*out_color = entity.get_component<TextRendererComponent>().fg_color;
+}
+
+inline static void text_renderer_component_set_fg_color(UID entity_id, const Color* color) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().fg_color = *color;
+}
+
+inline static void text_renderer_component_get_bg_color(UID entity_id, Color* out_color) {
+	Entity entity = get_entity(entity_id);
+
+	*out_color = entity.get_component<TextRendererComponent>().bg_color;
+}
+
+inline static void text_renderer_component_set_bg_color(UID entity_id, const Color* color) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().bg_color = *color;
+}
+
+inline static float text_renderer_component_get_kerning(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<TextRendererComponent>().kerning;
+}
+
+inline static void text_renderer_component_set_kerning(UID entity_id, float kerning) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().kerning = kerning;
+}
+
+inline static float text_renderer_component_get_line_spacing(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<TextRendererComponent>().line_spacing;
+}
+
+inline static void text_renderer_component_set_line_spacing(UID entity_id, float line_spacing) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRendererComponent>().line_spacing = line_spacing;
+}
+
+#pragma endregion
+#pragma region PostProcessVolume
+
+inline static bool post_process_volume_component_get_is_global(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<PostProcessVolume>().is_global;
+}
+
+inline static void post_process_volume_component_set_is_global(UID entity_id, bool value) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().is_global = value;
+}
+
+inline static void post_process_volume_component_get_gray_scale(UID entity_id,
+		PostProcessVolume::GrayScaleSettings* out_gray_scale) {
+	Entity entity = get_entity(entity_id);
+
+	*out_gray_scale = entity.get_component<PostProcessVolume>().gray_scale;
+}
+
+inline static void post_process_volume_component_set_gray_scale(UID entity_id,
+		const PostProcessVolume::GrayScaleSettings* gray_scale) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().gray_scale = *gray_scale;
+}
+
+inline static void post_process_volume_component_get_chromatic_aberration(UID entity_id,
+		PostProcessVolume::ChromaticAberrationSettings* out_chromatic_aberration) {
+	Entity entity = get_entity(entity_id);
+
+	*out_chromatic_aberration = entity.get_component<PostProcessVolume>().chromatic_aberration;
+}
+
+inline static void post_process_volume_component_set_chromatic_aberration(UID entity_id,
+		const PostProcessVolume::ChromaticAberrationSettings* chromatic_aberration) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().chromatic_aberration = *chromatic_aberration;
+}
+
+inline static void post_process_volume_component_get_blur(UID entity_id,
+		PostProcessVolume::BlurSettings* out_blur) {
+	Entity entity = get_entity(entity_id);
+
+	*out_blur = entity.get_component<PostProcessVolume>().blur;
+}
+
+inline static void post_process_volume_component_set_blur(UID entity_id,
+		const PostProcessVolume::BlurSettings* blur) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().blur = *blur;
+}
+
+inline static void post_process_volume_component_get_sharpen(UID entity_id,
+		PostProcessVolume::SharpenSettings* out_sharpen) {
+	Entity entity = get_entity(entity_id);
+
+	*out_sharpen = entity.get_component<PostProcessVolume>().sharpen;
+}
+
+inline static void post_process_volume_component_set_sharpen(UID entity_id,
+		const PostProcessVolume::SharpenSettings* sharpen) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().sharpen = *sharpen;
+}
+
+inline static void post_process_volume_component_get_vignette(UID entity_id,
+		PostProcessVolume::VignetteSettings* out_vignette) {
+	Entity entity = get_entity(entity_id);
+
+	*out_vignette = entity.get_component<PostProcessVolume>().vignette;
+}
+
+inline static void post_process_volume_component_set_vignette(UID entity_id,
+		const PostProcessVolume::VignetteSettings* vignette) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<PostProcessVolume>().vignette = *vignette;
+}
+
+#pragma endregion
 #pragma region Input
 
 inline static bool input_is_key_pressed(KeyCode keycode) {
@@ -409,8 +610,21 @@ inline static void input_get_scroll_offset(glm::vec2* out_offset) {
 #pragma endregion
 #pragma region SceneManager
 
-inline static void scene_manager_load_scene(MonoString* path) {
+inline static void
+scene_manager_load_scene(MonoString* path) {
 	SceneManager::load_scene(mono_string_to_string(path));
+}
+
+#pragma endregion
+
+#pragma region AssetRegistry
+
+inline static uint64_t asset_registry_load(MonoString* path, AssetType type) {
+	return AssetRegistry::load(mono_string_to_string(path), type);
+}
+
+inline static void asset_registry_unload(AssetHandle handle) {
+	AssetRegistry::unload(handle);
 }
 
 #pragma endregion
@@ -484,7 +698,7 @@ void register_functions() {
 	ADD_INTERNAL_CALL(entity_instantiate);
 	ADD_INTERNAL_CALL(entity_assign_script);
 
-	// Begin Transform Component
+	// Begin TransformComponent
 	ADD_INTERNAL_CALL(transform_component_get_local_position);
 	ADD_INTERNAL_CALL(transform_component_set_local_position);
 	ADD_INTERNAL_CALL(transform_component_get_local_rotation);
@@ -500,7 +714,7 @@ void register_functions() {
 	ADD_INTERNAL_CALL(transform_component_translate);
 	ADD_INTERNAL_CALL(transform_component_rotate);
 
-	// Begin Camera Component
+	// Begin CameraComponent
 	ADD_INTERNAL_CALL(camera_component_camera_get_aspect_ratio);
 	ADD_INTERNAL_CALL(camera_component_camera_set_aspect_ratio);
 	ADD_INTERNAL_CALL(camera_component_camera_get_zoom_level);
@@ -517,6 +731,42 @@ void register_functions() {
 	// Begin ScriptComponent
 	ADD_INTERNAL_CALL(script_component_get_class_name);
 
+	// Begin SpriteRendererComponent
+	ADD_INTERNAL_CALL(sprite_renderer_component_get_texture);
+	ADD_INTERNAL_CALL(sprite_renderer_component_set_texture);
+	ADD_INTERNAL_CALL(sprite_renderer_component_get_color);
+	ADD_INTERNAL_CALL(sprite_renderer_component_set_color);
+	ADD_INTERNAL_CALL(sprite_renderer_component_get_tex_tiling);
+	ADD_INTERNAL_CALL(sprite_renderer_component_set_tex_tiling);
+
+	// Begin TextRendererComponent
+	ADD_INTERNAL_CALL(text_renderer_component_get_text);
+	ADD_INTERNAL_CALL(text_renderer_component_set_text);
+	ADD_INTERNAL_CALL(text_renderer_component_get_font);
+	ADD_INTERNAL_CALL(text_renderer_component_set_font);
+	ADD_INTERNAL_CALL(text_renderer_component_get_fg_color);
+	ADD_INTERNAL_CALL(text_renderer_component_set_fg_color);
+	ADD_INTERNAL_CALL(text_renderer_component_get_bg_color);
+	ADD_INTERNAL_CALL(text_renderer_component_set_bg_color);
+	ADD_INTERNAL_CALL(text_renderer_component_get_kerning);
+	ADD_INTERNAL_CALL(text_renderer_component_set_kerning);
+	ADD_INTERNAL_CALL(text_renderer_component_get_line_spacing);
+	ADD_INTERNAL_CALL(text_renderer_component_set_line_spacing);
+
+	// Begin PostProcessVolume
+	ADD_INTERNAL_CALL(post_process_volume_component_get_is_global);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_is_global);
+	ADD_INTERNAL_CALL(post_process_volume_component_get_gray_scale);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_gray_scale);
+	ADD_INTERNAL_CALL(post_process_volume_component_get_chromatic_aberration);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_chromatic_aberration);
+	ADD_INTERNAL_CALL(post_process_volume_component_get_blur);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_blur);
+	ADD_INTERNAL_CALL(post_process_volume_component_get_sharpen);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_sharpen);
+	ADD_INTERNAL_CALL(post_process_volume_component_get_vignette);
+	ADD_INTERNAL_CALL(post_process_volume_component_set_vignette);
+
 	// Begin Scene Manager
 	ADD_INTERNAL_CALL(scene_manager_load_scene);
 
@@ -527,6 +777,9 @@ void register_functions() {
 	ADD_INTERNAL_CALL(input_is_mouse_released);
 	ADD_INTERNAL_CALL(input_get_mouse_position);
 	ADD_INTERNAL_CALL(input_get_scroll_offset);
+
+	ADD_INTERNAL_CALL(asset_registry_load);
+	ADD_INTERNAL_CALL(asset_registry_unload);
 }
 
 } // namespace script_glue

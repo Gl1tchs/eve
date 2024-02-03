@@ -199,7 +199,7 @@ namespace EveEngine
 		/// </summary>
 		/// <param name="obj">The object to compare with the current vector.</param>
 		/// <returns><c>true</c> if the objects are equal; otherwise, <c>false</c>.</returns>
-		public override readonly bool Equals(object? obj)
+		public override readonly bool Equals(object obj)
 		{
 			if (obj is Vector3 other)
 			{

@@ -66,7 +66,7 @@ namespace EveEngine
 		/// <summary>
 		/// Called every frame.
 		/// </summary>
-		/// <param name="ds">Delta seconds.</param>
+		/// <param name="dt">Delta seconds.</param>
 		protected virtual void OnUpdate(float dt) { }
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace EveEngine
 		/// </summary>
 		/// <typeparam name="T">Component to look for.</typeparam>
 		/// <returns>Component reference if found <c>null</c> otherwise.</returns>
-		public T? GetComponent<T>() where T : Component, new()
+		public T GetComponent<T>() where T : Component, new()
 		{
 			if (!HasComponent<T>())
 				return null;
@@ -114,7 +114,7 @@ namespace EveEngine
 		/// <typeparam name="T">Component to add.</typeparam>
 		/// <returns>Added component reference.</returns>
 		/// <exception cref="DuplicateComponentException">Will be thrown if component already exists.</exception>
-		public T? AddComponent<T>() where T : Component, new()
+		public T AddComponent<T>() where T : Component, new()
 		{
 			var componentType = typeof(T);
 
@@ -134,7 +134,7 @@ namespace EveEngine
 		/// </summary>
 		/// <param name="name">Entity name to look for.</param>
 		/// <returns>Entity reference if found Entity. <c>InvalidEntity</c> otherwise.</returns>
-		public Entity Entity_FindByName(string name)
+		public static Entity FindByName(string name)
 		{
 			ulong entityId = Interop.entity_find_by_name(name);
 			return new Entity(entityId);
@@ -145,7 +145,7 @@ namespace EveEngine
 		/// </summary>
 		/// <typeparam name="T">The entity script instance class to cast.</typeparam>
 		/// <returns>Script instance of the entity.</returns>
-		public T? As<T>() where T : Entity, new()
+		public T As<T>() where T : Entity, new()
 		{
 			object instance = Interop.get_script_instance(Id);
 			return instance as T;
@@ -160,7 +160,7 @@ namespace EveEngine
 		/// <param name="rotation">Rotation of the entity transform.</param>
 		/// <param name="scale">Scale of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Vector3 position, Vector3 rotation, Vector3 scale) where T : Entity, new()
+		public T Instantiate<T>(string name, Vector3 position, Vector3 rotation, Vector3 scale) where T : Entity, new()
 		{
 			ulong createdId = Interop.entity_instantiate(name, 0, ref position, ref rotation, ref scale);
 
@@ -182,7 +182,7 @@ namespace EveEngine
 		/// <param name="position">Position of the entity transform.</param>
 		/// <param name="rotation">Rotation of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Vector3 position, Vector3 rotation) where T : Entity, new()
+		public T Instantiate<T>(string name, Vector3 position, Vector3 rotation) where T : Entity, new()
 		{
 			return Instantiate<T>(name, Entity.InvalidEntity, position, rotation, Vector3.One);
 		}
@@ -194,7 +194,7 @@ namespace EveEngine
 		/// <param name="name">The entity name of the scene.</param>
 		/// <param name="position">Position of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Vector3 position) where T : Entity, new()
+		public T Instantiate<T>(string name, Vector3 position) where T : Entity, new()
 		{
 			return Instantiate<T>(name, position, Vector3.Zero, Vector3.One);
 		}
@@ -205,7 +205,7 @@ namespace EveEngine
 		/// <typeparam name="T">Entity script class to create with.</typeparam>
 		/// <param name="name">The entity name of the scene.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name) where T : Entity, new()
+		public T Instantiate<T>(string name) where T : Entity, new()
 		{
 			return Instantiate<T>(name, Vector3.Zero, Vector3.Zero, Vector3.One);
 		}
@@ -220,7 +220,7 @@ namespace EveEngine
 		/// <param name="rotation">Rotation of the entity transform.</param>
 		/// <param name="scale">Scale of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Entity parent, Vector3 position, Vector3 rotation, Vector3 scale) where T : Entity, new()
+		public T Instantiate<T>(string name, Entity parent, Vector3 position, Vector3 rotation, Vector3 scale) where T : Entity, new()
 		{
 			ulong createdId = Interop.entity_instantiate(name, parent.Id, ref position, ref rotation, ref scale);
 
@@ -243,7 +243,7 @@ namespace EveEngine
 		/// <param name="position">Position of the entity transform.</param>
 		/// <param name="rotation">Rotation of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Entity parent, Vector3 position, Vector3 rotation) where T : Entity, new()
+		public T Instantiate<T>(string name, Entity parent, Vector3 position, Vector3 rotation) where T : Entity, new()
 		{
 			return Instantiate<T>(name, parent, position, rotation, Vector3.One);
 		}
@@ -256,7 +256,7 @@ namespace EveEngine
 		/// <param name="parent">The parent of the entity.</param>
 		/// <param name="position">Position of the entity transform.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Entity parent, Vector3 position) where T : Entity, new()
+		public T Instantiate<T>(string name, Entity parent, Vector3 position) where T : Entity, new()
 		{
 			return Instantiate<T>(name, parent, position, Vector3.Zero, Vector3.One);
 		}
@@ -268,7 +268,7 @@ namespace EveEngine
 		/// <param name="name">The entity name of the scene.</param>
 		/// <param name="parent">The parent of the entity.</param>
 		/// <returns>New created entity instance.</returns>
-		public T? Instantiate<T>(string name, Entity parent) where T : Entity, new()
+		public T Instantiate<T>(string name, Entity parent) where T : Entity, new()
 		{
 			return Instantiate<T>(name, parent, Vector3.Zero, Vector3.Zero, Vector3.One);
 		}
@@ -283,7 +283,7 @@ namespace EveEngine
 		/// <remarks>
 		/// Two entities are considered equal if they have the same identifier (Id).
 		/// </remarks>
-		public override bool Equals(object? obj)
+		public override bool Equals(object obj)
 		{
 			if ((obj == null) || !this.GetType().Equals(obj.GetType()))
 			{

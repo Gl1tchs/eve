@@ -11,7 +11,7 @@ namespace EveEngine
 		/// <param name="path">Path of the path in eve asset path format</param>
 		/// <example>
 		///  SceneManager.LoadScene("res://scenes/scene1.escn");
-		/// </example
+		/// </example>
 		public static void LoadScene(string path)
 		{
 			Interop.scene_manager_load_scene(path);
