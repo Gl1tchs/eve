@@ -115,6 +115,48 @@
           1.0,
           1.0
         ]
+      },
+      "script_component": {
+        "class_name": "Sample.MyEntity",
+        "script_fields": [
+          {
+            "name": "Speed",
+            "type": "Float",
+            "data": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "id": 8959252701979587220,
+      "tag": "Camera",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "camera_component": {
+        "camera": {
+          "aspect_ratio": 1.5032119750976563,
+          "zoom_level": 1.0,
+          "near_clip": -1.0,
+          "far_clip": 1.0
+        },
+        "is_primary": true,
+        "is_fixed_aspect_ratio": false
       }
     }
   ]

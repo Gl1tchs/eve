@@ -10,22 +10,24 @@
 #include "renderer/renderer.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
+#include "scripting/script_engine.h"
 
 #include <imgui.h>
 #include <tinyfiledialogs.h>
 
 EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 		Application(info) {
-	hierarchy = create_ref<HierarchyPanel>();
-	inspector = create_ref<InspectorPanel>(hierarchy);
-
-	editor_camera = create_ref<EditorCamera>();
 	scene_renderer = create_ref<SceneRenderer>();
-
 	// bind entity selection beheaviour
 	scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
 
+	editor_camera = create_ref<EditorCamera>();
+
+	hierarchy = create_ref<HierarchyPanel>();
+	inspector = create_ref<InspectorPanel>(hierarchy);
+
 	_setup_menubar();
+	_setup_toolbar();
 }
 
 void EditorApplication::_on_start() {
@@ -35,12 +37,30 @@ void EditorApplication::_on_update(float dt) {
 	// resize
 	_on_viewport_resize();
 
-	if (viewport.is_focused()) {
-		editor_camera->update(dt);
-	}
+	switch (state) {
+		case SceneState::EDIT: {
+			if (viewport.is_focused()) {
+				editor_camera->update(dt);
+			}
 
-	// render image to frame buffer
-	scene_renderer->render_editor(dt, editor_camera);
+			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
+				scene_renderer->render_editor(dt, editor_camera);
+			}
+
+			break;
+		}
+		case SceneState::PAUSED:
+		case SceneState::PLAY: {
+			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
+				scene->update(dt);
+				scene_renderer->render_runtime(dt);
+			}
+
+			break;
+		}
+		default:
+			break;
+	}
 }
 
 void EditorApplication::_on_imgui_update(float dt) {
@@ -52,6 +72,8 @@ void EditorApplication::_on_imgui_update(float dt) {
 		DockSpace::end();
 		return;
 	}
+
+	toolbar.render();
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	viewport.set_render_texture_id(scene_renderer->get_final_texture_id());
@@ -78,7 +100,7 @@ void EditorApplication::_setup_menubar() {
 				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
 				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
 				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) },
-				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(_quit) },
+				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(quit) },
 		}
 	};
 	menubar.push_menu(file_menu);
@@ -88,6 +110,7 @@ void EditorApplication::_setup_menubar() {
 		{
 				{ "Viewport",
 						[this]() { viewport.set_active(true); } },
+				{ "Toolbar", [this]() { toolbar.set_active(true); } },
 				{ "Hierarchy",
 						[this]() { hierarchy->set_active(true); } },
 				{ "Inspector",
@@ -101,11 +124,22 @@ void EditorApplication::_setup_menubar() {
 	menubar.push_menu(view_menu);
 }
 
+void EditorApplication::_setup_toolbar() {
+	toolbar.on_play = BIND_FUNC(_on_scene_play);
+	toolbar.on_stop = BIND_FUNC(_on_scene_stop);
+	toolbar.on_pause = BIND_FUNC(_on_scene_pause);
+	toolbar.on_resume = BIND_FUNC(_on_scene_resume);
+	toolbar.on_step = BIND_FUNC(_on_scene_step);
+}
+
 void EditorApplication::_on_viewport_resize() {
 	const auto viewport_size = viewport.get_size();
+
+	// this will cache it on it's own
+	scene_renderer->on_viewport_resize({ viewport_size.x, viewport_size.y });
+
 	if (viewport_size.x > 0 && viewport_size.y > 0) {
 		editor_camera->aspect_ratio = (float)viewport_size.x / (float)viewport_size.y;
-		scene_renderer->on_viewport_resize({ viewport_size.x, viewport_size.y });
 	}
 }
 
@@ -183,9 +217,51 @@ void EditorApplication::_open_project() {
 	if (Ref<Project> project = Project::load(fs::path(path)); project) {
 		hierarchy->set_selected_entity(INVALID_ENTITY);
 
+		ScriptEngine::init();
+
 		// load the first scene
-		SceneManager::load_scene(project->get_starting_scene_path());
+		EVE_ASSERT_ENGINE(SceneManager::load_scene(project->get_starting_scene_path()));
+		editor_scene = SceneManager::get_active();
 	}
+}
+
+void EditorApplication::_set_scene_state(SceneState _state) {
+	state = _state;
+	toolbar.set_state(state);
+}
+
+void EditorApplication::_on_scene_open() {
+	editor_scene = SceneManager::get_active();
+}
+
+void EditorApplication::_on_scene_play() {
+	_set_scene_state(SceneState::PLAY);
+
+	SceneManager::get_active() = Scene::copy(editor_scene);
+
+	SceneManager::get_active()->start();
+}
+
+void EditorApplication::_on_scene_stop() {
+	_set_scene_state(SceneState::EDIT);
+
+	SceneManager::get_active()->stop();
+
+	SceneManager::get_active() = editor_scene;
+}
+
+void EditorApplication::_on_scene_pause() {
+	_set_scene_state(SceneState::PAUSED);
+	SceneManager::get_active()->set_paused(true);
+}
+
+void EditorApplication::_on_scene_resume() {
+	_set_scene_state(SceneState::PLAY);
+	SceneManager::get_active()->set_paused(false);
+}
+
+void EditorApplication::_on_scene_step() {
+	SceneManager::get_active()->step();
 }
 
 // Application entrypoint

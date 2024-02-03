@@ -4,10 +4,6 @@
 #include "core/color.h"
 #include "renderer/vertex_array.h"
 
-enum class GraphicsAPI { kNone = 0,
-	kOpenGL,
-	kVulkan };
-
 enum BufferBits : uint16_t {
 	BUFFER_BITS_DEPTH = 1 << 0,
 	BUFFER_BITS_COLOR = 1 << 1,

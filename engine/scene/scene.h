@@ -11,7 +11,7 @@ class Scene : public Asset {
 public:
 	EVE_IMPL_ASSET(AssetType::SCENE)
 
-	Scene(const char* name = "default");
+	Scene(const std::string& name = "default");
 
 	void start();
 
@@ -19,9 +19,9 @@ public:
 
 	void stop();
 
-	void set_paused(bool paused);
+	void set_paused(bool _paused);
 
-	void step(uint32_t frames);
+	void step(uint32_t frames = 1);
 
 	bool is_running();
 
@@ -89,7 +89,7 @@ public:
 	// DISCLAIMER
 	//  only the components that are defined in components.h:AllComponents<>
 	//  component group will be copied.
-	void copy_to(Ref<Scene> dst);
+	static Ref<Scene> copy(Ref<Scene> src);
 
 	static void serialize(Ref<Scene> scene, std::string path);
 

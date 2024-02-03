@@ -3,6 +3,13 @@
 
 struct GLFWwindow;
 
+enum class WindowCursorMode {
+	NORMAL = 0,
+	HIDDEN = 1,
+	DISABLED = 2,
+	CAPTURED = 3,
+};
+
 struct WindowCreateInfo {
 	const char* title = "eve game";
 	uint32_t w = 1280;
@@ -24,6 +31,14 @@ public:
 
 	float get_aspect_ratio() const;
 
+	WindowCursorMode get_cursor_mode() const;
+	void set_cursor_mode(WindowCursorMode mode);
+
+	// TODO:
+	// get/set title
+	// get/set vsync
+	// get/set window mode
+
 	GLFWwindow* get_native_window();
 
 private:
@@ -31,6 +46,8 @@ private:
 
 private:
 	GLFWwindow* window;
+
+	WindowCursorMode cursor_mode = WindowCursorMode::NORMAL;
 };
 
 #endif

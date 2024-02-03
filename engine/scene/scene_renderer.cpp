@@ -53,6 +53,20 @@ void SceneRenderer::render_runtime(float ds) {
 		_render_scene(data);
 
 		_post_process();
+	} else {
+		// TODO render no camera text center of the screen
+
+		// clear the screen
+		frame_buffer->bind();
+		{
+			RenderCommand::set_depth_testing(true);
+
+			RenderCommand::set_clear_color(COLOR_GRAY);
+			RenderCommand::clear(BUFFER_BITS_COLOR | BUFFER_BITS_DEPTH);
+		}
+		frame_buffer->unbind();
+
+		post_processed = false;
 	}
 }
 

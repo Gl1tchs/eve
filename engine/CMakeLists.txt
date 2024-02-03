@@ -27,6 +27,7 @@ PRIVATE
     ${VENDOR_DIR}/imgui
     ${VENDOR_DIR}/stb
 	${VENDOR_DIR}/filewatch
+	${VENDOR_DIR}/mono/include
 )
 
 target_link_libraries(eve
@@ -38,6 +39,12 @@ PRIVATE
     glfw
 	imgui
 	msdf-atlas-gen
+	mono
 )
 
 target_compile_definitions(eve PRIVATE GLFW_INCLUDE_NONE)
+
+add_custom_command(TARGET eve PRE_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${VENDOR_DIR}/mono/bin/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+  COMMENT "Copying Mono DLL to the build destination."
+)

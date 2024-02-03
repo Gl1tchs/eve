@@ -29,10 +29,16 @@ struct TextRendererComponent {
 	float line_spacing = 0.0f;
 };
 
+struct ScriptComponent {
+	std::string class_name;
+};
+
 template <typename... Component>
 struct ComponentGroup {};
 
 using AllComponents =
-		ComponentGroup<TransformComponent, CameraComponent, SpriteRendererComponent, TextRendererComponent, PostProcessVolume>;
+		ComponentGroup<TransformComponent, CameraComponent,
+				SpriteRendererComponent, TextRendererComponent,
+				PostProcessVolume, ScriptComponent>;
 
 #endif

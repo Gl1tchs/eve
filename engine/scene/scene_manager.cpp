@@ -5,7 +5,7 @@
 
 Ref<Scene> SceneManager::s_active_scene = nullptr;
 
-void SceneManager::load_scene(const std::string& path) {
+bool SceneManager::load_scene(const std::string& path) {
 	//? TODO do not unload shared assets
 	if (s_active_scene) {
 		if (s_active_scene->is_running()) {
@@ -24,7 +24,7 @@ void SceneManager::load_scene(const std::string& path) {
 				s_active_scene->start();
 			});
 
-			return;
+			return true;
 		} else {
 			AssetRegistry::unload_all();
 		}
@@ -33,12 +33,14 @@ void SceneManager::load_scene(const std::string& path) {
 	AssetHandle handle = AssetRegistry::load(path, AssetType::SCENE);
 	if (!handle) {
 		EVE_LOG_ENGINE_ERROR("Unable to load scene from path: {}", path);
-		return;
+		return false;
 	}
 
 	s_active_scene = AssetRegistry::get<Scene>(handle);
+
+	return true;
 }
 
-Ref<Scene> SceneManager::get_active() {
+Ref<Scene>& SceneManager::get_active() {
 	return s_active_scene;
 }

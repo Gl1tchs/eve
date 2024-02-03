@@ -1,5 +1,6 @@
 #include "panels/viewport_panel.h"
 
+#include "editor.h"
 #include "scene/scene_manager.h"
 
 #include <imgui.h>
@@ -35,7 +36,10 @@ void ViewportPanel::_draw() {
 						ImGui::AcceptDragDropPayload("DND_PAYLOAD_SCENE")) {
 			const char* recv_path = static_cast<const char*>(payload->Data);
 
-			SceneManager::load_scene(recv_path);
+			if (SceneManager::load_scene(recv_path)) {
+				EditorApplication* editor = (EditorApplication*)Application::get_instance();
+				editor->_on_scene_open();
+			}
 		}
 
 		ImGui::EndDragDropTarget();

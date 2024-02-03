@@ -6,6 +6,7 @@
 #include "core/key_code.h"
 #include "core/mouse_code.h"
 
+#include "window.h"
 #include <GLFW/glfw3.h>
 
 static void glfw_error_callback(int error, const char* description) {
@@ -62,6 +63,31 @@ glm::ivec2 Window::get_size() const {
 float Window::get_aspect_ratio() const {
 	const glm::ivec2 s = get_size();
 	return static_cast<float>(s.x) / static_cast<float>(s.y);
+}
+
+WindowCursorMode Window::get_cursor_mode() const {
+	return cursor_mode;
+}
+
+void Window::set_cursor_mode(WindowCursorMode mode) {
+	cursor_mode = mode;
+
+	switch (cursor_mode) {
+		case WindowCursorMode::NORMAL:
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			break;
+		case WindowCursorMode::HIDDEN:
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			break;
+		case WindowCursorMode::DISABLED:
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			break;
+		case WindowCursorMode::CAPTURED:
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+			break;
+		default:
+			break;
+	}
 }
 
 GLFWwindow* Window::get_native_window() {

@@ -5,6 +5,7 @@
 #include "core/timer.h"
 #include "imgui/imgui_layer.h"
 #include "renderer/font.h"
+#include "scripting/script_engine.h"
 
 Application* Application::s_instance = nullptr;
 
@@ -30,6 +31,7 @@ Application::~Application() {
 		Font::s_default_font.reset();
 	}
 
+	ScriptEngine::shutdown();
 	Renderer::shutdown();
 }
 
@@ -83,6 +85,10 @@ void Application::_process_main_thread_queue() {
 	main_thread_queue.clear();
 }
 
-void Application::_quit() {
+void Application::quit() {
 	running = false;
+}
+
+Ref<Window> Application::get_window() {
+	return window;
 }

@@ -52,6 +52,17 @@ bin/*
 !bin/res
 !bin/imgui.ini
 
+# Mono dll and build files
+!vendor/mono/bin/*.dll
+!vendor/mono/bin/*.a
+!vendor/mono/bin/*.dylib
+!vendor/mono/bin/*.pdb
+!vendor/mono/lib/*.lib
+!bin/mono
+!bin/mono/lib/mono/4.5/Facades/*.dll
+!bin/mono/lib/mono/4.5/*.dll
+
 # Test project files
 !bin/sample
+bin/sample/out
 !bin/demo

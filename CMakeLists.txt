@@ -14,5 +14,6 @@ set(VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
 # Define the targets
 add_subdirectory(vendor)
+
 add_subdirectory(engine)
 add_subdirectory(editor)

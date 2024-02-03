@@ -32,11 +32,12 @@ PostProcessor::PostProcessor() {
 			"shaders/post-processing/vignette.frag");
 
 	FrameBufferCreateInfo fb_info;
+	fb_info.width = 1280;
+	fb_info.height = 768;
 	fb_info.attachments = {
 		FrameBufferTextureFormat::RGBA8,
 	};
-	fb_info.width = 1280;
-	fb_info.height = 768;
+
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 }
 

@@ -20,3 +20,13 @@ target_link_libraries(editor PRIVATE
 	imgui
 	tinyfiledialogs
 )
+
+add_custom_command(TARGET editor PRE_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/LICENSE
+  COMMENT "Copying LICENSE to the build destination."
+)
+
+add_custom_command(TARGET editor PRE_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/docs ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/docs
+  COMMENT "Copying documentation files to the build destination."
+)

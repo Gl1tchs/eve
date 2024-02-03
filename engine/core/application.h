@@ -20,6 +20,10 @@ public:
 
 	void run();
 
+	void quit();
+
+	Ref<Window> get_window();
+
 	static void enque_main_thread(MainThreadFunc func);
 
 	static Application* get_instance();
@@ -39,8 +43,6 @@ protected:
 	inline virtual void _on_imgui_update(float dt) {}
 
 	inline virtual void _on_destroy() {}
-
-	void _quit();
 
 private:
 	bool running = true;
