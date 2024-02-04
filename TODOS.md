@@ -4,10 +4,11 @@
 - [ ] Runtime camera aspect ratio not changing properly.
 
 ## General
-- [ ] Box2D physics.
+- [x] Box2D physics.
 - [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization
+- [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
 - [x] Open Project

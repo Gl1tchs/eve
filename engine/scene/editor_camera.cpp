@@ -20,7 +20,7 @@ void EditorCamera::update(float dt) {
 		return;
 	}
 
-	glm::vec2 mouse_delta = Input::get_mouse_position() - last_mouse_pos;
+	const glm::vec2 mouse_delta = Input::get_mouse_position() - last_mouse_pos;
 
 	transform.local_position.x += mouse_delta.x * sensitivity * zoom_level * dt;
 	transform.local_position.y -= mouse_delta.y * sensitivity * zoom_level * dt;

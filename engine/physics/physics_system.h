@@ -5,6 +5,7 @@
 
 class Scene;
 class b2World;
+
 enum b2BodyType;
 
 struct PhysicsSettings {
