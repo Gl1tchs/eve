@@ -133,6 +133,8 @@ uint32_t SceneRenderer::get_final_texture_id() const {
 }
 
 void SceneRenderer::_render_scene(const CameraData& camera_data) {
+	EVE_PROFILE_FUNCTION();
+
 	const auto scene = SceneManager::get_active();
 
 	Renderer::reset_stats();

@@ -3,7 +3,7 @@
 #include "core/application.h"
 #include "core/file_system.h"
 #include "project/project.h"
-#include "script_engine.h"
+#include "scene/components.h"
 #include "scripting/script_glue.h"
 
 #include <mono/jit/jit.h>
@@ -127,6 +127,8 @@ inline static ScriptFieldType mono_type_to_script_field_type(MonoType* mono_type
 }
 
 void ScriptEngine::init(bool is_runtime) {
+	EVE_PROFILE_FUNCTION();
+
 	if (s_data) {
 		reinit();
 		return;
@@ -174,6 +176,8 @@ void ScriptEngine::reinit() {
 }
 
 void ScriptEngine::shutdown() {
+	EVE_PROFILE_FUNCTION();
+
 	_shutdown_mono();
 	delete s_data;
 	s_data = nullptr;
@@ -184,6 +188,8 @@ bool ScriptEngine::is_initialized() {
 }
 
 void ScriptEngine::_init_mono() {
+	EVE_PROFILE_FUNCTION();
+
 	mono_set_assemblies_path("mono/lib");
 
 	if (s_data->enable_debugging) {
@@ -208,6 +214,8 @@ void ScriptEngine::_init_mono() {
 }
 
 void ScriptEngine::_shutdown_mono() {
+	EVE_PROFILE_FUNCTION();
+
 	mono_domain_set(mono_get_root_domain(), false);
 
 	mono_domain_unload(s_data->app_domain);
@@ -222,6 +230,8 @@ void ScriptEngine::_shutdown_mono() {
 }
 
 bool ScriptEngine::load_assembly(const fs::path& filepath) {
+	EVE_PROFILE_FUNCTION();
+
 	// Create an App Domain
 	char friendly_name[] = "EveScriptRuntime";
 	s_data->app_domain = mono_domain_create_appdomain(friendly_name, nullptr);
@@ -237,6 +247,8 @@ bool ScriptEngine::load_assembly(const fs::path& filepath) {
 }
 
 bool ScriptEngine::load_app_assembly(const fs::path& filepath) {
+	EVE_PROFILE_FUNCTION();
+
 	s_data->app_assembly_path = filepath;
 	s_data->app_assembly = load_mono_assembly(filepath, s_data->enable_debugging);
 	if (s_data->app_assembly == nullptr)
@@ -252,6 +264,8 @@ bool ScriptEngine::load_app_assembly(const fs::path& filepath) {
 }
 
 void ScriptEngine::reload_assembly() {
+	EVE_PROFILE_FUNCTION();
+
 	mono_domain_set(mono_get_root_domain(), false);
 
 	mono_domain_unload(s_data->app_domain);
@@ -271,6 +285,8 @@ bool ScriptEngine::does_entity_class_exists(const std::string& fullClassName) {
 }
 
 void ScriptEngine::create_entity_instance(Entity entity) {
+	EVE_PROFILE_FUNCTION();
+
 	const auto& sc = entity.get_component<ScriptComponent>();
 	if (!ScriptEngine::does_entity_class_exists(sc.class_name)) {
 		return;
@@ -315,6 +331,8 @@ void ScriptEngine::set_entity_managed_field_values(Entity entity) {
 }
 
 void ScriptEngine::invoke_on_create_entity(Entity entity) {
+	EVE_PROFILE_FUNCTION();
+
 	UID entity_id = entity.get_uid();
 
 	Ref<ScriptInstance> instance = get_entity_script_instance(entity_id);
@@ -323,6 +341,8 @@ void ScriptEngine::invoke_on_create_entity(Entity entity) {
 }
 
 void ScriptEngine::invoke_on_update_entity(Entity entity, float dt) {
+	EVE_PROFILE_FUNCTION();
+
 	UID entity_uuid = entity.get_uid();
 	if (auto instance = get_entity_script_instance(entity_uuid); instance) {
 		instance->invoke_on_update(dt);
@@ -333,6 +353,8 @@ void ScriptEngine::invoke_on_update_entity(Entity entity, float dt) {
 }
 
 void ScriptEngine::invoke_on_destroy_entity(Entity entity) {
+	EVE_PROFILE_FUNCTION();
+
 	UID entity_uuid = entity.get_uid();
 	if (auto instance = get_entity_script_instance(entity_uuid); instance) {
 		instance->invoke_on_destroy();
@@ -389,6 +411,8 @@ ScriptFieldMap& ScriptEngine::get_script_field_map(Entity entity) {
 }
 
 void ScriptEngine::_load_assembly_classes() {
+	EVE_PROFILE_FUNCTION();
+
 	s_data->entity_classes.clear();
 
 	const MonoTableInfo* type_definitions_table =
@@ -488,6 +512,8 @@ MonoString* ScriptEngine::create_mono_string(const char* string) {
 }
 
 MonoObject* ScriptEngine::_instantiate_class(MonoClass* mono_class) {
+	EVE_PROFILE_FUNCTION();
+
 	MonoObject* instance = mono_object_new(s_data->app_domain, mono_class);
 	mono_runtime_object_init(instance);
 	return instance;

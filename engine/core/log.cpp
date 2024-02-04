@@ -56,6 +56,8 @@ std::unordered_map<LogLevel, std::string> Logger::s_verbosity_colors = {
 };
 
 std::ofstream Logger::s_log_file;
+std::mutex Logger::s_logger_mutex;
+
 std::vector<Ref<LogBuffer>> Logger::s_log_buffers = {};
 
 LogBuffer::LogBuffer(uint32_t max_messages) :
@@ -75,6 +77,8 @@ void LogBuffer::clear() {
 }
 
 void Logger::init(const std::string& file_name) {
+	std::lock_guard<std::mutex> lock(s_logger_mutex);
+
 	s_log_file.open(file_name);
 	if (!s_log_file.is_open()) {
 		throw std::runtime_error(
@@ -83,6 +87,8 @@ void Logger::init(const std::string& file_name) {
 }
 
 void Logger::log(LogSender sender, LogLevel level, const std::string& fmt) {
+	std::lock_guard<std::mutex> lock(s_logger_mutex);
+
 	const std::string time_stamp = get_timestamp();
 
 	const std::string message =

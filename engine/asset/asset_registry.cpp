@@ -80,6 +80,8 @@ void AssetRegistry::init() {
 }
 
 Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
+	EVE_PROFILE_FUNCTION();
+
 	const auto it = s_loaded_assets.find(handle);
 	if (it == s_loaded_assets.end()) {
 		return nullptr;
@@ -89,6 +91,8 @@ Ref<Asset> AssetRegistry::get(const AssetHandle& handle) {
 }
 
 AssetHandle AssetRegistry::load(const std::string& path, AssetType type) {
+	EVE_PROFILE_FUNCTION();
+
 	const fs::path path_abs = Project::get_asset_path(path);
 	if (!fs::exists(path_abs)) {
 		return INVALID_UID;
@@ -150,6 +154,8 @@ bool AssetRegistry::is_loaded(const AssetHandle& handle) {
 }
 
 AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
+	EVE_PROFILE_FUNCTION();
+
 	const fs::path path_abs = Project::get_asset_path(path);
 
 	const AssetType type = get_asset_type_from_extension(path_abs.extension().string());
@@ -171,6 +177,8 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 }
 
 void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& new_path) {
+	EVE_PROFILE_FUNCTION();
+
 	const std::string old_path_rel = Project::get_relative_asset_path(old_path.string());
 	const std::string new_path_rel = Project::get_relative_asset_path(new_path.string());
 

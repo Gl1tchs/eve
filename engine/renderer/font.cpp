@@ -12,6 +12,8 @@ inline static uint32_t s_memory_counter = 1;
 
 inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas::GlyphGeometry>& glyphs,
 		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height) {
+	EVE_PROFILE_FUNCTION();
+
 	msdf_atlas::GeneratorAttributes attributes;
 	attributes.config.overlapSupport = true;
 	attributes.scanlinePass = true;
@@ -45,6 +47,8 @@ inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas
 
 inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		MSDFData* data, const std::string& name) {
+	EVE_PROFILE_FUNCTION();
+
 	struct CharsetRange {
 		uint32_t begin, end;
 	};
@@ -98,6 +102,8 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 }
 
 Font::Font(const fs::path& path) {
+	EVE_PROFILE_FUNCTION();
+
 	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 
 	const std::string path_str = path.string();
@@ -115,6 +121,8 @@ Font::Font(const fs::path& path) {
 }
 
 Font::Font(const uint8_t* bytes, uint32_t length) {
+	EVE_PROFILE_FUNCTION();
+
 	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 
 	msdfgen::FontHandle* font = msdfgen::loadFontData(ft, bytes, length);

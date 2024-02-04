@@ -15,6 +15,8 @@ Scene::Scene(const std::string& name) :
 }
 
 void Scene::start() {
+	EVE_PROFILE_FUNCTION();
+
 	running = true;
 
 	ScriptEngine::on_runtime_start(this);
@@ -43,6 +45,8 @@ void Scene::start() {
 }
 
 void Scene::update(float dt) {
+	EVE_PROFILE_FUNCTION();
+
 	if (paused && step_frames-- <= 0) {
 		return;
 	}
@@ -54,6 +58,8 @@ void Scene::update(float dt) {
 }
 
 void Scene::stop() {
+	EVE_PROFILE_FUNCTION();
+
 	running = false;
 
 	for (auto entity_id : view<ScriptComponent>()) {
@@ -194,6 +200,8 @@ static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst,
 }
 
 Ref<Scene> Scene::copy(Ref<Scene> src) {
+	EVE_PROFILE_FUNCTION();
+
 	Ref<Scene> dst = create_ref<Scene>(src->name);
 
 	auto& src_registry = src->registry;

@@ -17,6 +17,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(TextureWrappingMode,
 		});
 
 Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
+	EVE_PROFILE_FUNCTION();
+
 	// Get .meta path
 	fs::path metadata_path = path;
 	metadata_path.replace_extension(path.extension().string() + ".meta");
@@ -79,6 +81,8 @@ Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
 }
 
 Ref<Font> AssetLoader::load_font(const fs::path& path) {
+	EVE_PROFILE_FUNCTION();
+
 	// Get .meta path
 	fs::path metadata_path = path;
 	metadata_path.replace_extension(path.extension().string() + ".meta");
@@ -123,6 +127,8 @@ Ref<Font> AssetLoader::load_font(const fs::path& path) {
 }
 
 Ref<Scene> AssetLoader::load_scene(const fs::path& path) {
+	EVE_PROFILE_FUNCTION();
+
 	Ref<Scene> scene = create_ref<Scene>();
 	if (!Scene::deserialize(scene, path.string())) {
 		return nullptr;

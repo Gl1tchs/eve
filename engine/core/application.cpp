@@ -5,11 +5,14 @@
 #include "core/timer.h"
 #include "imgui/imgui_layer.h"
 #include "renderer/font.h"
+#include "renderer/renderer.h"
 #include "scripting/script_engine.h"
 
 Application* Application::s_instance = nullptr;
 
 Application::Application(const ApplicationCreateInfo& info) {
+	EVE_PROFILE_FUNCTION();
+
 	EVE_ASSERT_ENGINE(!s_instance, "Only on instance can exists at a time!");
 	s_instance = this;
 
@@ -24,6 +27,8 @@ Application::Application(const ApplicationCreateInfo& info) {
 }
 
 Application::~Application() {
+	EVE_PROFILE_FUNCTION();
+
 	// FIXME
 	// 	perhaps there is a better way to
 	//	delete static opengl resources.
@@ -36,30 +41,28 @@ Application::~Application() {
 }
 
 void Application::run() {
-	ImGuiLayer imgui_layer(window);
+	EVE_PROFILE_FUNCTION();
 
-	_on_start();
+	imgui_layer = new ImGuiLayer(window);
+
+	{
+		EVE_PROFILE_SCOPE("Application::_on_start");
+
+		_on_start();
+	}
 
 	Timer timer;
 	while (running) {
-		float dt = timer.get_delta_time();
-
-		window->poll_events();
-
-		_process_main_thread_queue();
-
-		_on_update(dt);
-
-		imgui_layer.begin();
-		{
-			_on_imgui_update(dt);
-		}
-		imgui_layer.end();
-
-		window->swap_buffers();
+		_event_loop(timer.get_delta_time());
 	}
 
-	_on_destroy();
+	{
+		EVE_PROFILE_SCOPE("Application::_on_destroy");
+
+		_on_destroy();
+	}
+
+	delete imgui_layer;
 }
 
 void Application::enque_main_thread(MainThreadFunc func) {
@@ -74,6 +77,30 @@ void Application::enque_main_thread(MainThreadFunc func) {
 
 Application* Application::get_instance() {
 	return s_instance;
+}
+
+void Application::_event_loop(float dt) {
+	EVE_PROFILE_FUNCTION();
+
+	window->poll_events();
+
+	_process_main_thread_queue();
+
+	{
+		EVE_PROFILE_SCOPE("Application::_on_update");
+
+		_on_update(dt);
+	}
+
+	imgui_layer->begin();
+	{
+		EVE_PROFILE_SCOPE("Application::_on_imgui_update");
+
+		_on_imgui_update(dt);
+	}
+	imgui_layer->end();
+
+	window->swap_buffers();
 }
 
 void Application::_process_main_thread_queue() {

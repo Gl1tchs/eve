@@ -52,6 +52,8 @@ Shader::~Shader() {
 }
 
 void Shader::recompile(const char* vs_path, const char* fs_path) {
+	EVE_PROFILE_FUNCTION();
+
 	glDeleteProgram(renderer_id);
 	renderer_id = glCreateProgram();
 

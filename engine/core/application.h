@@ -2,7 +2,8 @@
 #define APPLICATION_H
 
 #include "core/window.h"
-#include "renderer/renderer.h"
+
+class ImGuiLayer;
 
 struct ApplicationCreateInfo {
 	const char* name;
@@ -10,7 +11,6 @@ struct ApplicationCreateInfo {
 	const char** argv;
 };
 
-// TODO try to make this function pointer
 typedef std::function<void(void)> MainThreadFunc;
 
 class Application {
@@ -29,6 +29,8 @@ public:
 	static Application* get_instance();
 
 private:
+	void _event_loop(float dt);
+
 	void _process_main_thread_queue();
 
 protected:
@@ -49,6 +51,8 @@ private:
 
 	std::vector<MainThreadFunc> main_thread_queue;
 	std::mutex main_thread_queue_mutex;
+
+	ImGuiLayer* imgui_layer;
 };
 
 #endif

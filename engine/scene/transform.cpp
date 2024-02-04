@@ -58,6 +58,8 @@ glm::vec3 TransformComponent::get_up() const {
 }
 
 glm::mat4 TransformComponent::get_transform_matrix() const {
+	EVE_PROFILE_FUNCTION();
+
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), local_position);
 	transform =
 			glm::rotate(transform, glm::radians(local_rotation.x), VEC3_RIGHT);

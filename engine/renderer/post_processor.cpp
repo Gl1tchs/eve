@@ -8,6 +8,8 @@
 #include "renderer/vertex_array.h"
 
 PostProcessor::PostProcessor() {
+	EVE_PROFILE_FUNCTION();
+
 	vertex_array = create_ref<VertexArray>();
 
 	// TODO maybe use single shader?
@@ -42,6 +44,8 @@ PostProcessor::PostProcessor() {
 }
 
 bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer, const PostProcessVolume& _volume) {
+	EVE_PROFILE_FUNCTION();
+
 	volume = _volume;
 
 	if (!volume.is_any_effect_provided()) {

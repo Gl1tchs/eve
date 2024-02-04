@@ -43,6 +43,8 @@ Window::~Window() {
 }
 
 void Window::swap_buffers() const {
+	EVE_PROFILE_FUNCTION();
+
 	glfwSwapBuffers(window);
 }
 

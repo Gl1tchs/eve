@@ -52,6 +52,8 @@ struct RenderData {
 static RenderData* s_data = nullptr;
 
 void Renderer::init() {
+	EVE_PROFILE_FUNCTION();
+
 	// initialize render data
 	s_data = new RenderData();
 
@@ -412,6 +414,8 @@ void Renderer::_begin_batch() {
 }
 
 void Renderer::_flush() {
+	EVE_PROFILE_FUNCTION();
+
 	if (s_data->line_vertices.get_count() > 0) {
 		s_data->line_vertex_buffer->set_data(s_data->line_vertices.get_data(), s_data->line_vertices.get_size());
 

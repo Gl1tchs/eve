@@ -64,6 +64,8 @@ private:
 	static std::unordered_map<LogLevel, std::string> s_verbosity_colors;
 
 	static std::ofstream s_log_file;
+	static std::mutex s_logger_mutex;
+
 	static std::vector<Ref<LogBuffer>> s_log_buffers;
 };
 

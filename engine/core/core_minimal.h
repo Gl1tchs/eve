@@ -3,6 +3,7 @@
 
 #include "core/assert.h"
 #include "core/buffer.h"
+#include "core/instrumentor.h"
 #include "core/memory.h"
 
 #if __linux__

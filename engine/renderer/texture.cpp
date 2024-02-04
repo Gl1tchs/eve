@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "texture.h"
 #include <stb_image.h>
 
 int texture_format_to_gl(TextureFormat format) {
@@ -71,6 +70,8 @@ inline static TextureFormat get_texture_format_from_channels(const int channels)
 
 Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 		renderer_id(0) {
+	EVE_PROFILE_FUNCTION();
+
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
 	int channels;
@@ -98,6 +99,8 @@ Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 
 Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, bool flip_on_load) :
 		renderer_id(0) {
+	EVE_PROFILE_FUNCTION();
+
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
 	int channels;
@@ -125,6 +128,8 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, boo
 
 Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size) :
 		renderer_id(0), metadata(metadata), size(size) {
+	EVE_PROFILE_FUNCTION();
+
 	_gen_texture(metadata, pixels);
 }
 
