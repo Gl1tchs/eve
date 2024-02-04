@@ -20,5 +20,4 @@ Here is an very basic example of an **.csproj** file which has a relative direct
     </Reference>
   </ItemGroup>
 </Project>
-
 ```
