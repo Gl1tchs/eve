@@ -222,6 +222,99 @@ namespace EveEngine
 		internal extern static void text_renderer_component_set_line_spacing(ulong entityId, float lineSpacing);
 
 		#endregion
+		#region Rigidbody2DComponent
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern Rigidbody2D.BodyType rigidbody2d_component_get_type(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_set_type(ulong entityId, Rigidbody2D.BodyType type);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern bool rigidbody2d_component_get_fixed_rotation(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_set_fixed_rotation(ulong entityId, bool fixedRotation);
+
+		#endregion
+		#region BoxCollider2DComponent
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_get_offset(ulong entityId, out Vector2 offset);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_offset(ulong entityId, ref Vector2 offset);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_get_size(ulong entityId, out Vector2 size);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_size(ulong entityId, ref Vector2 size);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float box_collider2d_component_get_density(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_density(ulong entityId, float density);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float box_collider2d_component_get_friction(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_friction(ulong entityId, float friction);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float box_collider2d_component_get_restitution(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_restitution(ulong entityId, float restitution);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float box_collider2d_component_get_restitution_threshold(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_restitution_threshold(ulong entityId, float restitutionThreshold);
+
+		#endregion
+		#region CircleCollider2DComponent
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_get_offset(ulong entityId, out Vector2 offset);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_offset(ulong entityId, ref Vector2 offset);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float circle_collider2d_component_get_radius(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_radius(ulong entityId, float radius);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float circle_collider2d_component_get_density(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_density(ulong entityId, float density);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float circle_collider2d_component_get_friction(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_friction(ulong entityId, float friction);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float circle_collider2d_component_get_restitution(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_restitution(ulong entityId, float restitution);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float circle_collider2d_component_get_restitution_threshold(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_restitution_threshold(ulong entityId, float restitutionThreshold);
+
+		#endregion
 		#region PostProcessVolume
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]

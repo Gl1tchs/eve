@@ -160,10 +160,12 @@ bool ScriptInstance::set_field_value_internal(const std::string& name,
 		if (managed_instance) {
 			data = (void*)managed_instance;
 		} else {
+#if EVE_DEBUG
 			EVE_LOG_ENGINE_WARNING(
 					"Entity {}, does not have an managed script instance. Using default "
 					"instead.",
 					entity.get_name());
+#endif
 
 			ScriptInstance entity_instance(
 					create_ref<ScriptClass>(ScriptEngine::get_entity_class()), entity);

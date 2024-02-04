@@ -1,6 +1,6 @@
 namespace EveEngine
 {
-	public class TextRendererComponent : Component
+	public class TextRenderer : Component
 	{
 		public string Text
 		{

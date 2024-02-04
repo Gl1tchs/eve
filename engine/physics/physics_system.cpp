@@ -9,13 +9,13 @@
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_world.h>
 
-b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2DComponent::BodyType bodyType) {
+b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bodyType) {
 	switch (bodyType) {
-		case Rigidbody2DComponent::BodyType::STATIC:
+		case Rigidbody2D::BodyType::STATIC:
 			return b2_staticBody;
-		case Rigidbody2DComponent::BodyType::DYNAMIC:
+		case Rigidbody2D::BodyType::DYNAMIC:
 			return b2_dynamicBody;
-		case Rigidbody2DComponent::BodyType::KINEMATIC:
+		case Rigidbody2D::BodyType::KINEMATIC:
 			return b2_kinematicBody;
 		default: {
 			EVE_ASSERT_ENGINE(false, "Unknown body type");
@@ -24,17 +24,17 @@ b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2DComponent::BodyType bodyTyp
 	}
 }
 
-Rigidbody2DComponent::BodyType rigidbody2d_type_from_box2d_body(b2BodyType bodyType) {
+Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType bodyType) {
 	switch (bodyType) {
 		case b2_staticBody:
-			return Rigidbody2DComponent::BodyType::STATIC;
+			return Rigidbody2D::BodyType::STATIC;
 		case b2_dynamicBody:
-			return Rigidbody2DComponent::BodyType::DYNAMIC;
+			return Rigidbody2D::BodyType::DYNAMIC;
 		case b2_kinematicBody:
-			return Rigidbody2DComponent::BodyType::KINEMATIC;
+			return Rigidbody2D::BodyType::KINEMATIC;
 		default: {
 			EVE_ASSERT_ENGINE(false, "Unknown body type");
-			return Rigidbody2DComponent::BodyType::STATIC;
+			return Rigidbody2D::BodyType::STATIC;
 		}
 	}
 }
@@ -53,11 +53,11 @@ void PhysicsSystem::on_physics2d_start() {
 
 	physics2d_world->SetGravity({ settings.gravity.x, settings.gravity.y });
 
-	for (auto entity_id : scene->view<Rigidbody2DComponent>()) {
+	for (auto entity_id : scene->view<Rigidbody2D>()) {
 		Entity entity{ entity_id, scene };
 
 		auto& transform = entity.get_transform();
-		auto& rb2d = entity.get_component<Rigidbody2DComponent>();
+		auto& rb2d = entity.get_component<Rigidbody2D>();
 
 		b2BodyDef body_def;
 		body_def.type = rigidbody2d_type_to_box2d_body(rb2d.type);
@@ -68,8 +68,8 @@ void PhysicsSystem::on_physics2d_start() {
 		body->SetFixedRotation(rb2d.fixed_rotation);
 		rb2d.runtime_body = body;
 
-		if (entity.has_component<BoxCollider2DComponent>()) {
-			auto& bc2d = entity.get_component<BoxCollider2DComponent>();
+		if (entity.has_component<BoxCollider2D>()) {
+			auto& bc2d = entity.get_component<BoxCollider2D>();
 
 			b2PolygonShape box_shape;
 			box_shape.SetAsBox(bc2d.size.x * transform.get_scale().x,
@@ -86,8 +86,8 @@ void PhysicsSystem::on_physics2d_start() {
 			body->CreateFixture(&fixture_def);
 		}
 
-		if (entity.has_component<CircleCollider2DComponent>()) {
-			auto& cc2d = entity.get_component<CircleCollider2DComponent>();
+		if (entity.has_component<CircleCollider2D>()) {
+			auto& cc2d = entity.get_component<CircleCollider2D>();
 
 			b2CircleShape circle_shape;
 			circle_shape.m_p.Set(cc2d.offset.x, cc2d.offset.y);
@@ -127,11 +127,11 @@ void PhysicsSystem::on_physics2d_update(float dt) {
 	physics2d_world->Step(dt, velocity_iters, position_iters);
 
 	// Retrieve transform from Box2D
-	for (auto e : scene->view<Rigidbody2DComponent>()) {
+	for (auto e : scene->view<Rigidbody2D>()) {
 		Entity entity = { e, scene };
 
 		auto& transform = entity.get_transform();
-		auto& rb2d = entity.get_component<Rigidbody2DComponent>();
+		auto& rb2d = entity.get_component<Rigidbody2D>();
 
 		b2Body* body = (b2Body*)rb2d.runtime_body;
 

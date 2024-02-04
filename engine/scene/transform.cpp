@@ -1,6 +1,6 @@
 #include "scene/transform.h"
 
-glm::vec3 TransformComponent::get_position() const {
+glm::vec3 Transform::get_position() const {
 	if (parent) {
 		return local_position + parent->get_position();
 	} else {
@@ -8,7 +8,7 @@ glm::vec3 TransformComponent::get_position() const {
 	}
 }
 
-glm::vec3 TransformComponent::get_rotation() const {
+glm::vec3 Transform::get_rotation() const {
 	if (parent) {
 		return local_rotation + parent->get_rotation();
 	} else {
@@ -16,7 +16,7 @@ glm::vec3 TransformComponent::get_rotation() const {
 	}
 }
 
-glm::vec3 TransformComponent::get_scale() const {
+glm::vec3 Transform::get_scale() const {
 	if (parent) {
 		return local_scale * parent->get_scale();
 	} else {
@@ -24,15 +24,15 @@ glm::vec3 TransformComponent::get_scale() const {
 	}
 }
 
-void TransformComponent::translate(glm::vec3 translation) {
+void Transform::translate(glm::vec3 translation) {
 	local_position += translation;
 }
 
-void TransformComponent::rotate(const float angle, const glm::vec3 axis) {
+void Transform::rotate(const float angle, const glm::vec3 axis) {
 	local_rotation += angle * axis;
 }
 
-void TransformComponent::look_at(const glm::vec3& target) {
+void Transform::look_at(const glm::vec3& target) {
 	glm::vec3 direction = glm::normalize(target - local_position);
 
 	// Compute pitch and yaw angles using trigonometry
@@ -42,22 +42,22 @@ void TransformComponent::look_at(const glm::vec3& target) {
 	local_rotation = glm::vec3(pitch, yaw, 0.0f);
 }
 
-glm::vec3 TransformComponent::get_forward() const {
+glm::vec3 Transform::get_forward() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_FORWARD);
 }
 
-glm::vec3 TransformComponent::get_right() const {
+glm::vec3 Transform::get_right() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_RIGHT);
 }
 
-glm::vec3 TransformComponent::get_up() const {
+glm::vec3 Transform::get_up() const {
 	glm::fquat orientation = glm::fquat(glm::radians(local_rotation));
 	return glm::normalize(orientation * VEC3_UP);
 }
 
-glm::mat4 TransformComponent::get_transform_matrix() const {
+glm::mat4 Transform::get_transform_matrix() const {
 	EVE_PROFILE_FUNCTION();
 
 	glm::mat4 transform = glm::translate(glm::mat4(1.0f), local_position);
@@ -75,7 +75,7 @@ glm::mat4 TransformComponent::get_transform_matrix() const {
 	return transform;
 }
 
-glm::vec3 TransformComponent::get_direction() const {
+glm::vec3 Transform::get_direction() const {
 	glm::vec3 direction(cos(local_rotation.x) * cos(local_rotation.y),
 			sin(local_rotation.x),
 			cos(local_rotation.x) * sin(local_rotation.y));

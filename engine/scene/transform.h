@@ -10,8 +10,8 @@ constexpr glm::vec3 VEC3_ONE(1.0f, 1.0f, 1.0f);
 
 constexpr glm::vec3 WORLD_UP = VEC3_UP;
 
-struct TransformComponent final {
-	TransformComponent* parent = nullptr;
+struct Transform final {
+	Transform* parent = nullptr;
 
 	glm::vec3 local_position = VEC3_ZERO;
 	glm::vec3 local_rotation = VEC3_ZERO;
@@ -38,6 +38,6 @@ struct TransformComponent final {
 	glm::vec3 get_direction() const;
 };
 
-constexpr TransformComponent DEFAULT_TRANSFORM{};
+constexpr Transform DEFAULT_TRANSFORM{};
 
 #endif

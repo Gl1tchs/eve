@@ -77,7 +77,7 @@ public:
 
 	const std::string& get_name();
 
-	TransformComponent& get_transform();
+	Transform& get_transform();
 
 	operator bool() const;
 

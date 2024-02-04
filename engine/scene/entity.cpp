@@ -45,8 +45,8 @@ void Entity::set_parent(Entity parent) {
 	parent_children_ids.push_back(get_uid());
 
 	// Make transform values relative to the new parent.
-	TransformComponent& transform = get_transform();
-	TransformComponent& parent_transform = parent.get_transform();
+	Transform& transform = get_transform();
+	Transform& parent_transform = parent.get_transform();
 
 	transform.local_position =
 			transform.get_position() - parent_transform.get_position();
@@ -89,7 +89,7 @@ bool Entity::remove_child(Entity child) {
 
 	if (it != children_ids.end()) {
 		// Set local positions as the world position
-		TransformComponent& child_transform = child.get_transform();
+		Transform& child_transform = child.get_transform();
 		child_transform.local_position = child_transform.get_position();
 		child_transform.local_rotation = child_transform.get_rotation();
 		child_transform.local_scale = child_transform.get_scale();
@@ -136,8 +136,8 @@ const std::string& Entity::get_name() {
 	return get_component<IdComponent>().tag;
 }
 
-TransformComponent& Entity::get_transform() {
-	return get_component<TransformComponent>();
+Transform& Entity::get_transform() {
+	return get_component<Transform>();
 }
 
 Entity::operator bool() const {

@@ -14,13 +14,13 @@ struct CameraComponent {
 	bool is_fixed_aspect_ratio = false;
 };
 
-struct SpriteRendererComponent {
+struct SpriteRenderer {
 	AssetHandle texture;
 	Color color = COLOR_WHITE;
 	glm::vec2 tex_tiling = { 1, 1 };
 };
 
-struct TextRendererComponent {
+struct TextRenderer {
 	std::string text = "Add a Caption!";
 	AssetHandle font = 0;
 	Color fg_color = COLOR_WHITE;
@@ -29,7 +29,7 @@ struct TextRendererComponent {
 	float line_spacing = 0.0f;
 };
 
-struct Rigidbody2DComponent {
+struct Rigidbody2D {
 	enum class BodyType { STATIC = 0,
 		DYNAMIC,
 		KINEMATIC };
@@ -41,7 +41,7 @@ struct Rigidbody2DComponent {
 	void* runtime_body = nullptr;
 };
 
-struct BoxCollider2DComponent {
+struct BoxCollider2D {
 	glm::vec2 offset = { 0.0f, 0.0f };
 	glm::vec2 size = { 0.5f, 0.5f };
 
@@ -55,7 +55,7 @@ struct BoxCollider2DComponent {
 	void* runtime_fixture = nullptr;
 };
 
-struct CircleCollider2DComponent {
+struct CircleCollider2D {
 	glm::vec2 offset = { 0.0f, 0.0f };
 	float radius = 0.5f;
 
@@ -77,10 +77,10 @@ template <typename... Component>
 struct ComponentGroup {};
 
 using AllComponents =
-		ComponentGroup<TransformComponent, CameraComponent,
-				SpriteRendererComponent, TextRendererComponent,
-				Rigidbody2DComponent, BoxCollider2DComponent,
-				CircleCollider2DComponent, PostProcessVolume,
+		ComponentGroup<Transform, CameraComponent,
+				SpriteRenderer, TextRenderer,
+				Rigidbody2D, BoxCollider2D,
+				CircleCollider2D, PostProcessVolume,
 				ScriptComponent>;
 
 #endif

@@ -168,7 +168,7 @@ void Renderer::end_pass() {
 	_flush();
 }
 
-void Renderer::draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id) {
+void Renderer::draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id) {
 	Ref<Texture2D> texture = AssetRegistry::get<Texture2D>(sprite.texture);
 
 	draw_quad(
@@ -179,16 +179,16 @@ void Renderer::draw_sprite(const SpriteRendererComponent& sprite, const Transfor
 			entity_id);
 }
 
-void Renderer::draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id) {
+void Renderer::draw_quad(const Transform& transform, const Color& color, uint32_t entity_id) {
 	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
 }
 
-void Renderer::draw_quad(const TransformComponent& transform, Ref<Texture2D> texture,
+void Renderer::draw_quad(const Transform& transform, Ref<Texture2D> texture,
 		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	draw_quad(transform, texture, COLOR_WHITE, tex_tiling, entity_id);
 }
 
-void Renderer::draw_quad(const TransformComponent& transform,
+void Renderer::draw_quad(const Transform& transform,
 		Ref<Texture2D> texture, const Color& color,
 		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	if (quad_needs_batch(s_data->quad_index_count) ||
@@ -219,8 +219,8 @@ void Renderer::draw_quad(const TransformComponent& transform,
 	s_data->stats.index_count += QUAD_INDEX_COUNT;
 }
 
-void Renderer::draw_text(const TextRendererComponent& text_comp,
-		const TransformComponent& transform,
+void Renderer::draw_text(const TextRenderer& text_comp,
+		const Transform& transform,
 		uint32_t entity_id) {
 	Ref<Font> font = AssetRegistry::get<Font>(text_comp.font);
 	if (!font) {
@@ -233,14 +233,14 @@ void Renderer::draw_text(const TextRendererComponent& text_comp,
 			entity_id);
 }
 
-void Renderer::draw_text(const std::string& text, const TransformComponent& transform,
+void Renderer::draw_text(const std::string& text, const Transform& transform,
 		const Color& fg_color,
 		const Color& bg_color,
 		float kerning, float line_spacing, uint32_t entity_id) {
 	draw_text(text, nullptr, transform, fg_color, bg_color, kerning, line_spacing, entity_id);
 }
 
-void Renderer::draw_text(const std::string& text, Ref<Font> font, const TransformComponent& transform,
+void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transform& transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing, uint32_t entity_id) {
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();

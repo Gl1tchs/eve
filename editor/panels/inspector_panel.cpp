@@ -135,12 +135,12 @@ void InspectorPanel::_draw() {
 
 	if (ImGui::BeginPopup("AddComponentPopup")) {
 		display_add_component_entry<CameraComponent>(selected_entity, "Camera");
-		display_add_component_entry<SpriteRendererComponent>(selected_entity,
+		display_add_component_entry<SpriteRenderer>(selected_entity,
 				"Sprite Renderer");
-		display_add_component_entry<TextRendererComponent>(selected_entity, "TextRenderer");
-		display_add_component_entry<Rigidbody2DComponent>(selected_entity, "Rigidbody2D");
-		display_add_component_entry<BoxCollider2DComponent>(selected_entity, "BoxCollider2D");
-		display_add_component_entry<CircleCollider2DComponent>(selected_entity, "CircleCollider2D");
+		display_add_component_entry<TextRenderer>(selected_entity, "TextRenderer");
+		display_add_component_entry<Rigidbody2D>(selected_entity, "Rigidbody2D");
+		display_add_component_entry<BoxCollider2D>(selected_entity, "BoxCollider2D");
+		display_add_component_entry<CircleCollider2D>(selected_entity, "CircleCollider2D");
 		display_add_component_entry<PostProcessVolume>(selected_entity, "PostProcessVolume");
 		display_add_component_entry<ScriptComponent>(selected_entity, "Script");
 
@@ -163,8 +163,8 @@ void InspectorPanel::_draw() {
 	ImGui::Columns();      \
 	}
 
-	draw_component<TransformComponent>("Transform", selected_entity,
-			[](TransformComponent& transform) {
+	draw_component<Transform>("Transform", selected_entity,
+			[](Transform& transform) {
 				BEGIN_FIELD("Position");
 				{
 					ImGui::DragFloat3("##PositionControl",
@@ -231,9 +231,9 @@ void InspectorPanel::_draw() {
 				}
 			});
 
-	draw_component<SpriteRendererComponent>(
+	draw_component<SpriteRenderer>(
 			"Sprite Renderer", selected_entity,
-			[this](SpriteRendererComponent& sprite_comp) {
+			[this](SpriteRenderer& sprite_comp) {
 				Ref<Texture2D> texture =
 						sprite_comp.texture != 0
 						? AssetRegistry::get<Texture2D>(sprite_comp.texture)
@@ -294,9 +294,9 @@ void InspectorPanel::_draw() {
 				END_FIELD();
 			});
 
-	draw_component<TextRendererComponent>(
+	draw_component<TextRenderer>(
 			"Text Renderer", selected_entity,
-			[this](TextRendererComponent& text_comp) {
+			[this](TextRenderer& text_comp) {
 				BEGIN_FIELD("Text");
 				{
 					ImGui::InputTextMultiline("##TextControl", &text_comp.text);
@@ -375,17 +375,17 @@ void InspectorPanel::_draw() {
 				END_FIELD();
 			});
 
-	draw_component<Rigidbody2DComponent>("Rigidbody2D", selected_entity, [](Rigidbody2DComponent& rb2d) {
+	draw_component<Rigidbody2D>("Rigidbody2D", selected_entity, [](Rigidbody2D& rb2d) {
 		static const char* items[] = {
 			"Static",
 			"Dynamic",
 			"Kinematic"
 		};
 
-		static const Rigidbody2DComponent::BodyType body_types[] = {
-			Rigidbody2DComponent::BodyType::STATIC,
-			Rigidbody2DComponent::BodyType::DYNAMIC,
-			Rigidbody2DComponent::BodyType::KINEMATIC,
+		static const Rigidbody2D::BodyType body_types[] = {
+			Rigidbody2D::BodyType::STATIC,
+			Rigidbody2D::BodyType::DYNAMIC,
+			Rigidbody2D::BodyType::KINEMATIC,
 		};
 
 		const char* current_item = items[static_cast<int>(rb2d.type)];
@@ -415,7 +415,7 @@ void InspectorPanel::_draw() {
 		END_FIELD();
 	});
 
-	draw_component<BoxCollider2DComponent>("BoxCollider2D", selected_entity, [](BoxCollider2DComponent& box_collider) {
+	draw_component<BoxCollider2D>("BoxCollider2D", selected_entity, [](BoxCollider2D& box_collider) {
 		BEGIN_FIELD("Offset");
 		{
 			ImGui::DragFloat2("##BoxColliderOffset", glm::value_ptr(box_collider.offset));
@@ -453,7 +453,7 @@ void InspectorPanel::_draw() {
 		END_FIELD();
 	});
 
-	draw_component<CircleCollider2DComponent>("CircleCollider2D", selected_entity, [](CircleCollider2DComponent& circle_collider) {
+	draw_component<CircleCollider2D>("CircleCollider2D", selected_entity, [](CircleCollider2D& circle_collider) {
 		BEGIN_FIELD("Offset");
 		{
 			ImGui::DragFloat2("##CircleColliderOffset", glm::value_ptr(circle_collider.offset));

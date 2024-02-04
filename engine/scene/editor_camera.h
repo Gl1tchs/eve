@@ -14,8 +14,8 @@ public:
 
 	void reset_transform();
 
-	TransformComponent& get_transform();
-	const TransformComponent& get_transform() const;
+	Transform& get_transform();
+	const Transform& get_transform() const;
 
 	void set_speed(float value);
 	float get_speed() const;
@@ -24,7 +24,7 @@ public:
 	float get_sensitivity() const;
 
 private:
-	TransformComponent transform;
+	Transform transform;
 
 	float sensitivity{ 0.25 };
 	float scroll_speed{ 0.5f };

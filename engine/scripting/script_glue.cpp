@@ -162,7 +162,7 @@ inline static uint64_t entity_instantiate(MonoString* name, UID parent_id,
 		return 0;
 	}
 
-	TransformComponent& tc = created_entity.get_transform();
+	Transform& tc = created_entity.get_transform();
 	tc.local_position = *position;
 	tc.local_rotation = *rotation;
 	tc.local_scale = *scale;
@@ -387,37 +387,37 @@ inline static MonoString* script_component_get_class_name(UID entity_id) {
 inline static uint64_t sprite_renderer_component_get_texture(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
-	return entity.get_component<SpriteRendererComponent>().texture;
+	return entity.get_component<SpriteRenderer>().texture;
 }
 
 inline static void sprite_renderer_component_set_texture(UID entity_id, AssetHandle texture) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<SpriteRendererComponent>().texture = texture;
+	entity.get_component<SpriteRenderer>().texture = texture;
 }
 
 inline static void sprite_renderer_component_get_color(UID entity_id, Color* out_color) {
 	Entity entity = get_entity(entity_id);
 
-	*out_color = entity.get_component<SpriteRendererComponent>().color;
+	*out_color = entity.get_component<SpriteRenderer>().color;
 }
 
 inline static void sprite_renderer_component_set_color(UID entity_id, Color* color) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<SpriteRendererComponent>().color = *color;
+	entity.get_component<SpriteRenderer>().color = *color;
 }
 
 inline static void sprite_renderer_component_get_tex_tiling(UID entity_id, glm::vec2* out_tex_tiling) {
 	Entity entity = get_entity(entity_id);
 
-	*out_tex_tiling = entity.get_component<SpriteRendererComponent>().tex_tiling;
+	*out_tex_tiling = entity.get_component<SpriteRenderer>().tex_tiling;
 }
 
 inline static void sprite_renderer_component_set_tex_tiling(UID entity_id, glm::vec2* tex_tiling) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<SpriteRendererComponent>().tex_tiling = *tex_tiling;
+	entity.get_component<SpriteRenderer>().tex_tiling = *tex_tiling;
 }
 
 #pragma endregion
@@ -426,73 +426,250 @@ inline static void sprite_renderer_component_set_tex_tiling(UID entity_id, glm::
 inline static std::string text_renderer_component_get_text(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
-	return entity.get_component<TextRendererComponent>().text;
+	return entity.get_component<TextRenderer>().text;
 }
 
 inline static void text_renderer_component_set_text(UID entity_id, MonoString* text) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().text = mono_string_to_string(text);
+	entity.get_component<TextRenderer>().text = mono_string_to_string(text);
 }
 
 inline static UID text_renderer_component_get_font(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
-	return entity.get_component<TextRendererComponent>().font;
+	return entity.get_component<TextRenderer>().font;
 }
 
 inline static void text_renderer_component_set_font(UID entity_id, UID font_handle) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().font = font_handle;
+	entity.get_component<TextRenderer>().font = font_handle;
 }
 
 inline static void text_renderer_component_get_fg_color(UID entity_id, Color* out_color) {
 	Entity entity = get_entity(entity_id);
 
-	*out_color = entity.get_component<TextRendererComponent>().fg_color;
+	*out_color = entity.get_component<TextRenderer>().fg_color;
 }
 
 inline static void text_renderer_component_set_fg_color(UID entity_id, const Color* color) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().fg_color = *color;
+	entity.get_component<TextRenderer>().fg_color = *color;
 }
 
 inline static void text_renderer_component_get_bg_color(UID entity_id, Color* out_color) {
 	Entity entity = get_entity(entity_id);
 
-	*out_color = entity.get_component<TextRendererComponent>().bg_color;
+	*out_color = entity.get_component<TextRenderer>().bg_color;
 }
 
 inline static void text_renderer_component_set_bg_color(UID entity_id, const Color* color) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().bg_color = *color;
+	entity.get_component<TextRenderer>().bg_color = *color;
 }
 
 inline static float text_renderer_component_get_kerning(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
-	return entity.get_component<TextRendererComponent>().kerning;
+	return entity.get_component<TextRenderer>().kerning;
 }
 
 inline static void text_renderer_component_set_kerning(UID entity_id, float kerning) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().kerning = kerning;
+	entity.get_component<TextRenderer>().kerning = kerning;
 }
 
 inline static float text_renderer_component_get_line_spacing(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
-	return entity.get_component<TextRendererComponent>().line_spacing;
+	return entity.get_component<TextRenderer>().line_spacing;
 }
 
 inline static void text_renderer_component_set_line_spacing(UID entity_id, float line_spacing) {
 	Entity entity = get_entity(entity_id);
 
-	entity.get_component<TextRendererComponent>().line_spacing = line_spacing;
+	entity.get_component<TextRenderer>().line_spacing = line_spacing;
+}
+
+#pragma endregion
+#pragma region Rigidbody2DComponent
+
+inline static Rigidbody2D::BodyType rigidbody2d_component_get_type(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<Rigidbody2D>().type;
+}
+
+inline static void rigidbody2d_component_set_type(UID entity_id, Rigidbody2D::BodyType type) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<Rigidbody2D>().type = type;
+}
+
+inline static bool rigidbody2d_component_get_fixed_rotation(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<Rigidbody2D>().fixed_rotation;
+}
+
+inline static void rigidbody2d_component_set_fixed_rotation(UID entity_id, bool fixed_rotation) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<Rigidbody2D>().fixed_rotation = fixed_rotation;
+}
+
+#pragma endregion
+#pragma region BoxCollider2DComponent
+
+inline static void box_collider2d_component_get_offset(UID entity_id, glm::vec2* out_offset) {
+	Entity entity = get_entity(entity_id);
+
+	*out_offset = entity.get_component<BoxCollider2D>().offset;
+}
+
+inline static void box_collider2d_component_set_offset(UID entity_id, const glm::vec2* offset) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().offset = *offset;
+}
+
+inline static void box_collider2d_component_get_size(UID entity_id, glm::vec2* out_size) {
+	Entity entity = get_entity(entity_id);
+
+	*out_size = entity.get_component<BoxCollider2D>().size;
+}
+
+inline static void box_collider2d_component_set_size(UID entity_id, const glm::vec2* size) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().size = *size;
+}
+
+inline static float box_collider2d_component_get_density(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<BoxCollider2D>().density;
+}
+
+inline static void box_collider2d_component_set_density(UID entity_id, float density) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().density = density;
+}
+
+inline static float box_collider2d_component_get_friction(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<BoxCollider2D>().friction;
+}
+
+inline static void box_collider2d_component_set_friction(UID entity_id, float friction) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().friction = friction;
+}
+
+inline static float box_collider2d_component_get_restitution(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<BoxCollider2D>().restitution;
+}
+
+inline static void box_collider2d_component_set_restitution(UID entity_id, float restitution) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().restitution = restitution;
+}
+
+inline static float box_collider2d_component_get_restitution_threshold(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<BoxCollider2D>().restitution_threshold;
+}
+
+inline static void box_collider2d_component_set_restitution_threshold(UID entity_id, float restitution_threshold) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().restitution_threshold = restitution_threshold;
+}
+
+#pragma endregion
+#pragma region CircleCollider2DComponent
+
+inline static void circle_collider2d_component_get_offset(UID entity_id, glm::vec2* out_offset) {
+	Entity entity = get_entity(entity_id);
+
+	*out_offset = entity.get_component<CircleCollider2D>().offset;
+}
+
+inline static void circle_collider2d_component_set_offset(UID entity_id, const glm::vec2* offset) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().offset = *offset;
+}
+
+inline static float circle_collider2d_component_get_radius(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().radius;
+}
+
+inline static void circle_collider2d_component_set_radius(UID entity_id, float radius) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().radius = radius;
+}
+
+inline static float circle_collider2d_component_get_density(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().density;
+}
+
+inline static void circle_collider2d_component_set_density(UID entity_id, float density) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().density = density;
+}
+
+inline static float circle_collider2d_component_get_friction(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().friction;
+}
+
+inline static void circle_collider2d_component_set_friction(UID entity_id, float friction) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().friction = friction;
+}
+
+inline static float circle_collider2d_component_get_restitution(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().restitution;
+}
+
+inline static void circle_collider2d_component_set_restitution(UID entity_id, float restitution) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().restitution = restitution;
+}
+
+inline static float circle_collider2d_component_get_restitution_threshold(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().restitution_threshold;
+}
+
+inline static void circle_collider2d_component_set_restitution_threshold(UID entity_id, float restitution_threshold) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().restitution_threshold = restitution_threshold;
 }
 
 #pragma endregion
@@ -616,7 +793,6 @@ scene_manager_load_scene(MonoString* path) {
 }
 
 #pragma endregion
-
 #pragma region AssetRegistry
 
 inline static uint64_t asset_registry_load(MonoString* path, AssetType type) {
@@ -731,7 +907,7 @@ void register_functions() {
 	// Begin ScriptComponent
 	ADD_INTERNAL_CALL(script_component_get_class_name);
 
-	// Begin SpriteRendererComponent
+	// Begin SpriteRenderer
 	ADD_INTERNAL_CALL(sprite_renderer_component_get_texture);
 	ADD_INTERNAL_CALL(sprite_renderer_component_set_texture);
 	ADD_INTERNAL_CALL(sprite_renderer_component_get_color);
@@ -739,7 +915,7 @@ void register_functions() {
 	ADD_INTERNAL_CALL(sprite_renderer_component_get_tex_tiling);
 	ADD_INTERNAL_CALL(sprite_renderer_component_set_tex_tiling);
 
-	// Begin TextRendererComponent
+	// Begin TextRenderer
 	ADD_INTERNAL_CALL(text_renderer_component_get_text);
 	ADD_INTERNAL_CALL(text_renderer_component_set_text);
 	ADD_INTERNAL_CALL(text_renderer_component_get_font);
@@ -752,6 +928,40 @@ void register_functions() {
 	ADD_INTERNAL_CALL(text_renderer_component_set_kerning);
 	ADD_INTERNAL_CALL(text_renderer_component_get_line_spacing);
 	ADD_INTERNAL_CALL(text_renderer_component_set_line_spacing);
+
+	// Begin Rigidbody2D
+	ADD_INTERNAL_CALL(rigidbody2d_component_get_type);
+	ADD_INTERNAL_CALL(rigidbody2d_component_set_type);
+	ADD_INTERNAL_CALL(rigidbody2d_component_get_fixed_rotation);
+	ADD_INTERNAL_CALL(rigidbody2d_component_set_fixed_rotation);
+
+	// Begin BoxCollider2DComponent
+	ADD_INTERNAL_CALL(box_collider2d_component_get_offset);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_offset);
+	ADD_INTERNAL_CALL(box_collider2d_component_get_size);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_size);
+	ADD_INTERNAL_CALL(box_collider2d_component_get_density);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_density);
+	ADD_INTERNAL_CALL(box_collider2d_component_get_friction);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_friction);
+	ADD_INTERNAL_CALL(box_collider2d_component_get_restitution);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_restitution);
+	ADD_INTERNAL_CALL(box_collider2d_component_get_restitution_threshold);
+	ADD_INTERNAL_CALL(box_collider2d_component_set_restitution_threshold);
+
+	// Begin CircleCollider2D
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_offset);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_offset);
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_radius);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_radius);
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_density);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_density);
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_friction);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_friction);
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution);
+	ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution_threshold);
+	ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution_threshold);
 
 	// Begin PostProcessVolume
 	ADD_INTERNAL_CALL(post_process_volume_component_get_is_global);

@@ -1,6 +1,6 @@
 namespace EveEngine
 {
-	public class SpriteRendererComponent : Component
+	public class SpriteRenderer : Component
 	{
 		public ulong Texture
 		{

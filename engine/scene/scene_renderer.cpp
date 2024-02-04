@@ -155,15 +155,15 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 
 		Renderer::begin_pass(camera_data);
 		{
-			scene->view<TransformComponent, SpriteRendererComponent>().each(
-					[this](entt::entity entity_id, const TransformComponent& transform,
-							const SpriteRendererComponent& sprite) {
+			scene->view<Transform, SpriteRenderer>().each(
+					[this](entt::entity entity_id, const Transform& transform,
+							const SpriteRenderer& sprite) {
 						Renderer::draw_sprite(sprite, transform, (uint32_t)entity_id);
 					});
 
-			scene->view<TransformComponent, TextRendererComponent>().each(
-					[this](entt::entity entity_id, const TransformComponent& transform,
-							const TextRendererComponent& text_component) {
+			scene->view<Transform, TextRenderer>().each(
+					[this](entt::entity entity_id, const Transform& transform,
+							const TextRenderer& text_component) {
 						Renderer::draw_text(text_component, transform, (uint32_t)entity_id);
 					});
 

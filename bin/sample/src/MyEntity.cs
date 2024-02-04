@@ -9,10 +9,14 @@ namespace Sample
 
 		protected override void OnCreate()
 		{
+			var rb2d = GetComponent<Rigidbody2D>();
+			rb2d.Type = Rigidbody2D.BodyType.Dynamic;
+
 			var volume = GetComponent<PostProcessVolume>();
 			volume.Vignette = new PostProcessVolume.VignetteSettings
 			{
 				enabled = true,
+				strength = 0.25f
 			};
 		}
 

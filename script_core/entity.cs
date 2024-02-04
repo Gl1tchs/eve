@@ -32,7 +32,7 @@ namespace EveEngine
 		/// <summary>
 		/// Transform of the entity.
 		/// </summary>
-		public TransformComponent Transform { get; private set; }
+		public Transform Transform { get; private set; }
 
 		/// <summary>
 		/// Entity with an id of 0.
@@ -53,7 +53,7 @@ namespace EveEngine
 		public Entity(ulong id)
 		{
 			Id = id;
-			Transform = GetComponent<TransformComponent>();
+			Transform = GetComponent<Transform>();
 		}
 #pragma warning restore CS8601
 #pragma warning restore CS8618

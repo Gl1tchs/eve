@@ -19,7 +19,7 @@ struct OrthographicCamera {
 
 	glm::mat4 get_projection_matrix() const;
 
-	glm::mat4 get_view_matrix(const TransformComponent& transform) const;
+	glm::mat4 get_view_matrix(const Transform& transform) const;
 };
 
 #endif

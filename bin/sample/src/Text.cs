@@ -9,7 +9,7 @@ namespace Sample
 
 		protected override void OnCreate()
 		{
-			var textComponent = GetComponent<TextRendererComponent>();
+			var textComponent = GetComponent<TextRenderer>();
 			textComponent.Text = "Hello, World!";
 			textComponent.ForegroundColor = color;
 		}

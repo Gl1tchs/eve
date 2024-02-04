@@ -102,7 +102,7 @@ Entity Scene::create(UID uid, const std::string& name, UID parent_id) {
 	Entity entity{ registry.create(), this };
 
 	entity.add_component<IdComponent>(uid, name);
-	entity.add_component<TransformComponent>();
+	entity.add_component<Transform>();
 	entity.add_component<RelationComponent>();
 
 	if (parent_id) {
@@ -264,14 +264,14 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 		break;                                             \
 	}
 
-NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2DComponent::BodyType, {
-																	 { Rigidbody2DComponent::BodyType::STATIC, "static" },
-																	 { Rigidbody2DComponent::BodyType::DYNAMIC, "dynamic" },
-																	 { Rigidbody2DComponent::BodyType::KINEMATIC, "kinematic" },
+NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType, {
+																	 { Rigidbody2D::BodyType::STATIC, "static" },
+																	 { Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
+																	 { Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
 															 })
 
 static Json serialize_entity(Entity& entity) {
-	bool has_required_components = entity.has_component<IdComponent, RelationComponent, TransformComponent>();
+	bool has_required_components = entity.has_component<IdComponent, RelationComponent, Transform>();
 	EVE_ASSERT_ENGINE(has_required_components);
 
 	Json out;
@@ -280,7 +280,7 @@ static Json serialize_entity(Entity& entity) {
 	out["tag"] = entity.get_name();
 	out["parent_id"] = entity.get_relation().parent_id;
 
-	const TransformComponent& transform = entity.get_transform();
+	const Transform& transform = entity.get_transform();
 	out["transform_component"] = Json{
 		{ "local_position", transform.local_position },
 		{ "local_rotation", transform.local_rotation },
@@ -301,8 +301,8 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
-	if (entity.has_component<SpriteRendererComponent>()) {
-		const SpriteRendererComponent& sc = entity.get_component<SpriteRendererComponent>();
+	if (entity.has_component<SpriteRenderer>()) {
+		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
 		const auto texture = AssetRegistry::get<Texture2D>(sc.texture);
 
@@ -313,8 +313,8 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
-	if (entity.has_component<TextRendererComponent>()) {
-		const TextRendererComponent& tc = entity.get_component<TextRendererComponent>();
+	if (entity.has_component<TextRenderer>()) {
+		const TextRenderer& tc = entity.get_component<TextRenderer>();
 
 		const auto font = AssetRegistry::get<Font>(tc.font);
 
@@ -328,8 +328,8 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
-	if (entity.has_component<Rigidbody2DComponent>()) {
-		auto& rb2d = entity.get_component<Rigidbody2DComponent>();
+	if (entity.has_component<Rigidbody2D>()) {
+		auto& rb2d = entity.get_component<Rigidbody2D>();
 
 		out["rigidbody2d_component"] = Json{
 			{ "type", rb2d.type },
@@ -337,8 +337,8 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
-	if (entity.has_component<BoxCollider2DComponent>()) {
-		auto& box_collider = entity.get_component<BoxCollider2DComponent>();
+	if (entity.has_component<BoxCollider2D>()) {
+		auto& box_collider = entity.get_component<BoxCollider2D>();
 
 		out["box_collider"] = Json{
 			{ "offset", box_collider.offset },
@@ -350,8 +350,8 @@ static Json serialize_entity(Entity& entity) {
 		};
 	}
 
-	if (entity.has_component<CircleCollider2DComponent>()) {
-		auto& circle_collider = entity.get_component<CircleCollider2DComponent>();
+	if (entity.has_component<CircleCollider2D>()) {
+		auto& circle_collider = entity.get_component<CircleCollider2D>();
 
 		out["circle_collider"] = Json{
 			{ "offset", circle_collider.offset },
@@ -515,7 +515,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 		if (const auto& transform_json = entity_json["transform_component"];
 				!transform_json.is_null()) {
-			auto& tc = deserialing_entity.get_component<TransformComponent>();
+			auto& tc = deserialing_entity.get_component<Transform>();
 
 			tc.local_position = transform_json["local_position"].get<glm::vec3>();
 			tc.local_rotation = transform_json["local_rotation"].get<glm::vec3>();
@@ -547,7 +547,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 		if (const auto& sprite_comp_json = entity_json["sprite_renderer_component"];
 				!sprite_comp_json.is_null()) {
 			auto& sprite_component =
-					deserialing_entity.add_component<SpriteRendererComponent>();
+					deserialing_entity.add_component<SpriteRenderer>();
 
 			const std::string texture_path = sprite_comp_json["texture"].get<std::string>();
 
@@ -564,7 +564,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 		}
 
 		if (const auto& text_comp_json = entity_json["text_renderer_component"]; !text_comp_json.is_null()) {
-			auto& text_component = deserialing_entity.add_component<TextRendererComponent>();
+			auto& text_component = deserialing_entity.add_component<TextRenderer>();
 
 			text_component.text = text_comp_json["text"].get<std::string>();
 
@@ -584,15 +584,15 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 		}
 
 		if (const auto& rb2d_json = entity_json["rigidbody2d_component"]; !rb2d_json.is_null()) {
-			auto& rb2d = deserialing_entity.add_component<Rigidbody2DComponent>();
+			auto& rb2d = deserialing_entity.add_component<Rigidbody2D>();
 
-			rb2d.type = rb2d_json["type"].get<Rigidbody2DComponent::BodyType>();
+			rb2d.type = rb2d_json["type"].get<Rigidbody2D::BodyType>();
 			rb2d.fixed_rotation = rb2d_json["fixed_rotation"].get<bool>();
 		}
 
 		if (const auto& box_collider_json = entity_json["box_collider"];
 				!box_collider_json.is_null()) {
-			auto& box_collider = deserialing_entity.add_component<BoxCollider2DComponent>();
+			auto& box_collider = deserialing_entity.add_component<BoxCollider2D>();
 
 			box_collider.offset = box_collider_json["offset"].get<glm::vec2>();
 			box_collider.size = box_collider_json["size"].get<glm::vec2>();
@@ -605,7 +605,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 		if (const auto& circle_collider_json = entity_json["circle_collider"];
 				!circle_collider_json.is_null()) {
-			auto& circle_collider = deserialing_entity.add_component<CircleCollider2DComponent>();
+			auto& circle_collider = deserialing_entity.add_component<CircleCollider2D>();
 
 			circle_collider.offset = circle_collider_json["offset"].get<glm::vec2>();
 			circle_collider.radius = circle_collider_json["radius"].get<float>();

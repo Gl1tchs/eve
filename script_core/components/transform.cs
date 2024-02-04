@@ -3,12 +3,12 @@ namespace EveEngine
 	/// <summary>
 	/// Represents a transform component attached to an entity.
 	/// </summary>
-	public class TransformComponent : Component
+	public class Transform : Component
 	{
 		/// <summary>
 		/// Parent transform of current's
 		/// </summary>
-		public TransformComponent Parent
+		public Transform Parent
 		{
 			get
 			{
@@ -17,7 +17,7 @@ namespace EveEngine
 					return null;
 				}
 
-				return Entity.Parent.GetComponent<TransformComponent>();
+				return Entity.Parent.GetComponent<Transform>();
 			}
 		}
 

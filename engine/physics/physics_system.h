@@ -32,8 +32,8 @@ private:
 	PhysicsSettings settings{};
 };
 
-b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2DComponent::BodyType body_type);
+b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType body_type);
 
-Rigidbody2DComponent::BodyType rigidbody2d_type_from_box2d_body(b2BodyType body_type);
+Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType body_type);
 
 #endif

@@ -25,29 +25,29 @@ public:
 
 	static void end_pass();
 
-	static void draw_sprite(const SpriteRendererComponent& sprite, const TransformComponent& transform, uint32_t entity_id = -1);
+	static void draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id = -1);
 
-	static void draw_quad(const TransformComponent& transform, const Color& color, uint32_t entity_id = -1);
+	static void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id = -1);
 
-	static void draw_quad(const TransformComponent& transform, Ref<Texture2D> texture,
+	static void draw_quad(const Transform& transform, Ref<Texture2D> texture,
 			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
 
-	static void draw_quad(const TransformComponent& transform,
+	static void draw_quad(const Transform& transform,
 			Ref<Texture2D> texture, const Color& color,
 			const glm::vec2& tex_tiling, uint32_t entity_id = -1);
 
-	static void draw_text(const TextRendererComponent& text_comp,
-			const TransformComponent& transform,
+	static void draw_text(const TextRenderer& text_comp,
+			const Transform& transform,
 			uint32_t entity_id = -1);
 
-	static void draw_text(const std::string& text, const TransformComponent& transform,
+	static void draw_text(const std::string& text, const Transform& transform,
 			const Color& fg_color,
 			const Color& bg_color,
 			float kerning, float line_spacing, uint32_t entity_id = -1);
 
 	// TODO If camera zooms out characters are breaking down.
 	static void draw_text(const std::string& text, Ref<Font> font,
-			const TransformComponent& transform, const Color& fg_color,
+			const Transform& transform, const Color& fg_color,
 			const Color& bg_color,
 			float kerning, float line_spacing, uint32_t entity_id = -1);
 

@@ -38,9 +38,9 @@ void EditorCamera::reset_transform() {
 	transform.local_scale = VEC3_ONE;
 }
 
-TransformComponent& EditorCamera::get_transform() { return transform; }
+Transform& EditorCamera::get_transform() { return transform; }
 
-const TransformComponent& EditorCamera::get_transform() const { return transform; }
+const Transform& EditorCamera::get_transform() const { return transform; }
 
 void EditorCamera::set_speed(float value) { sensitivity = value; }
 
