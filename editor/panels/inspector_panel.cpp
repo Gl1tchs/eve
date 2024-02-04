@@ -137,8 +137,11 @@ void InspectorPanel::_draw() {
 		display_add_component_entry<CameraComponent>(selected_entity, "Camera");
 		display_add_component_entry<SpriteRendererComponent>(selected_entity,
 				"Sprite Renderer");
-		display_add_component_entry<TextRendererComponent>(selected_entity, "Text Renderer");
-		display_add_component_entry<PostProcessVolume>(selected_entity, "Post Process Volume");
+		display_add_component_entry<TextRendererComponent>(selected_entity, "TextRenderer");
+		display_add_component_entry<Rigidbody2DComponent>(selected_entity, "Rigidbody2D");
+		display_add_component_entry<BoxCollider2DComponent>(selected_entity, "BoxCollider2D");
+		display_add_component_entry<CircleCollider2DComponent>(selected_entity, "CircleCollider2D");
+		display_add_component_entry<PostProcessVolume>(selected_entity, "PostProcessVolume");
 		display_add_component_entry<ScriptComponent>(selected_entity, "Script");
 
 		ImGui::EndPopup();
@@ -371,6 +374,122 @@ void InspectorPanel::_draw() {
 				}
 				END_FIELD();
 			});
+
+	draw_component<Rigidbody2DComponent>("Rigidbody2D", selected_entity, [](Rigidbody2DComponent& rb2d) {
+		static const char* items[] = {
+			"Static",
+			"Dynamic",
+			"Kinematic"
+		};
+
+		static const Rigidbody2DComponent::BodyType body_types[] = {
+			Rigidbody2DComponent::BodyType::STATIC,
+			Rigidbody2DComponent::BodyType::DYNAMIC,
+			Rigidbody2DComponent::BodyType::KINEMATIC,
+		};
+
+		const char* current_item = items[static_cast<int>(rb2d.type)];
+
+		BEGIN_FIELD("Body Type");
+		{
+			if (ImGui::BeginCombo("##Rb2DBodyType", current_item)) {
+				for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+					bool is_selected = (current_item == items[n]);
+					if (ImGui::Selectable(items[n], is_selected)) {
+						current_item = items[n];
+						rb2d.type = body_types[n];
+					}
+					if (is_selected) {
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Fixed Rotation");
+		{
+			ImGui::Checkbox("##Rb2DFixedRotation", &rb2d.fixed_rotation);
+		}
+		END_FIELD();
+	});
+
+	draw_component<BoxCollider2DComponent>("BoxCollider2D", selected_entity, [](BoxCollider2DComponent& box_collider) {
+		BEGIN_FIELD("Offset");
+		{
+			ImGui::DragFloat2("##BoxColliderOffset", glm::value_ptr(box_collider.offset));
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Size");
+		{
+			ImGui::DragFloat2("##BoxColliderSize", glm::value_ptr(box_collider.size));
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Density");
+		{
+			ImGui::DragFloat("##BoxColliderDensity", &box_collider.density);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Friction");
+		{
+			ImGui::DragFloat("##BoxColliderFriciton", &box_collider.friction);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Restitution");
+		{
+			ImGui::DragFloat("##BoxColliderRestitution", &box_collider.restitution);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Threshold");
+		{
+			ImGui::DragFloat("##BoxColliderRestitutionThreshold", &box_collider.restitution_threshold);
+		}
+		END_FIELD();
+	});
+
+	draw_component<CircleCollider2DComponent>("CircleCollider2D", selected_entity, [](CircleCollider2DComponent& circle_collider) {
+		BEGIN_FIELD("Offset");
+		{
+			ImGui::DragFloat2("##CircleColliderOffset", glm::value_ptr(circle_collider.offset));
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Size");
+		{
+			ImGui::DragFloat("##CircleColliderSize", &circle_collider.radius);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Density");
+		{
+			ImGui::DragFloat("##CircleColliderDensity", &circle_collider.density);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Friction");
+		{
+			ImGui::DragFloat("##CircleColliderFriciton", &circle_collider.friction);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Restitution");
+		{
+			ImGui::DragFloat("##CircleColliderRestitution", &circle_collider.restitution);
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("Threshold");
+		{
+			ImGui::DragFloat("##CircleColliderRestitutionThreshold", &circle_collider.restitution_threshold);
+		}
+		END_FIELD();
+	});
 
 	draw_component<PostProcessVolume>("Post Processing Volume", selected_entity, [](PostProcessVolume& volume) {
 		ImGui::Columns();

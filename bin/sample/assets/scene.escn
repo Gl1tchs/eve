@@ -8,8 +8,8 @@
       "parent_id": 0,
       "transform_component": {
         "local_position": [
-          -1.25,
-          -1.25,
+          -1.600000023841858,
+          -2.1500000953674316,
           0.0
         ],
         "local_rotation": [
@@ -24,7 +24,7 @@
         ]
       },
       "text_renderer_component": {
-        "text": "Hello, Workbench!",
+        "text": "Hello, World!",
         "font": "res://workbench.ttf",
         "fg_color": [
           1.0,
@@ -63,46 +63,6 @@
       }
     },
     {
-      "id": 9223372036854775808,
-      "tag": "my text 2",
-      "parent_id": 0,
-      "transform_component": {
-        "local_position": [
-          -1.25,
-          -1.75,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          0.5,
-          0.5,
-          1.0
-        ]
-      },
-      "text_renderer_component": {
-        "text": "Hello, Roboto!",
-        "font": "",
-        "fg_color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "bg_color": [
-          0.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        "kerning": 0.0,
-        "line_spacing": 0.0
-      }
-    },
-    {
       "id": 7070123401178905868,
       "tag": "my entity",
       "parent_id": 0,
@@ -115,7 +75,7 @@
         "local_rotation": [
           0.0,
           0.0,
-          0.0
+          -0.6000000238418579
         ],
         "local_scale": [
           1.0,
@@ -135,6 +95,24 @@
           1.0,
           1.0
         ]
+      },
+      "rigidbody2d_component": {
+        "type": "dynamic",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 1.0,
+        "restitution_threshold": 1.0
       },
       "post_process_volume": {
         "is_global": true,
@@ -205,13 +183,66 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 1.674698829650879,
-          "zoom_level": 3.0,
+          "aspect_ratio": 1.4730290174484253,
+          "zoom_level": 5.0,
           "near_clip": -1.0,
           "far_clip": 1.0
         },
         "is_primary": true,
         "is_fixed_aspect_ratio": false
+      }
+    },
+    {
+      "id": 16554862507967313981,
+      "tag": "Entity",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.6000000238418579,
+          -3.799999952316284,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          20.0,
+          0.5,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": "",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          1.0,
+          1.0
+        ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
       }
     }
   ]

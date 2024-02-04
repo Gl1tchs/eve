@@ -29,6 +29,46 @@ struct TextRendererComponent {
 	float line_spacing = 0.0f;
 };
 
+struct Rigidbody2DComponent {
+	enum class BodyType { STATIC = 0,
+		DYNAMIC,
+		KINEMATIC };
+
+	BodyType type = BodyType::STATIC;
+	bool fixed_rotation = false;
+
+	// Storage for runtime
+	void* runtime_body = nullptr;
+};
+
+struct BoxCollider2DComponent {
+	glm::vec2 offset = { 0.0f, 0.0f };
+	glm::vec2 size = { 0.5f, 0.5f };
+
+	// TODO create a physics material
+	float density = 1.0f;
+	float friction = 0.5f;
+	float restitution = 0.0f;
+	float restitution_threshold = 0.5f;
+
+	// Storage for runtime
+	void* runtime_fixture = nullptr;
+};
+
+struct CircleCollider2DComponent {
+	glm::vec2 offset = { 0.0f, 0.0f };
+	float radius = 0.5f;
+
+	// TODO create a physics material
+	float density = 1.0f;
+	float friction = 0.5f;
+	float restitution = 0.0f;
+	float restitution_threshold = 0.5f;
+
+	// Storage for runtime
+	void* runtime_fixture = nullptr;
+};
+
 struct ScriptComponent {
 	std::string class_name;
 };
@@ -39,6 +79,8 @@ struct ComponentGroup {};
 using AllComponents =
 		ComponentGroup<TransformComponent, CameraComponent,
 				SpriteRendererComponent, TextRendererComponent,
-				PostProcessVolume, ScriptComponent>;
+				Rigidbody2DComponent, BoxCollider2DComponent,
+				CircleCollider2DComponent, PostProcessVolume,
+				ScriptComponent>;
 
 #endif

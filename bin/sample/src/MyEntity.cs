@@ -18,8 +18,6 @@ namespace Sample
 
 		protected override void OnUpdate(float dt)
 		{
-			Camera.Transform.Position = Transform.Position;
-
 			if (Input.IsKeyPressed(KeyCode.Up))
 			{
 				Transform.Translate(Vector3.Up * Speed * dt);

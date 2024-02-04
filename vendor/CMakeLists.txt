@@ -1,3 +1,7 @@
+set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "Build the Box2D unit tests" FORCE)
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL  "Build the Box2D testbed" FORCE)
+add_subdirectory(box2d)
+
 add_subdirectory(entt)
 add_subdirectory(glad)
 add_subdirectory(glfw)

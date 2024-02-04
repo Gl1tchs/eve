@@ -3,6 +3,7 @@
 #include "asset/asset_registry.h"
 #include "core/json_utils.h"
 #include "core/uid.h"
+#include "physics/physics_system.h"
 #include "project/project.h"
 #include "renderer/font.h"
 #include "scene/components.h"
@@ -11,13 +12,16 @@
 #include "scripting/script_engine.h"
 
 Scene::Scene(const std::string& name) :
-		name(name) {
+		name(name),
+		physics_system(this) {
 }
 
 void Scene::start() {
 	EVE_PROFILE_FUNCTION();
 
 	running = true;
+
+	physics_system.on_physics2d_start();
 
 	ScriptEngine::on_runtime_start(this);
 
@@ -45,16 +49,18 @@ void Scene::start() {
 }
 
 void Scene::update(float dt) {
-	EVE_PROFILE_FUNCTION();
-
 	if (paused && step_frames-- <= 0) {
 		return;
 	}
+
+	EVE_PROFILE_FUNCTION();
 
 	for (auto entity_id : view<ScriptComponent>()) {
 		Entity entity = { entity_id, this };
 		ScriptEngine::invoke_on_update_entity(entity, dt);
 	}
+
+	physics_system.on_physics2d_update(dt);
 }
 
 void Scene::stop() {
@@ -68,6 +74,8 @@ void Scene::stop() {
 	}
 
 	ScriptEngine::on_runtime_stop();
+
+	physics_system.on_physics2d_stop();
 }
 
 void Scene::set_paused(bool _paused) {
@@ -256,6 +264,12 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 		break;                                             \
 	}
 
+NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2DComponent::BodyType, {
+																	 { Rigidbody2DComponent::BodyType::STATIC, "static" },
+																	 { Rigidbody2DComponent::BodyType::DYNAMIC, "dynamic" },
+																	 { Rigidbody2DComponent::BodyType::KINEMATIC, "kinematic" },
+															 })
+
 static Json serialize_entity(Entity& entity) {
 	bool has_required_components = entity.has_component<IdComponent, RelationComponent, TransformComponent>();
 	EVE_ASSERT_ENGINE(has_required_components);
@@ -311,6 +325,41 @@ static Json serialize_entity(Entity& entity) {
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
 			{ "line_spacing", tc.line_spacing },
+		};
+	}
+
+	if (entity.has_component<Rigidbody2DComponent>()) {
+		auto& rb2d = entity.get_component<Rigidbody2DComponent>();
+
+		out["rigidbody2d_component"] = Json{
+			{ "type", rb2d.type },
+			{ "fixed_rotation", rb2d.fixed_rotation },
+		};
+	}
+
+	if (entity.has_component<BoxCollider2DComponent>()) {
+		auto& box_collider = entity.get_component<BoxCollider2DComponent>();
+
+		out["box_collider"] = Json{
+			{ "offset", box_collider.offset },
+			{ "size", box_collider.size },
+			{ "density", box_collider.density },
+			{ "friction", box_collider.friction },
+			{ "restitution", box_collider.restitution },
+			{ "restitution_threshold", box_collider.restitution_threshold },
+		};
+	}
+
+	if (entity.has_component<CircleCollider2DComponent>()) {
+		auto& circle_collider = entity.get_component<CircleCollider2DComponent>();
+
+		out["circle_collider"] = Json{
+			{ "offset", circle_collider.offset },
+			{ "radius", circle_collider.radius },
+			{ "density", circle_collider.density },
+			{ "friction", circle_collider.friction },
+			{ "restitution", circle_collider.restitution },
+			{ "restitution_threshold", circle_collider.restitution_threshold },
 		};
 	}
 
@@ -532,6 +581,39 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();
 			text_component.line_spacing = text_comp_json["line_spacing"].get<float>();
+		}
+
+		if (const auto& rb2d_json = entity_json["rigidbody2d_component"]; !rb2d_json.is_null()) {
+			auto& rb2d = deserialing_entity.add_component<Rigidbody2DComponent>();
+
+			rb2d.type = rb2d_json["type"].get<Rigidbody2DComponent::BodyType>();
+			rb2d.fixed_rotation = rb2d_json["fixed_rotation"].get<bool>();
+		}
+
+		if (const auto& box_collider_json = entity_json["box_collider"];
+				!box_collider_json.is_null()) {
+			auto& box_collider = deserialing_entity.add_component<BoxCollider2DComponent>();
+
+			box_collider.offset = box_collider_json["offset"].get<glm::vec2>();
+			box_collider.size = box_collider_json["size"].get<glm::vec2>();
+
+			box_collider.density = box_collider_json["density"].get<float>();
+			box_collider.friction = box_collider_json["friction"].get<float>();
+			box_collider.restitution = box_collider_json["restitution"].get<float>();
+			box_collider.restitution_threshold = box_collider_json["restitution_threshold"].get<float>();
+		}
+
+		if (const auto& circle_collider_json = entity_json["circle_collider"];
+				!circle_collider_json.is_null()) {
+			auto& circle_collider = deserialing_entity.add_component<CircleCollider2DComponent>();
+
+			circle_collider.offset = circle_collider_json["offset"].get<glm::vec2>();
+			circle_collider.radius = circle_collider_json["radius"].get<float>();
+
+			circle_collider.density = circle_collider_json["density"].get<float>();
+			circle_collider.friction = circle_collider_json["friction"].get<float>();
+			circle_collider.restitution = circle_collider_json["restitution"].get<float>();
+			circle_collider.restitution_threshold = circle_collider_json["restitution_threshold"].get<float>();
 		}
 
 		if (const auto& post_process_json = entity_json["post_process_volume"]; !post_process_json.is_null()) {

@@ -28,6 +28,7 @@ PRIVATE
     ${VENDOR_DIR}/stb
 	${VENDOR_DIR}/filewatch
 	${VENDOR_DIR}/mono/include
+	${VENDOR_DIR}/box2d/include
 )
 
 target_link_libraries(eve
@@ -40,6 +41,7 @@ PRIVATE
 	imgui
 	msdf-atlas-gen
 	mono
+	box2d
 )
 
 target_compile_definitions(eve PRIVATE GLFW_INCLUDE_NONE)

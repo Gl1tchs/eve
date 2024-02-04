@@ -67,51 +67,50 @@ std::string Project::get_starting_scene_path() {
 	return s_active_project->config.starting_scene;
 }
 
-fs::path Project::get_asset_path(std::string asset) {
+fs::path Project::get_asset_path(const std::string& path) {
 	EVE_ASSERT_ENGINE(s_active_project);
 
-	const std::string proj_substr = "prj://";
-	const std::string res_substr = "res://";
+	const std::string_view proj_substr = "prj://";
+	const std::string_view res_substr = "res://";
 
-	if (const auto pos = asset.find(proj_substr); pos != std::string::npos) {
+	fs::path result_path;
+
+	if (const auto pos = path.find(proj_substr); pos != std::string::npos) {
 		const auto project_dir = get_project_directory();
-
-		asset.erase(pos, proj_substr.length());
-
-		return project_dir / asset;
-	} else if (const auto pos = asset.find(res_substr);
-			   pos != std::string::npos) {
-		const auto asset_dir = get_asset_directory();
-
-		asset.erase(pos, res_substr.length());
-
-		return asset_dir / asset;
+		result_path = project_dir / std::string_view(path).substr(pos + proj_substr.length());
+	} else if (const auto pos = path.find(res_substr); pos != std::string::npos) {
+		const auto path_copy_dir = get_asset_directory();
+		result_path = path_copy_dir / std::string_view(path).substr(pos + res_substr.length());
+	} else {
+		result_path = path;
 	}
 
-	return asset;
+	return result_path;
 }
 
-std::string Project::get_relative_asset_path(const std::string& path) {
+std::string Project::get_relative_asset_path(const fs::path& path) {
 	const auto project_dir = get_project_directory();
 	const auto asset_dir = get_asset_directory();
+
+	std::string path_string = path.string();
 
 	fs::path relative_path;
 
 	// Check if the path is inside the asset directory
-	if (path.compare(0, asset_dir.string().length(), asset_dir.string()) == 0) {
+	if (path_string.compare(0, asset_dir.string().length(), asset_dir.string()) == 0) {
 		relative_path = fs::relative(path, asset_dir);
 		return "res://" + relative_path.string();
 	}
 
 	// Check if the path is inside the project directory
-	if (path.compare(0, project_dir.string().length(), project_dir.string()) ==
+	if (path_string.compare(0, project_dir.string().length(), project_dir.string()) ==
 			0) {
 		relative_path = fs::relative(path, project_dir);
 		return "prj://" + relative_path.string();
 	}
 
 	// If the path is not inside the project or asset directory, return the original path
-	return path;
+	return path_string;
 }
 
 Ref<Project> Project::create(const fs::path& path) {

@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "asset/asset.h"
+#include "physics/physics_system.h"
 
 #include <entt/entt.hpp>
 
@@ -97,6 +98,8 @@ public:
 
 private:
 	std::string name;
+
+	PhysicsSystem physics_system;
 
 	bool running = false;
 	bool paused = false;

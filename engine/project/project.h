@@ -28,9 +28,9 @@ public:
 
 	static std::string get_starting_scene_path();
 
-	static fs::path get_asset_path(std::string asset);
+	static fs::path get_asset_path(const std::string& path);
 
-	static std::string get_relative_asset_path(const std::string& path);
+	static std::string get_relative_asset_path(const fs::path& path);
 
 	static Ref<Project> create(const fs::path& path);
 
