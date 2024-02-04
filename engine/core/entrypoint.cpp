@@ -1,5 +1,6 @@
 #include "core/entrypoint.h"
-#include "core/log.h"
+
+#include "debug/log.h"
 
 int main(int argc, const char** argv) {
 	Logger::init("eve.log");

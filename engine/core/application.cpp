@@ -1,8 +1,8 @@
 #include "core/application.h"
 
-#include "core/assert.h"
 #include "core/event_system.h"
 #include "core/timer.h"
+#include "debug/assert.h"
 #include "imgui/imgui_layer.h"
 #include "renderer/font.h"
 #include "renderer/renderer.h"

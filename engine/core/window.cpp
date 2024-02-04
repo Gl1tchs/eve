@@ -1,12 +1,11 @@
 #include "core/window.h"
 
-#include "core/assert.h"
 #include "core/event_system.h"
 #include "core/input.h"
 #include "core/key_code.h"
 #include "core/mouse_code.h"
+#include "debug/assert.h"
 
-#include "window.h"
 #include <GLFW/glfw3.h>
 
 static void glfw_error_callback(int error, const char* description) {

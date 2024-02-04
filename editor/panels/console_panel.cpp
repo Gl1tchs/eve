@@ -1,5 +1,6 @@
 #include "panels/console_panel.h"
-#include "core/log.h"
+
+#include "debug/log.h"
 
 #include <imgui.h>
 

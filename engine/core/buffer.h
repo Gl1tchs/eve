@@ -1,7 +1,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include "core/assert.h"
+#include "debug/assert.h"
 
 struct Buffer {
 	uint8_t* data = nullptr;

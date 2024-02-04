@@ -1,7 +1,7 @@
 #ifndef ASSERT_H
 #define ASSERT_H
 
-#include "core/log.h"
+#include "debug/log.h"
 
 #if _WIN32
 #define DEBUGBREAK() __debugbreak()

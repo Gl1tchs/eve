@@ -1,4 +1,4 @@
-#include "core/instrumentor.h"
+#include "debug/instrumentor.h"
 
 Instrumentor::Instrumentor() :
 		current_session(nullptr), profile_count(0) {

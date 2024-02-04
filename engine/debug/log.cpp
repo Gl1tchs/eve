@@ -1,4 +1,4 @@
-#include "core/log.h"
+#include "debug/log.h"
 
 #include "core/core_minimal.h"
 
