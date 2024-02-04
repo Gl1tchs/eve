@@ -52,8 +52,6 @@ class Logger {
 public:
 	static void init(const std::string& file_name);
 
-	static void deinit();
-
 	static void log(LogSender sender, LogLevel level, const std::string& fmt);
 
 	static void push_buffer(Ref<LogBuffer>& buffer);

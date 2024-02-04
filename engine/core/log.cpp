@@ -82,14 +82,6 @@ void Logger::init(const std::string& file_name) {
 	}
 }
 
-void Logger::deinit() {
-	if (!s_log_file.is_open()) {
-		return;
-	}
-
-	s_log_file.close();
-}
-
 void Logger::log(LogSender sender, LogLevel level, const std::string& fmt) {
 	const std::string time_stamp = get_timestamp();
 
@@ -110,6 +102,7 @@ void Logger::log(LogSender sender, LogLevel level, const std::string& fmt) {
 	// Output to file
 	if (s_log_file.is_open()) {
 		s_log_file << message << "\n";
+		s_log_file.flush();
 	}
 }
 

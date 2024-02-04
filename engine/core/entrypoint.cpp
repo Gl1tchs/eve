@@ -13,7 +13,5 @@ int main(int argc, const char** argv) {
 	// cleanup
 	delete _application;
 
-	Logger::deinit();
-
 	return 0;
 }
