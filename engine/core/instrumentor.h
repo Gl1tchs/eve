@@ -50,7 +50,12 @@ private:
 	bool stopped;
 };
 
+#if EVE_DEBUG
 #define EVE_ENABLE_PROFILING 1
+#else
+#define EVE_ENABLE_PROFILING 0
+#endif
+
 #if EVE_ENABLE_PROFILING
 
 #define EVE_PROFILE_BEGIN_SESSION(name, file_path) Instrumentor::get_instance().begin_session(name, file_path)
