@@ -8,7 +8,7 @@ A yet another cross platform game engine which is easy to use and performant.
 - Asset System
 - C# Mono Scripting
 - Post Processing
-- (Coming Soon) 2D Physics
+- 2D Physics
 - (Coming Soon) Animations
 - (Coming Soon) Particle System
 - (Coming Soon) VFX

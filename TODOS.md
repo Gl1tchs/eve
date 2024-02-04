@@ -25,6 +25,10 @@
 ## Scripting
 - [ ] String script fields
 
+## Physics
+- [ ] Collision triggers.
+- [ ] Collision layer checks.
+
 ## Asset
 - [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
 - [ ] Change occurencies of entities when an asset renamed or removed
