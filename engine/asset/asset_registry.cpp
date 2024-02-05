@@ -65,9 +65,9 @@ inline static void on_file_change(const fs::path& path_rel, const filewatch::Eve
 	}
 }
 
-inline static LoadedAssetRegistryMap s_loaded_assets = {};
-
+inline static LoadedAssetRegistryMap s_loaded_assets;
 inline static Ref<filewatch::FileWatch<std::string>> s_watcher;
+inline static std::unordered_map<fs::path, AssetHandle> s_file_uid_cache;
 
 void AssetRegistry::init() {
 	if (s_watcher) {
@@ -158,6 +158,11 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 
 	const fs::path path_abs = Project::get_asset_path(path);
 
+	// return handle from cache if found
+	if (const auto it = s_file_uid_cache.find(path_abs); it != s_file_uid_cache.end()) {
+		return it->second;
+	}
+
 	const AssetType type = get_asset_type_from_extension(path_abs.extension().string());
 
 	const fs::path asset_path = (type == AssetType::SCENE)
@@ -173,7 +178,12 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 		return INVALID_UID;
 	}
 
-	return json["uid"].get<AssetHandle>();
+	AssetHandle handle = json["uid"].get<AssetHandle>();
+
+	// add handle to cache
+	s_file_uid_cache[path_abs] = handle;
+
+	return handle;
 }
 
 void AssetRegistry::on_asset_rename(const fs::path& old_path, const fs::path& new_path) {
