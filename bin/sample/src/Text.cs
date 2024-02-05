@@ -4,7 +4,6 @@ namespace Sample
 {
 	public class Text : Entity
 	{
-		public string text;
 		public Color color;
 
 		protected override void OnCreate()

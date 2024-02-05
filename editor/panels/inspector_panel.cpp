@@ -373,6 +373,12 @@ void InspectorPanel::_draw() {
 					ImGui::DragFloat("##LineSpacingControl", &text_comp.line_spacing);
 				}
 				END_FIELD();
+
+				BEGIN_FIELD("Screen Space");
+				{
+					ImGui::Checkbox("##ScreenSpaceControl", &text_comp.is_screen_space);
+				}
+				END_FIELD();
 			});
 
 	draw_component<Rigidbody2D>("Rigidbody2D", selected_entity, [](Rigidbody2D& rb2d) {

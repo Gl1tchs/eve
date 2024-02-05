@@ -27,6 +27,7 @@ struct TextRenderer {
 	Color bg_color = COLOR_TRANSPARENT;
 	float kerning = 0.0f;
 	float line_spacing = 0.0f;
+	bool is_screen_space = false;
 };
 
 struct Rigidbody2D {

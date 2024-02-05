@@ -47,8 +47,11 @@ void SceneRenderer::render_runtime(float ds) {
 		const auto& cc = camera.get_component<CameraComponent>();
 		const auto& tc = camera.get_transform();
 
-		CameraData data = { cc.camera.get_view_matrix(tc),
-			cc.camera.get_projection_matrix(), tc.get_position() };
+		CameraData data = {
+			cc.camera.get_view_matrix(tc),
+			cc.camera.get_projection_matrix(),
+			cc.camera.zoom_level
+		};
 
 		_render_scene(data);
 
@@ -76,9 +79,11 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 		return;
 	}
 
-	CameraData data = { editor_camera->get_view_matrix(),
+	CameraData data = {
+		editor_camera->get_view_matrix(),
 		editor_camera->get_projection_matrix(),
-		editor_camera->get_transform().get_position() };
+		editor_camera->zoom_level
+	};
 
 	_render_scene(data);
 
@@ -133,9 +138,12 @@ uint32_t SceneRenderer::get_final_texture_id() const {
 }
 
 void SceneRenderer::_render_scene(const CameraData& camera_data) {
-	EVE_PROFILE_FUNCTION();
-
 	const auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
+
+	EVE_PROFILE_FUNCTION();
 
 	Renderer::reset_stats();
 

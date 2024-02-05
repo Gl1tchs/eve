@@ -221,6 +221,12 @@ namespace EveEngine
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal extern static void text_renderer_component_set_line_spacing(ulong entityId, float lineSpacing);
 
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static bool text_renderer_component_get_is_screen_space(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void text_renderer_component_set_is_screen_space(ulong entityId, bool isScreenSpace);
+
 		#endregion
 		#region Rigidbody2DComponent
 

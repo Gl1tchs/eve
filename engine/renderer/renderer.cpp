@@ -117,6 +117,7 @@ void Renderer::init() {
 			{ ShaderDataType::FLOAT2, "a_tex_coord" },
 			{ ShaderDataType::FLOAT4, "a_fg_color" },
 			{ ShaderDataType::FLOAT4, "a_bg_color" },
+			{ ShaderDataType::INT, "a_is_screen_space" },
 			{ ShaderDataType::INT, "a_entity_id" },
 	});
 	s_data->text_vertex_array->add_vertex_buffer(s_data->text_vertex_buffer);
@@ -220,8 +221,7 @@ void Renderer::draw_quad(const Transform& transform,
 }
 
 void Renderer::draw_text(const TextRenderer& text_comp,
-		const Transform& transform,
-		uint32_t entity_id) {
+		const Transform& transform, uint32_t entity_id) {
 	Ref<Font> font = AssetRegistry::get<Font>(text_comp.font);
 	if (!font) {
 		font = Font::get_default();
@@ -230,19 +230,24 @@ void Renderer::draw_text(const TextRenderer& text_comp,
 	draw_text(text_comp.text, font ? font : Font::get_default(),
 			transform, text_comp.fg_color, text_comp.bg_color,
 			text_comp.kerning, text_comp.line_spacing,
-			entity_id);
+			text_comp.is_screen_space, entity_id);
 }
 
 void Renderer::draw_text(const std::string& text, const Transform& transform,
-		const Color& fg_color,
-		const Color& bg_color,
-		float kerning, float line_spacing, uint32_t entity_id) {
-	draw_text(text, nullptr, transform, fg_color, bg_color, kerning, line_spacing, entity_id);
+		const Color& fg_color, const Color& bg_color,
+		float kerning, float line_spacing,
+		bool is_screen_space, uint32_t entity_id) {
+	draw_text(text, nullptr,
+			transform, fg_color,
+			bg_color, kerning,
+			line_spacing, is_screen_space,
+			entity_id);
 }
 
 void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transform& transform,
 		const Color& fg_color, const Color& bg_color,
-		float kerning, float line_spacing, uint32_t entity_id) {
+		float kerning, float line_spacing,
+		bool is_screen_space, uint32_t entity_id) {
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();
 	if (font_atlas != s_data->font_atlas_texture) {
 		_next_batch();
@@ -326,6 +331,7 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transfor
 		vertex.tex_coord = tex_coord_min;
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.is_screen_space = is_screen_space;
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 
@@ -333,6 +339,7 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transfor
 		vertex.tex_coord = { tex_coord_min.x, tex_coord_max.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.is_screen_space = is_screen_space;
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 
@@ -340,6 +347,7 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transfor
 		vertex.tex_coord = tex_coord_max;
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.is_screen_space = is_screen_space;
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 
@@ -347,6 +355,7 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transfor
 		vertex.tex_coord = { tex_coord_max.x, tex_coord_min.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
+		vertex.is_screen_space = is_screen_space;
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 

@@ -45,5 +45,11 @@ namespace EveEngine
 			get => Interop.text_renderer_component_get_line_spacing(Entity.Id);
 			set => Interop.text_renderer_component_set_line_spacing(Entity.Id, value);
 		}
+
+		public bool IsScreenSpace
+		{
+			get => Interop.text_renderer_component_get_is_screen_space(Entity.Id);
+			set => Interop.text_renderer_component_set_is_screen_space(Entity.Id, value);
+		}
 	};
 }

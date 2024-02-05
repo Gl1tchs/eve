@@ -15574,7 +15574,8 @@
           0.0
         ],
         "kerning": 0.0,
-        "line_spacing": 0.0
+        "line_spacing": 0.0,
+				"is_screen_space" : false
       }
     },
     {

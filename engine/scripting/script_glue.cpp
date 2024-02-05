@@ -495,6 +495,18 @@ inline static void text_renderer_component_set_line_spacing(UID entity_id, float
 	entity.get_component<TextRenderer>().line_spacing = line_spacing;
 }
 
+inline static bool text_renderer_component_get_is_screen_space(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<TextRenderer>().is_screen_space;
+}
+
+inline static void text_renderer_component_set_is_screen_space(UID entity_id, bool is_screen_space) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<TextRenderer>().is_screen_space = is_screen_space;
+}
+
 #pragma endregion
 #pragma region Rigidbody2DComponent
 
@@ -928,6 +940,8 @@ void register_functions() {
 	ADD_INTERNAL_CALL(text_renderer_component_set_kerning);
 	ADD_INTERNAL_CALL(text_renderer_component_get_line_spacing);
 	ADD_INTERNAL_CALL(text_renderer_component_set_line_spacing);
+	ADD_INTERNAL_CALL(text_renderer_component_get_is_screen_space);
+	ADD_INTERNAL_CALL(text_renderer_component_set_is_screen_space);
 
 	// Begin Rigidbody2D
 	ADD_INTERNAL_CALL(rigidbody2d_component_get_type);

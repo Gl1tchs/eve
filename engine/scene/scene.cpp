@@ -265,10 +265,10 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	}
 
 NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType, {
-																	 { Rigidbody2D::BodyType::STATIC, "static" },
-																	 { Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
-																	 { Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
-															 })
+															{ Rigidbody2D::BodyType::STATIC, "static" },
+															{ Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
+															{ Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
+													})
 
 static Json serialize_entity(Entity& entity) {
 	bool has_required_components = entity.has_component<IdComponent, RelationComponent, Transform>();
@@ -325,6 +325,7 @@ static Json serialize_entity(Entity& entity) {
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
 			{ "line_spacing", tc.line_spacing },
+			{ "is_screen_space", tc.is_screen_space },
 		};
 	}
 
@@ -581,6 +582,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();
 			text_component.line_spacing = text_comp_json["line_spacing"].get<float>();
+			text_component.is_screen_space = text_comp_json["is_screen_space"].get<bool>();
 		}
 
 		if (const auto& rb2d_json = entity_json["rigidbody2d_component"]; !rb2d_json.is_null()) {
@@ -676,8 +678,6 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 						ScriptFieldType type = deserialize_script_field_type(type_string);
 
 						ScriptFieldInstance& field_instance = entity_fields[name];
-
-						EVE_ASSERT_ENGINE(fields.find(name) != fields.end());
 
 						if (fields.find(name) == fields.end()) {
 							continue;

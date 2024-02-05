@@ -3,13 +3,13 @@
   "name": "scene",
   "entities": [
     {
-      "id": 12517815595370061652,
-      "tag": "my text",
+      "id": 12207773597134581231,
+      "tag": "Entity",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
-          -1.600000023841858,
-          -2.1500000953674316,
+          10.0,
+          0.0,
           0.0
         ],
         "local_rotation": [
@@ -18,8 +18,167 @@
           0.0
         ],
         "local_scale": [
+          1.0,
+          11.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": "",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          1.0,
+          1.0
+        ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
           0.5,
+          0.5
+        ],
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
+      }
+    },
+    {
+      "id": 16105381538406036866,
+      "tag": "Entity",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          5.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          20.0,
+          1.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": "",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          1.0,
+          1.0
+        ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
           0.5,
+          0.5
+        ],
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
+      }
+    },
+    {
+      "id": 2038558295031678942,
+      "tag": "Entity",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          -10.0,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          11.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": "",
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          1.0,
+          1.0
+        ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
+      }
+    },
+    {
+      "id": 12517815595370061652,
+      "tag": "my text",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          -0.44999998807907104,
+          0.699999988079071,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          0.15000000596046448,
+          0.15000000596046448,
           1.0
         ]
       },
@@ -39,16 +198,12 @@
           0.0
         ],
         "kerning": 0.0,
-        "line_spacing": 0.0
+        "line_spacing": 0.0,
+				"is_screen_space" : true
       },
       "script_component": {
         "class_name": "Sample.Text",
         "script_fields": [
-          {
-            "name": "text",
-            "type": "None",
-            "data": null
-          },
           {
             "name": "color",
             "type": "Color",
@@ -183,8 +338,8 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 1.4730290174484253,
-          "zoom_level": 5.0,
+          "aspect_ratio": 1.451612949371338,
+          "zoom_level": 10.0,
           "near_clip": -1.0,
           "far_clip": 1.0
         },
@@ -198,8 +353,8 @@
       "parent_id": 0,
       "transform_component": {
         "local_position": [
-          0.6000000238418579,
-          -3.799999952316284,
+          0.0,
+          -5.0,
           0.0
         ],
         "local_rotation": [
@@ -209,7 +364,7 @@
         ],
         "local_scale": [
           20.0,
-          0.5,
+          1.0,
           1.0
         ]
       },
