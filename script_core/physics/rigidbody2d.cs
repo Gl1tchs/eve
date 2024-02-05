@@ -4,9 +4,9 @@ namespace EveEngine
 	{
 		public enum BodyType
 		{
+			Static = 0,
 			Dynamic,
 			Kinematic,
-			Static
 		}
 
 		public BodyType Type

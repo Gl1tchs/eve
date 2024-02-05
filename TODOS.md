@@ -18,6 +18,9 @@
 - [x] Content browser panel.
 
 ## Renderer
+- [ ] Selected item bounds renderer
+- [ ] Physics collider bounds renderer
+- [ ] Center texts.
 - [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations
@@ -28,6 +31,7 @@
 ## Physics
 - [ ] Collision triggers.
 - [ ] Collision layer checks.
+- [ ] Velocity and forces
 
 ## Asset
 - [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
