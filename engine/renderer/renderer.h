@@ -46,7 +46,7 @@ public:
 
 	// TODO If camera zooms out characters are breaking down.
 	static void draw_text(const std::string& text, Ref<Font> font,
-			const Transform& transform, const Color& fg_color,
+			Transform transform, const Color& fg_color,
 			const Color& bg_color,
 			float kerning, float line_spacing,
 			bool is_screen_space = false, uint32_t entity_id = -1);

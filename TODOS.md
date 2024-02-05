@@ -20,7 +20,7 @@
 ## Renderer
 - [ ] Selected item bounds renderer
 - [ ] Physics collider bounds renderer
-- [ ] Center texts.
+- [x] Center texts.
 - [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations

@@ -1,6 +1,7 @@
 #include "renderer/renderer.h"
 
 #include "asset/asset_registry.h"
+#include "core/application.h"
 #include "core/buffer.h"
 #include "renderer/font.h"
 #include "renderer/primitives/line.h"
@@ -244,7 +245,7 @@ void Renderer::draw_text(const std::string& text, const Transform& transform,
 			entity_id);
 }
 
-void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transform& transform,
+void Renderer::draw_text(const std::string& text, Ref<Font> font, Transform transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing,
 		bool is_screen_space, uint32_t entity_id) {
@@ -255,17 +256,58 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, const Transfor
 
 	s_data->font_atlas_texture = font_atlas;
 
-	const glm::mat4 transform_matrix = transform.get_transform_matrix();
-
 	const auto& font_geometry = font->get_msdf_data().font_geometry;
 	const auto& metrics = font_geometry.getMetrics();
-
-	double x = 0.0;
-	double y = 0.0;
 
 	double fs_scale = 1.0 / (metrics.ascenderY - metrics.descenderY);
 
 	const float space_glyph_advance = font_geometry.getGlyph(' ')->getAdvance();
+
+	// center the text around the transform if its not in screen space
+	if (!is_screen_space) {
+		float text_size = 0;
+		for (size_t i = 0; i < text.size(); i++) {
+			char character = text[i];
+			if (character == '\r' || character == '\n') {
+				continue;
+			}
+
+			if (character == ' ') {
+				text_size += fs_scale * space_glyph_advance + kerning;
+				continue;
+			}
+
+			if (character == '\t') {
+				text_size += 4.0f * (fs_scale * space_glyph_advance + kerning);
+				continue;
+			}
+
+			auto glyph = font_geometry.getGlyph(character);
+			if (!glyph) {
+				glyph = font_geometry.getGlyph('?');
+			}
+			if (!glyph) {
+				continue;
+			}
+
+			if (i < text.size()) {
+				double advance = glyph->getAdvance();
+				const char next_character = text[i + 1];
+				font_geometry.getAdvance(advance, character, next_character);
+
+				text_size += fs_scale * advance + kerning;
+			}
+		}
+
+		text_size *= transform.get_scale().x;
+
+		transform.local_position.x -= text_size / 2.0f;
+	}
+
+	const glm::mat4 transform_matrix = transform.get_transform_matrix();
+
+	double x = 0.0;
+	double y = 0.0;
 
 	for (size_t i = 0; i < text.size(); i++) {
 		char character = text[i];
