@@ -14,6 +14,8 @@ public:
 
 	Scene(const std::string& name = "default");
 
+	// runtime beheaviours
+
 	void start();
 
 	void update(float dt);
@@ -28,18 +30,18 @@ public:
 
 	bool is_paused();
 
+	// ECS
+
 	Entity create(const std::string& name, UID parent_id = 0);
 	Entity create(UID uid, const std::string& name, UID parent_id = INVALID_UID);
 
-	// FIXME
-	//	if script running remove from script engine
 	void destroy(Entity entity);
 	void destroy(UID uid);
 
 	// will check if entity valid or not
 	bool exists(Entity entity) const;
 
-	// wont check entity validity but looks for the id
+	// won't check entity validity but looks for the id
 	bool exists(UID uid) const;
 
 	Entity find_by_id(UID uid);

@@ -66,8 +66,8 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 
 	// is file an asset or not
 	if (!fs::is_directory(path)) {
-		const AssetHandle handle = AssetRegistry::get_handle_from_path(path.string());
-		const bool is_loaded = handle && AssetRegistry::is_loaded(handle);
+		const AssetHandle handle = asset_registry::get_handle_from_path(path.string());
+		const bool is_loaded = handle && asset_registry::is_asset_loaded(handle);
 
 		if (!is_renaming) {
 			const std::string label = std::format("{1}  {0}", filename, (is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
@@ -166,14 +166,14 @@ void ContentBrowserPanel::_draw_popup_context(const fs::path& path) {
 
 		// do not let scenes to be imported here
 		if ((type != AssetType::NONE && type != AssetType::SCENE) && ImGui::MenuItem("Load")) {
-			AssetRegistry::load(
+			asset_registry::load_asset(
 					Project::get_relative_asset_path(path.string()),
 					type);
 		}
 
-		if (const AssetHandle handle = AssetRegistry::get_handle_from_path(path.string());
-				AssetRegistry::is_loaded(handle) && ImGui::MenuItem("Unload")) {
-			AssetRegistry::unload(handle);
+		if (const AssetHandle handle = asset_registry::get_handle_from_path(path.string());
+				asset_registry::is_asset_loaded(handle) && ImGui::MenuItem("Unload")) {
+			asset_registry::unload_asset(handle);
 		}
 
 		if (ImGui::MenuItem("Rename")) {

@@ -4,6 +4,8 @@
 - [ ] Runtime camera aspect ratio not changing properly.
 
 ## General
+- [ ] Build script
+- [ ] More functional aproach for everything.
 - [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization

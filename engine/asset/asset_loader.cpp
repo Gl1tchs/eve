@@ -1,6 +1,9 @@
 #include "asset/asset_loader.h"
 
 #include "project/project.h"
+#include "renderer/font.h"
+#include "renderer/texture.h"
+#include "scene/entity.h"
 
 NLOHMANN_JSON_SERIALIZE_ENUM(TextureFilteringMode,
 		{
@@ -16,7 +19,9 @@ NLOHMANN_JSON_SERIALIZE_ENUM(TextureWrappingMode,
 				{ TextureWrappingMode::CLAMP_TO_BORDER, "clamp_to_border" },
 		});
 
-Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
+namespace asset_loader {
+
+Ref<Texture2D> load_texture(const fs::path& path) {
 	EVE_PROFILE_FUNCTION();
 
 	// Get .meta path
@@ -80,7 +85,7 @@ Ref<Texture2D> AssetLoader::load_texture(const fs::path& path) {
 	return texture;
 }
 
-Ref<Font> AssetLoader::load_font(const fs::path& path) {
+Ref<Font> load_font(const fs::path& path) {
 	EVE_PROFILE_FUNCTION();
 
 	// Get .meta path
@@ -126,7 +131,7 @@ Ref<Font> AssetLoader::load_font(const fs::path& path) {
 	return font;
 }
 
-Ref<Scene> AssetLoader::load_scene(const fs::path& path) {
+Ref<Scene> load_scene(const fs::path& path) {
 	EVE_PROFILE_FUNCTION();
 
 	Ref<Scene> scene = create_ref<Scene>();
@@ -136,3 +141,5 @@ Ref<Scene> AssetLoader::load_scene(const fs::path& path) {
 
 	return scene;
 }
+
+} //namespace asset_loader

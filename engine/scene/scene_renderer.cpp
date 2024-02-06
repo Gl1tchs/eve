@@ -145,7 +145,7 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 
 	EVE_PROFILE_FUNCTION();
 
-	Renderer::reset_stats();
+	renderer::reset_stats();
 
 	frame_buffer->bind();
 	{
@@ -162,18 +162,18 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 		}
 		before_render_functions.clear();
 
-		Renderer::begin_pass(camera_data);
+		renderer::begin_pass(camera_data);
 		{
 			scene->view<Transform, SpriteRenderer>().each(
 					[this](entt::entity entity_id, const Transform& transform,
 							const SpriteRenderer& sprite) {
-						Renderer::draw_sprite(sprite, transform, (uint32_t)entity_id);
+						renderer::draw_sprite(sprite, transform, (uint32_t)entity_id);
 					});
 
 			scene->view<Transform, TextRenderer>().each(
 					[this](entt::entity entity_id, const Transform& transform,
 							const TextRenderer& text_component) {
-						Renderer::draw_text(text_component, transform, (uint32_t)entity_id);
+						renderer::draw_text(text_component, transform, (uint32_t)entity_id);
 					});
 
 			for (const auto function : on_render_functions) {
@@ -181,7 +181,7 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 			}
 			on_render_functions.clear();
 		}
-		Renderer::end_pass();
+		renderer::end_pass();
 
 		for (const auto function : after_render_functions) {
 			function(frame_buffer);
@@ -196,9 +196,7 @@ void SceneRenderer::_post_process() {
 	post_processed = false;
 
 	const auto scene = SceneManager::get_active();
-
-	auto view = scene->view<PostProcessVolume>();
-	for (const entt::entity entity_id : view) {
+	for (const entt::entity entity_id : scene->view<PostProcessVolume>()) {
 		const PostProcessVolume& volume = scene->get_component<PostProcessVolume>(entity_id);
 		// TODO implement local effects
 		if (volume.is_global) {

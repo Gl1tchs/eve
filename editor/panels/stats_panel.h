@@ -3,8 +3,6 @@
 
 #include "panels/panel.h"
 
-class Renderer;
-
 class StatsPanel : public Panel {
 	EVE_IMPL_PANEL("Stats")
 

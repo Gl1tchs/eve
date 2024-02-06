@@ -12,31 +12,31 @@ bool SceneManager::load_scene(const std::string& path) {
 			Application::enque_main_thread([path]() {
 				s_active_scene->stop();
 
-				AssetRegistry::unload_all();
+				asset_registry::unload_all_assets();
 
-				AssetHandle handle = AssetRegistry::load(path, AssetType::SCENE);
+				AssetHandle handle = asset_registry::load_asset(path, AssetType::SCENE);
 				if (!handle) {
 					EVE_LOG_ENGINE_ERROR("Unable to load scene from path: {}", path);
 					return;
 				}
 
-				s_active_scene = AssetRegistry::get<Scene>(handle);
+				s_active_scene = asset_registry::get_asset<Scene>(handle);
 				s_active_scene->start();
 			});
 
 			return true;
 		} else {
-			AssetRegistry::unload_all();
+			asset_registry::unload_all_assets();
 		}
 	}
 
-	AssetHandle handle = AssetRegistry::load(path, AssetType::SCENE);
+	AssetHandle handle = asset_registry::load_asset(path, AssetType::SCENE);
 	if (!handle) {
 		EVE_LOG_ENGINE_ERROR("Unable to load scene from path: {}", path);
 		return false;
 	}
 
-	s_active_scene = AssetRegistry::get<Scene>(handle);
+	s_active_scene = asset_registry::get_asset<Scene>(handle);
 
 	return true;
 }

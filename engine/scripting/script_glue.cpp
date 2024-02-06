@@ -808,11 +808,11 @@ scene_manager_load_scene(MonoString* path) {
 #pragma region AssetRegistry
 
 inline static uint64_t asset_registry_load(MonoString* path, AssetType type) {
-	return AssetRegistry::load(mono_string_to_string(path), type);
+	return asset_registry::load_asset(mono_string_to_string(path), type);
 }
 
 inline static void asset_registry_unload(AssetHandle handle) {
-	AssetRegistry::unload(handle);
+	asset_registry::unload_asset(handle);
 }
 
 #pragma endregion

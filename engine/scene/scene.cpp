@@ -123,6 +123,10 @@ void Scene::destroy(Entity entity) {
 		destroy(child);
 	}
 
+	if (is_running()) {
+		ScriptEngine::invoke_on_destroy_entity(entity);
+	}
+
 	entity_map.erase(entity.get_uid());
 	registry.destroy(entity);
 }
@@ -157,13 +161,17 @@ Entity Scene::find_by_id(UID uid) {
 
 Entity Scene::find_by_name(const std::string& name) {
 	auto view = registry.view<IdComponent>();
-	for (auto entity : view) {
+
+	auto entity_it = std::find_if(view.begin(), view.end(), [&](const auto& entity) {
 		const IdComponent& id_comp = get_component<IdComponent>(entity);
-		if (id_comp.tag == name) {
-			return { entity, this };
-		}
+		return id_comp.tag == name;
+	});
+
+	if (entity_it != view.end()) {
+		return { *entity_it, this };
+	} else {
+		return {}; // Return an empty entity if not found
 	}
-	return {};
 }
 
 template <typename... Component>
@@ -349,7 +357,7 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<SpriteRenderer>()) {
 		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
-		const auto texture = AssetRegistry::get<Texture2D>(sc.texture);
+		const auto texture = asset_registry::get_asset<Texture2D>(sc.texture);
 
 		out["sprite_renderer_component"] = Json{
 			{ "texture", texture ? texture->path : "" },
@@ -361,7 +369,7 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<TextRenderer>()) {
 		const TextRenderer& tc = entity.get_component<TextRenderer>();
 
-		const auto font = AssetRegistry::get<Font>(tc.font);
+		const auto font = asset_registry::get_asset<Font>(tc.font);
 
 		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
@@ -599,7 +607,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 			sprite_component.texture = INVALID_UID;
 			if (fs::exists(Project::get_asset_path(texture_path))) {
-				if (AssetHandle handle = AssetRegistry::load(texture_path, AssetType::TEXTURE); handle) {
+				if (AssetHandle handle = asset_registry::load_asset(texture_path, AssetType::TEXTURE); handle) {
 					sprite_component.texture = handle;
 				}
 			}
@@ -618,7 +626,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 			text_component.font = INVALID_UID;
 			if (fs::exists(Project::get_asset_path(font_path))) {
-				if (AssetHandle handle = AssetRegistry::load(font_path, AssetType::FONT); handle) {
+				if (AssetHandle handle = asset_registry::load_asset(font_path, AssetType::FONT); handle) {
 					text_component.font = handle;
 				}
 			}

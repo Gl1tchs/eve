@@ -8,7 +8,7 @@ void StatsPanel::_draw() {
 	ImGui::Columns(2, nullptr, false);
 
 	if (ImGui::TreeNodeEx("Render Stats", ImGuiTreeNodeFlags_DefaultOpen)) {
-		RendererStats stats = Renderer::get_stats();
+		RendererStats stats = renderer::get_stats();
 
 		ImGui::NextColumn();
 		ImGui::NextColumn();

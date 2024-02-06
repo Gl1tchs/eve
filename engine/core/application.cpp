@@ -23,7 +23,7 @@ Application::Application(const ApplicationCreateInfo& info) {
 	event::subscribe<WindowCloseEvent>(
 			[this](const auto& _event) { running = false; });
 
-	Renderer::init();
+	renderer::init();
 }
 
 Application::~Application() {
@@ -37,7 +37,7 @@ Application::~Application() {
 	}
 
 	ScriptEngine::shutdown();
-	Renderer::shutdown();
+	renderer::shutdown();
 }
 
 void Application::run() {

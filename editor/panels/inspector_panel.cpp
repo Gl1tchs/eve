@@ -264,7 +264,7 @@ void InspectorPanel::_draw() {
 			[this](SpriteRenderer& sprite_comp) {
 				Ref<Texture2D> texture =
 						sprite_comp.texture != 0
-						? AssetRegistry::get<Texture2D>(sprite_comp.texture)
+						? asset_registry::get_asset<Texture2D>(sprite_comp.texture)
 						: nullptr;
 
 				if (!texture) {
@@ -279,7 +279,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (AssetRegistry::is_loaded(handle)) {
+							if (asset_registry::is_asset_loaded(handle)) {
 								sprite_comp.texture = handle;
 
 								g_modify_info.set_modified();
@@ -297,7 +297,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (AssetRegistry::is_loaded(handle)) {
+								if (asset_registry::is_asset_loaded(handle)) {
 									sprite_comp.texture = handle;
 
 									g_modify_info.set_modified();
@@ -345,7 +345,7 @@ void InspectorPanel::_draw() {
 
 				Ref<Font> font =
 						text_comp.font != 0
-						? AssetRegistry::get<Font>(text_comp.font)
+						? asset_registry::get_asset<Font>(text_comp.font)
 						: nullptr;
 
 				if (!font) {
@@ -360,7 +360,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (AssetRegistry::is_loaded(handle)) {
+							if (asset_registry::is_asset_loaded(handle)) {
 								text_comp.font = handle;
 
 								g_modify_info.set_modified();
@@ -378,7 +378,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (AssetRegistry::is_loaded(handle)) {
+								if (asset_registry::is_asset_loaded(handle)) {
 									text_comp.font = handle;
 
 									g_modify_info.set_modified();

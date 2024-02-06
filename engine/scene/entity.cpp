@@ -69,15 +69,15 @@ bool Entity::is_child() const {
 std::vector<Entity> Entity::get_children() const {
 	const std::vector<UID>& children_ids = get_relation().children_ids;
 
-	std::vector<Entity> children{};
-	for (const auto& child_id : children_ids) {
-		Entity entity = scene->find_by_id(child_id);
-		if (!entity) {
-			continue;
-		}
+	std::vector<Entity> children;
 
-		children.emplace_back(entity);
-	}
+	std::transform(children_ids.begin(), children_ids.end(), std::back_inserter(children), [&](const auto& child_id) {
+		Entity entity = scene->find_by_id(child_id);
+		return entity;
+	});
+
+	// remove entities that are not found
+	children.erase(std::remove_if(children.begin(), children.end(), [](const Entity& entity) { return !entity; }), children.end());
 
 	return children;
 }

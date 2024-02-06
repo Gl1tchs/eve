@@ -14,6 +14,8 @@
 #include "renderer/vertex_array.h"
 #include "renderer/vertex_buffer.h"
 
+namespace renderer {
+
 struct RenderData {
 	RendererStats stats;
 
@@ -52,7 +54,7 @@ struct RenderData {
 
 static RenderData* s_data = nullptr;
 
-void Renderer::init() {
+void init() {
 	EVE_PROFILE_FUNCTION();
 
 	// initialize render data
@@ -155,23 +157,23 @@ void Renderer::init() {
 	s_data->camera_buffer = create_ref<UniformBuffer>(sizeof(CameraData), 0);
 }
 
-void Renderer::shutdown() {
+void shutdown() {
 	// destroy render data
 	delete s_data;
 }
 
-void Renderer::begin_pass(const CameraData& camera_data) {
+void begin_pass(const CameraData& camera_data) {
 	s_data->camera_buffer->set_data(&camera_data, sizeof(CameraData));
 
-	_begin_batch();
+	begin_batch();
 }
 
-void Renderer::end_pass() {
-	_flush();
+void end_pass() {
+	flush();
 }
 
-void Renderer::draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id) {
-	Ref<Texture2D> texture = AssetRegistry::get<Texture2D>(sprite.texture);
+void draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id) {
+	Ref<Texture2D> texture = asset_registry::get_asset<Texture2D>(sprite.texture);
 
 	draw_quad(
 			transform,
@@ -181,24 +183,24 @@ void Renderer::draw_sprite(const SpriteRenderer& sprite, const Transform& transf
 			entity_id);
 }
 
-void Renderer::draw_quad(const Transform& transform, const Color& color, uint32_t entity_id) {
+void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id) {
 	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
 }
 
-void Renderer::draw_quad(const Transform& transform, Ref<Texture2D> texture,
+void draw_quad(const Transform& transform, Ref<Texture2D> texture,
 		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	draw_quad(transform, texture, COLOR_WHITE, tex_tiling, entity_id);
 }
 
-void Renderer::draw_quad(const Transform& transform,
+void draw_quad(const Transform& transform,
 		Ref<Texture2D> texture, const Color& color,
 		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	if (quad_needs_batch(s_data->quad_index_count) ||
 			(texture && s_data->texture_slot_index + 1 >= MAX_TEXTURE_COUNT)) {
-		_next_batch();
+		next_batch();
 	}
 
-	const float tex_index = texture ? _find_texture_index(texture) : 0.0f;
+	const float tex_index = texture ? find_texture_index(texture) : 0.0f;
 
 	const glm::mat4 transform_matrix = transform.get_transform_matrix();
 
@@ -221,9 +223,9 @@ void Renderer::draw_quad(const Transform& transform,
 	s_data->stats.index_count += QUAD_INDEX_COUNT;
 }
 
-void Renderer::draw_text(const TextRenderer& text_comp,
+void draw_text(const TextRenderer& text_comp,
 		const Transform& transform, uint32_t entity_id) {
-	Ref<Font> font = AssetRegistry::get<Font>(text_comp.font);
+	Ref<Font> font = asset_registry::get_asset<Font>(text_comp.font);
 	if (!font) {
 		font = Font::get_default();
 	}
@@ -234,7 +236,7 @@ void Renderer::draw_text(const TextRenderer& text_comp,
 			text_comp.is_screen_space, entity_id);
 }
 
-void Renderer::draw_text(const std::string& text, const Transform& transform,
+void draw_text(const std::string& text, const Transform& transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing,
 		bool is_screen_space, uint32_t entity_id) {
@@ -245,13 +247,13 @@ void Renderer::draw_text(const std::string& text, const Transform& transform,
 			entity_id);
 }
 
-void Renderer::draw_text(const std::string& text, Ref<Font> font, Transform transform,
+void draw_text(const std::string& text, Ref<Font> font, Transform transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing,
 		bool is_screen_space, uint32_t entity_id) {
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();
 	if (font_atlas != s_data->font_atlas_texture) {
-		_next_batch();
+		next_batch();
 	}
 
 	s_data->font_atlas_texture = font_atlas;
@@ -382,11 +384,11 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, Transform tran
 	}
 }
 
-void Renderer::draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color) {
+void draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color) {
 	draw_line({ p0.x, p0.y, 0 }, { p1.x, p1.y, 0 }, color);
 }
 
-void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color) {
+void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color) {
 	LineVertex vertex;
 
 	vertex.position = p0;
@@ -402,14 +404,14 @@ void Renderer::draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& 
 	s_data->stats.vertex_count += 2;
 }
 
-void Renderer::draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color) {
+void draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color) {
 	draw_line(min, { min.x, max.y }, color);
 	draw_line({ min.x, max.y }, max, color);
 	draw_line(max, { max.x, min.y }, color);
 	draw_line({ max.x, min.y }, min, color);
 }
 
-void Renderer::draw_box(const Transform& transform, const Color& color) {
+void draw_box(const Transform& transform, const Color& color) {
 	// https://en.wikipedia.org/wiki/Rotation_matrix
 	glm::mat4 transform_matrix = transform.get_transform_matrix();
 
@@ -424,15 +426,15 @@ void Renderer::draw_box(const Transform& transform, const Color& color) {
 	draw_line(rb, lb, color);
 }
 
-const RendererStats& Renderer::get_stats() {
+const RendererStats& get_stats() {
 	return s_data->stats;
 }
 
-void Renderer::reset_stats() {
+void reset_stats() {
 	memset(&s_data->stats, 0, sizeof(RendererStats));
 }
 
-void Renderer::_begin_batch() {
+void begin_batch() {
 	s_data->quad_vertices.reset_index();
 	s_data->quad_index_count = 0;
 
@@ -444,7 +446,7 @@ void Renderer::_begin_batch() {
 	s_data->texture_slot_index = 1;
 }
 
-void Renderer::_flush() {
+void flush() {
 	EVE_PROFILE_FUNCTION();
 
 	if (s_data->line_vertices.get_count() > 0) {
@@ -483,12 +485,12 @@ void Renderer::_flush() {
 	}
 }
 
-void Renderer::_next_batch() {
-	_flush();
-	_begin_batch();
+void next_batch() {
+	flush();
+	begin_batch();
 }
 
-float Renderer::_find_texture_index(const Ref<Texture2D>& texture) {
+float find_texture_index(const Ref<Texture2D>& texture) {
 	float texture_index = 0.0f;
 	for (uint32_t i = 1; i < s_data->texture_slot_index; i++) {
 		if (s_data->texture_slots[i] == texture) {
@@ -503,3 +505,5 @@ float Renderer::_find_texture_index(const Ref<Texture2D>& texture) {
 
 	return texture_index;
 }
+
+} //namespace renderer
