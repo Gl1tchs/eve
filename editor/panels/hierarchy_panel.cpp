@@ -36,6 +36,8 @@ void HierarchyPanel::_draw() {
 	if (ImGui::Button(ICON_FA_PLUS)) {
 		// create entity and set selected to new created entity
 		scene->select_entity(scene->create("Entity"));
+
+		g_modify_info.set_modified();
 	}
 
 	ImGui::Separator();
@@ -150,15 +152,21 @@ void HierarchyPanel::_draw_entity_context_menu(Entity& entity) {
 	if (ImGui::BeginPopupContextItem()) {
 		if (ImGui::MenuItem("Add")) {
 			scene->create("Entity");
+
+			g_modify_info.set_modified();
 		}
 
 		if (ImGui::MenuItem("Add Child")) {
 			scene->create("Entity", entity.get_uid());
+
+			g_modify_info.set_modified();
 		}
 
 		if (ImGui::MenuItem("Delete")) {
 			// Handle logic to remove the entity
 			entities_to_remove.push_back(entity);
+
+			g_modify_info.set_modified();
 		}
 
 		ImGui::EndPopup();
@@ -185,6 +193,8 @@ void HierarchyPanel::_draw_entity_drag_drop_target(const Entity& new_parent) {
 							SceneManager::get_active()->find_by_id(recv_id);
 					recv_entity) {
 				recv_entity.set_parent(new_parent);
+
+				g_modify_info.set_modified();
 			}
 		}
 

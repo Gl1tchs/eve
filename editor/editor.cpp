@@ -27,7 +27,14 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 void EditorApplication::_on_start() {
 }
 
+inline static bool s_default_title = true;
+
 void EditorApplication::_on_update(float dt) {
+	if (s_default_title && g_modify_info.modified) {
+		window->set_title(Project::get_name() + " *");
+		s_default_title = false;
+	}
+
 	// resize
 	_on_viewport_resize();
 
@@ -44,9 +51,13 @@ void EditorApplication::_on_update(float dt) {
 				scene_renderer->render_editor(dt, editor_camera);
 			}
 
+			_handle_shortcuts();
+
 			break;
 		}
-		case SceneState::PAUSED:
+		case SceneState::PAUSED: {
+			_handle_shortcuts();
+		}
 		case SceneState::PLAY: {
 			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
 				scene->update(dt);
@@ -181,21 +192,21 @@ void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) 
 }
 
 void EditorApplication::_save_active_scene() {
-	const auto& scene = SceneManager::get_active();
-	if (!scene) {
+	if (!editor_scene) {
 		return;
 	}
 
-	if (!scene->path.empty()) {
-		Scene::serialize(scene, scene->path);
+	if (!editor_scene->path.empty()) {
+		Scene::serialize(editor_scene, editor_scene->path);
+
+		_on_scene_save();
 	} else {
 		_save_active_scene_as();
 	}
 }
 
 void EditorApplication::_save_active_scene_as() {
-	const auto& scene = SceneManager::get_active();
-	if (!scene) {
+	if (!editor_scene) {
 		return;
 	}
 
@@ -208,7 +219,9 @@ void EditorApplication::_save_active_scene_as() {
 		return;
 	}
 
-	Scene::serialize(scene, path);
+	Scene::serialize(editor_scene, path);
+
+	_on_scene_save();
 }
 
 void EditorApplication::_open_project() {
@@ -229,7 +242,16 @@ void EditorApplication::_open_project() {
 
 		editor_scene = SceneManager::get_active();
 		editor_scene->clear_selected_entities();
+
+		window->set_title(Project::get_name());
 	}
+}
+
+void EditorApplication::_on_scene_save() {
+	window->set_title(Project::get_name());
+	s_default_title = true;
+
+	g_modify_info.on_save();
 }
 
 void EditorApplication::_set_scene_state(SceneState _state) {
@@ -269,6 +291,32 @@ void EditorApplication::_on_scene_resume() {
 
 void EditorApplication::_on_scene_step() {
 	SceneManager::get_active()->step();
+}
+
+void EditorApplication::_handle_shortcuts() {
+	if (Input::is_key_pressed(KeyCode::LEFT_CONTROL)) {
+		if (Input::is_key_pressed(KeyCode::S)) {
+			_save_active_scene();
+		}
+
+		if (Input::is_key_pressed(KeyCode::P)) {
+			_on_scene_play();
+		}
+
+		if (Input::is_key_pressed(KeyCode::LEFT_SHIFT)) {
+			if (Input::is_key_pressed(KeyCode::S)) {
+				_save_active_scene_as();
+			}
+
+			if (Input::is_key_pressed(KeyCode::O)) {
+				_open_project();
+			}
+
+			if (Input::is_key_pressed(KeyCode::Q)) {
+				quit();
+			}
+		}
+	}
 }
 
 // Application entrypoint

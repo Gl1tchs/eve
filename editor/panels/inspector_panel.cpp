@@ -26,6 +26,9 @@ inline static void display_add_component_entry(Entity& selected_entity,
 	if (!selected_entity.has_component<T>()) {
 		if (ImGui::MenuItem(component_name.c_str())) {
 			selected_entity.add_component<T>();
+
+			g_modify_info.set_modified();
+
 			ImGui::CloseCurrentPopup();
 		}
 	}
@@ -96,6 +99,8 @@ inline static void draw_component(const std::string& name, Entity entity,
 
 	if (remove_component) {
 		entity.remove_component<T>();
+
+		g_modify_info.set_modified();
 	}
 
 	ImGui::PopID();
@@ -172,22 +177,28 @@ void InspectorPanel::_draw() {
 			[](Transform& transform) {
 				BEGIN_FIELD("Position");
 				{
-					ImGui::DragFloat3("##PositionControl",
-							glm::value_ptr(transform.local_position), 0.1f);
+					if (ImGui::DragFloat3("##PositionControl",
+								glm::value_ptr(transform.local_position), 0.1f)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Rotation");
 				{
-					ImGui::DragFloat3("##RotationControl",
-							glm::value_ptr(transform.local_rotation), 0.1f);
+					if (ImGui::DragFloat3("##RotationControl",
+								glm::value_ptr(transform.local_rotation), 0.1f)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Scale");
 				{
-					ImGui::DragFloat3("##ScaleControl", glm::value_ptr(transform.local_scale),
-							0.1f);
+					if (ImGui::DragFloat3("##ScaleControl", glm::value_ptr(transform.local_scale),
+								0.1f)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 			});
@@ -199,38 +210,50 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Zoom Level");
 				{
-					ImGui::DragFloat("##ZoomLevelControl", &camera.zoom_level);
+					if (ImGui::DragFloat("##ZoomLevelControl", &camera.zoom_level)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Near Clip");
 				{
-					ImGui::DragFloat("##NearClipControl", &camera.near_clip);
+					if (ImGui::DragFloat("##NearClipControl", &camera.near_clip)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Far Clip");
 				{
-					ImGui::DragFloat("##FarClipControl", &camera.far_clip);
+					if (ImGui::DragFloat("##FarClipControl", &camera.far_clip)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Is Primary");
 				{
-					ImGui::Checkbox("##IsPrimaryControl", &camera_comp.is_primary);
+					if (ImGui::Checkbox("##IsPrimaryControl", &camera_comp.is_primary)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Is Fixed");
 				{
-					ImGui::Checkbox("##IsFixedControl", &camera_comp.is_fixed_aspect_ratio);
+					if (ImGui::Checkbox("##IsFixedControl", &camera_comp.is_fixed_aspect_ratio)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				if (camera_comp.is_fixed_aspect_ratio) {
 					BEGIN_FIELD("Aspect Ratio");
 					{
-						ImGui::DragFloat("##AspectRatioControl", &camera_comp.camera.aspect_ratio, 0.05f);
+						if (ImGui::DragFloat("##AspectRatioControl", &camera_comp.camera.aspect_ratio, 0.05f)) {
+							g_modify_info.set_modified();
+						}
 					}
 					END_FIELD();
 				}
@@ -258,6 +281,8 @@ void InspectorPanel::_draw() {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
 							if (AssetRegistry::is_loaded(handle)) {
 								sprite_comp.texture = handle;
+
+								g_modify_info.set_modified();
 							}
 						}
 						ImGui::EndDragDropTarget();
@@ -274,6 +299,8 @@ void InspectorPanel::_draw() {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
 								if (AssetRegistry::is_loaded(handle)) {
 									sprite_comp.texture = handle;
+
+									g_modify_info.set_modified();
 								}
 							}
 							ImGui::EndDragDropTarget();
@@ -281,6 +308,8 @@ void InspectorPanel::_draw() {
 
 						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							sprite_comp.texture = 0;
+
+							g_modify_info.set_modified();
 						}
 					}
 					END_FIELD();
@@ -288,13 +317,17 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Color");
 				{
-					ImGui::ColorEdit4("##ColorControl", &sprite_comp.color.r);
+					if (ImGui::ColorEdit4("##ColorControl", &sprite_comp.color.r)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Tiling");
 				{
-					ImGui::DragFloat2("##TilingControl", &sprite_comp.tex_tiling.x);
+					if (ImGui::DragFloat2("##TilingControl", &sprite_comp.tex_tiling.x)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 			});
@@ -304,7 +337,9 @@ void InspectorPanel::_draw() {
 			[this](TextRenderer& text_comp) {
 				BEGIN_FIELD("Text");
 				{
-					ImGui::InputTextMultiline("##TextControl", &text_comp.text);
+					if (ImGui::InputTextMultiline("##TextControl", &text_comp.text)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
@@ -327,6 +362,8 @@ void InspectorPanel::_draw() {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
 							if (AssetRegistry::is_loaded(handle)) {
 								text_comp.font = handle;
+
+								g_modify_info.set_modified();
 							}
 						}
 						ImGui::EndDragDropTarget();
@@ -343,6 +380,8 @@ void InspectorPanel::_draw() {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
 								if (AssetRegistry::is_loaded(handle)) {
 									text_comp.font = handle;
+
+									g_modify_info.set_modified();
 								}
 							}
 							ImGui::EndDragDropTarget();
@@ -350,6 +389,8 @@ void InspectorPanel::_draw() {
 
 						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							text_comp.font = 0;
+
+							g_modify_info.set_modified();
 						}
 					}
 					END_FIELD();
@@ -357,31 +398,41 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Foreground Color");
 				{
-					ImGui::ColorEdit4("##ForegroundColorControl", &text_comp.fg_color.r);
+					if (ImGui::ColorEdit4("##ForegroundColorControl", &text_comp.fg_color.r)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Background Color");
 				{
-					ImGui::ColorEdit4("##BackgroundColorControl", &text_comp.bg_color.r);
+					if (ImGui::ColorEdit4("##BackgroundColorControl", &text_comp.bg_color.r)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Kerning");
 				{
-					ImGui::DragFloat("##KerningControl", &text_comp.kerning);
+					if (ImGui::DragFloat("##KerningControl", &text_comp.kerning)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Line Spacing");
 				{
-					ImGui::DragFloat("##LineSpacingControl", &text_comp.line_spacing);
+					if (ImGui::DragFloat("##LineSpacingControl", &text_comp.line_spacing)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 
 				BEGIN_FIELD("Screen Space");
 				{
-					ImGui::Checkbox("##ScreenSpaceControl", &text_comp.is_screen_space);
+					if (ImGui::Checkbox("##ScreenSpaceControl", &text_comp.is_screen_space)) {
+						g_modify_info.set_modified();
+					}
 				}
 				END_FIELD();
 			});
@@ -409,6 +460,8 @@ void InspectorPanel::_draw() {
 					if (ImGui::Selectable(items[n], is_selected)) {
 						current_item = items[n];
 						rb2d.type = body_types[n];
+
+						g_modify_info.set_modified();
 					}
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();
@@ -421,7 +474,9 @@ void InspectorPanel::_draw() {
 
 		BEGIN_FIELD("Fixed Rotation");
 		{
-			ImGui::Checkbox("##Rb2DFixedRotation", &rb2d.fixed_rotation);
+			if (ImGui::Checkbox("##Rb2DFixedRotation", &rb2d.fixed_rotation)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 	});
@@ -429,37 +484,49 @@ void InspectorPanel::_draw() {
 	draw_component<BoxCollider2D>("BoxCollider2D", selected_entity, [](BoxCollider2D& box_collider) {
 		BEGIN_FIELD("Offset");
 		{
-			ImGui::DragFloat2("##BoxColliderOffset", glm::value_ptr(box_collider.offset));
+			if (ImGui::DragFloat2("##BoxColliderOffset", glm::value_ptr(box_collider.offset))) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Size");
 		{
-			ImGui::DragFloat2("##BoxColliderSize", glm::value_ptr(box_collider.size));
+			if (ImGui::DragFloat2("##BoxColliderSize", glm::value_ptr(box_collider.size))) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Density");
 		{
-			ImGui::DragFloat("##BoxColliderDensity", &box_collider.density);
+			if (ImGui::DragFloat("##BoxColliderDensity", &box_collider.density)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Friction");
 		{
-			ImGui::DragFloat("##BoxColliderFriciton", &box_collider.friction);
+			if (ImGui::DragFloat("##BoxColliderFriciton", &box_collider.friction)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Restitution");
 		{
-			ImGui::DragFloat("##BoxColliderRestitution", &box_collider.restitution);
+			if (ImGui::DragFloat("##BoxColliderRestitution", &box_collider.restitution)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Threshold");
 		{
-			ImGui::DragFloat("##BoxColliderRestitutionThreshold", &box_collider.restitution_threshold);
+			if (ImGui::DragFloat("##BoxColliderRestitutionThreshold", &box_collider.restitution_threshold)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 	});
@@ -467,37 +534,49 @@ void InspectorPanel::_draw() {
 	draw_component<CircleCollider2D>("CircleCollider2D", selected_entity, [](CircleCollider2D& circle_collider) {
 		BEGIN_FIELD("Offset");
 		{
-			ImGui::DragFloat2("##CircleColliderOffset", glm::value_ptr(circle_collider.offset));
+			if (ImGui::DragFloat2("##CircleColliderOffset", glm::value_ptr(circle_collider.offset))) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Size");
 		{
-			ImGui::DragFloat("##CircleColliderSize", &circle_collider.radius);
+			if (ImGui::DragFloat("##CircleColliderSize", &circle_collider.radius)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Density");
 		{
-			ImGui::DragFloat("##CircleColliderDensity", &circle_collider.density);
+			if (ImGui::DragFloat("##CircleColliderDensity", &circle_collider.density)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Friction");
 		{
-			ImGui::DragFloat("##CircleColliderFriciton", &circle_collider.friction);
+			if (ImGui::DragFloat("##CircleColliderFriciton", &circle_collider.friction)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Restitution");
 		{
-			ImGui::DragFloat("##CircleColliderRestitution", &circle_collider.restitution);
+			if (ImGui::DragFloat("##CircleColliderRestitution", &circle_collider.restitution)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 
 		BEGIN_FIELD("Threshold");
 		{
-			ImGui::DragFloat("##CircleColliderRestitutionThreshold", &circle_collider.restitution_threshold);
+			if (ImGui::DragFloat("##CircleColliderRestitutionThreshold", &circle_collider.restitution_threshold)) {
+				g_modify_info.set_modified();
+			}
 		}
 		END_FIELD();
 	});
@@ -507,7 +586,9 @@ void InspectorPanel::_draw() {
 		if (ImGui::TreeNode("Gray Scale")) {
 			BEGIN_FIELD("Enabled");
 			{
-				ImGui::Checkbox("##GrayScaleEnabled", &volume.gray_scale.enabled);
+				if (ImGui::Checkbox("##GrayScaleEnabled", &volume.gray_scale.enabled)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
@@ -517,13 +598,17 @@ void InspectorPanel::_draw() {
 		if (ImGui::TreeNode("Chromatic Aberration")) {
 			BEGIN_FIELD("Enabled");
 			{
-				ImGui::Checkbox("##ChromaticAberrationEnabled", &volume.chromatic_aberration.enabled);
+				if (ImGui::Checkbox("##ChromaticAberrationEnabled", &volume.chromatic_aberration.enabled)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Offset");
 			{
-				ImGui::DragFloat3("##ChromaticAberrationOffset", glm::value_ptr(volume.chromatic_aberration.offset), 0.001f, -1.0f, 1.0f);
+				if (ImGui::DragFloat3("##ChromaticAberrationOffset", glm::value_ptr(volume.chromatic_aberration.offset), 0.001f, -1.0f, 1.0f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
@@ -533,20 +618,26 @@ void InspectorPanel::_draw() {
 		if (ImGui::TreeNode("Blur")) {
 			BEGIN_FIELD("Enabled");
 			{
-				ImGui::Checkbox("##BlurEnabled", &volume.blur.enabled);
+				if (ImGui::Checkbox("##BlurEnabled", &volume.blur.enabled)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Size");
 			{
-				ImGui::DragScalar("##BlurSize", ImGuiDataType_U32, &volume.blur.size);
+				if (ImGui::DragScalar("##BlurSize", ImGuiDataType_U32, &volume.blur.size)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Seperation");
 			{
-				ImGui::DragFloat("##BlurSeperation",
-						&volume.blur.seperation, 0.1f, 1.0f, std::numeric_limits<float>::max());
+				if (ImGui::DragFloat("##BlurSeperation",
+							&volume.blur.seperation, 0.1f, 1.0f, std::numeric_limits<float>::max())) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
@@ -556,13 +647,17 @@ void InspectorPanel::_draw() {
 		if (ImGui::TreeNode("Sharpen")) {
 			BEGIN_FIELD("Enabled");
 			{
-				ImGui::Checkbox("##SharpenEnabled", &volume.sharpen.enabled);
+				if (ImGui::Checkbox("##SharpenEnabled", &volume.sharpen.enabled)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Amount");
 			{
-				ImGui::DragFloat("##SharpenAmount", &volume.sharpen.amount, 0.01f);
+				if (ImGui::DragFloat("##SharpenAmount", &volume.sharpen.amount, 0.01f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
@@ -572,31 +667,41 @@ void InspectorPanel::_draw() {
 		if (ImGui::TreeNode("Vignette")) {
 			BEGIN_FIELD("Enabled");
 			{
-				ImGui::Checkbox("##VignetteEnabled", &volume.vignette.enabled);
+				if (ImGui::Checkbox("##VignetteEnabled", &volume.vignette.enabled)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Inner");
 			{
-				ImGui::DragFloat("##VignetteInner", &volume.vignette.inner, 0.01f);
+				if (ImGui::DragFloat("##VignetteInner", &volume.vignette.inner, 0.01f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Outer");
 			{
-				ImGui::DragFloat("##VignetteOuter", &volume.vignette.outer, 0.01f);
+				if (ImGui::DragFloat("##VignetteOuter", &volume.vignette.outer, 0.01f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Strengh");
 			{
-				ImGui::DragFloat("##VignetteStrengh", &volume.vignette.strength, 0.01f);
+				if (ImGui::DragFloat("##VignetteStrengh", &volume.vignette.strength, 0.01f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
 			BEGIN_FIELD("Curvature");
 			{
-				ImGui::DragFloat("##VignetteCurvature", &volume.vignette.curvature, 0.01f);
+				if (ImGui::DragFloat("##VignetteCurvature", &volume.vignette.curvature, 0.01f)) {
+					g_modify_info.set_modified();
+				}
 			}
 			END_FIELD();
 
@@ -622,6 +727,8 @@ void InspectorPanel::_draw() {
 					std::string class_name = component.class_name;
 					if (ImGui::InputText("##ClassName", &class_name)) {
 						component.class_name = class_name;
+
+						g_modify_info.set_modified();
 					}
 
 					if (!script_class_exists) {
@@ -680,6 +787,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			float data = !use_default ? script_field.get_value<float>() : 0.0f;
 			if (ImGui::DragFloat(name.c_str(), &data)) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -687,6 +796,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			double data = !use_default ? script_field.get_value<double>() : 0.0;
 			if (ImGui::DragFloat(name.c_str(), (float*)&data)) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -694,6 +805,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			bool data = !use_default ? script_field.get_value<bool>() : false;
 			if (ImGui::Checkbox(name.c_str(), &data)) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -706,6 +819,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int8_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -715,6 +830,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int16_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -724,6 +841,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -733,6 +852,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int64_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -742,6 +863,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint8_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -751,6 +874,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint16_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -760,6 +885,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -769,6 +896,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint64_t>::max())) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -777,6 +906,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 					!use_default ? script_field.get_value<glm::vec2>() : glm::vec2(0.0f);
 			if (ImGui::DragFloat2(name.c_str(), &data[0])) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -785,6 +916,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 					!use_default ? script_field.get_value<glm::vec3>() : glm::vec3(0.0f);
 			if (ImGui::DragFloat3(name.c_str(), &data[0])) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -793,6 +926,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 					!use_default ? script_field.get_value<glm::vec4>() : glm::vec4(0.0f);
 			if (ImGui::DragFloat4(name.c_str(), &data[0])) {
 				script_field.set_value(data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -800,6 +935,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			Color color = !use_default ? script_field.get_value<Color>() : Color(0.0f);
 			if (ImGui::ColorEdit4(name.c_str(), &color.r)) {
 				script_field.set_value(color);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -819,6 +956,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 								ImGui::AcceptDragDropPayload("DND_PAYLOAD_ENTITY")) {
 					UID recv_id = *(const UID*)payload->Data;
 					script_field.set_value(recv_id);
+
+					g_modify_info.set_modified();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -833,6 +972,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			float data = script_instance->get_field_value<float>(name);
 			if (ImGui::DragFloat(name.c_str(), &data)) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -840,6 +981,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			double data = script_instance->get_field_value<double>(name);
 			if (ImGui::DragFloat(name.c_str(), (float*)&data)) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -847,6 +990,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			bool data = script_instance->get_field_value<bool>(name);
 			if (ImGui::Checkbox(name.c_str(), &data)) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -859,6 +1004,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int8_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -868,6 +1015,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int16_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -877,6 +1026,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -886,6 +1037,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<int64_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -895,6 +1048,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint8_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -904,6 +1059,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint16_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -913,6 +1070,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -922,6 +1081,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 						std::numeric_limits<int8_t>::min(),
 						std::numeric_limits<uint64_t>::max())) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -929,6 +1090,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			glm::vec2 data = script_instance->get_field_value<glm::vec2>(name);
 			if (ImGui::DragFloat2(name.c_str(), &data[0])) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -936,6 +1099,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			glm::vec3 data = script_instance->get_field_value<glm::vec3>(name);
 			if (ImGui::DragFloat3(name.c_str(), &data[0])) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -943,6 +1108,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			glm::vec4 data = script_instance->get_field_value<glm::vec4>(name);
 			if (ImGui::DragFloat4(name.c_str(), &data[0])) {
 				script_instance->set_field_value(name, data);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -950,6 +1117,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			Color color = script_instance->get_field_value<Color>(name);
 			if (ImGui::ColorEdit4(name.c_str(), &color.r)) {
 				script_instance->set_field_value(name, color);
+
+				g_modify_info.set_modified();
 			}
 			break;
 		}
@@ -968,6 +1137,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 								ImGui::AcceptDragDropPayload("DND_PAYLOAD_ENTITY")) {
 					UID recv_id = *(const UID*)payload->Data;
 					script_instance->set_field_value(name, recv_id);
+
+					g_modify_info.set_modified();
 				}
 				ImGui::EndDragDropTarget();
 			}

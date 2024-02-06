@@ -6,6 +6,7 @@
 #include "core/mouse_code.h"
 #include "debug/assert.h"
 
+#include "window.h"
 #include <GLFW/glfw3.h>
 
 static void glfw_error_callback(int error, const char* description) {
@@ -64,6 +65,10 @@ glm::ivec2 Window::get_size() const {
 float Window::get_aspect_ratio() const {
 	const glm::ivec2 s = get_size();
 	return static_cast<float>(s.x) / static_cast<float>(s.y);
+}
+
+void Window::set_title(std::string_view title) {
+	glfwSetWindowTitle(window, title.data());
 }
 
 WindowCursorMode Window::get_cursor_mode() const {

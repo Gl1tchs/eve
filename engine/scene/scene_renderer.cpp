@@ -86,6 +86,7 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 		editor_camera->zoom_level
 	};
 
+	// TODO this should not be affected by post processing
 	submit(RenderFuncTickFormat::ON_RENDER, [&scene](const Ref<FrameBuffer>& fb) {
 		for (auto entity : scene->get_selected_entities()) {
 			const Transform& transform = entity.get_transform();

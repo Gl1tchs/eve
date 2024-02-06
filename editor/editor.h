@@ -44,6 +44,8 @@ private:
 
 	void _open_project();
 
+	void _on_scene_save();
+
 	// scene runtime
 	void _set_scene_state(SceneState _state);
 
@@ -58,6 +60,8 @@ private:
 	void _on_scene_resume();
 
 	void _on_scene_step();
+
+	void _handle_shortcuts();
 
 private:
 	Ref<SceneRenderer> scene_renderer;

@@ -31,6 +31,8 @@ public:
 
 	float get_aspect_ratio() const;
 
+	void set_title(std::string_view title);
+
 	WindowCursorMode get_cursor_mode() const;
 	void set_cursor_mode(WindowCursorMode mode);
 

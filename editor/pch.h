@@ -33,4 +33,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "utils/modify_info.h"
+
 #include "core/core_minimal.h"
