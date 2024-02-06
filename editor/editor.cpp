@@ -275,7 +275,6 @@ void EditorApplication::_on_scene_play() {
 	_set_scene_state(SceneState::PLAY);
 
 	SceneManager::get_active() = Scene::copy(editor_scene);
-
 	SceneManager::get_active()->start();
 }
 
@@ -308,7 +307,9 @@ void EditorApplication::_handle_shortcuts() {
 		}
 
 		if (Input::is_key_pressed(KeyCode::P)) {
-			_on_scene_play();
+			if (editor_scene) {
+				_on_scene_play();
+			}
 		}
 
 		if (Input::is_key_pressed(KeyCode::LEFT_SHIFT)) {
