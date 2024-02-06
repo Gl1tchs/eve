@@ -21,8 +21,6 @@ void Scene::start() {
 
 	running = true;
 
-	physics_system.on_physics2d_start();
-
 	ScriptEngine::on_runtime_start(this);
 
 	{
@@ -46,6 +44,9 @@ void Scene::start() {
 			ScriptEngine::invoke_on_create_entity(entity);
 		}
 	}
+
+	// let scripts modify the values then start the physics system
+	physics_system.on_physics2d_start();
 }
 
 void Scene::update(float dt) {

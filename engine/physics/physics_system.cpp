@@ -5,9 +5,37 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/b2_circle_shape.h>
+#include <box2d/b2_contact.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
 #include <box2d/b2_world.h>
+
+struct FixtureUserData {
+	Entity entity = INVALID_ENTITY;
+	CollisionTriggerFunction trigger_function = nullptr;
+};
+
+class Physics2DContactListener : public b2ContactListener {
+	inline void BeginContact(b2Contact* contact) override {
+		b2Fixture* fixture_a = contact->GetFixtureA();
+		b2Fixture* fixture_b = contact->GetFixtureB();
+
+		FixtureUserData* user_data_a = reinterpret_cast<FixtureUserData*>(fixture_a->GetUserData().pointer);
+		FixtureUserData* user_data_b = reinterpret_cast<FixtureUserData*>(fixture_b->GetUserData().pointer);
+
+		if (!user_data_a || !user_data_b) {
+			return;
+		}
+
+		if (user_data_a->trigger_function && user_data_b->entity) {
+			user_data_a->trigger_function(user_data_b->entity.get_uid());
+		}
+
+		if (user_data_b->trigger_function && user_data_a->entity) {
+			user_data_b->trigger_function(user_data_a->entity.get_uid());
+		}
+	}
+};
 
 b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bodyType) {
 	switch (bodyType) {
@@ -39,9 +67,14 @@ Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType bodyType) {
 	}
 }
 
+static std::vector<Scope<FixtureUserData>> s_fixture_user_datas{};
+
 PhysicsSystem::PhysicsSystem(Scene* scene, const PhysicsSettings& settings) :
 		scene(scene), settings(settings) {
 	physics2d_world = new b2World({ settings.gravity.x, settings.gravity.y });
+
+	static Physics2DContactListener s_physics2d_contact_listener{};
+	physics2d_world->SetContactListener(&s_physics2d_contact_listener);
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -59,6 +92,7 @@ inline static b2Body* create_body(Entity entity, b2World* world) {
 
 	b2Body* body = world->CreateBody(&body_def);
 	body->SetFixedRotation(rb2d.fixed_rotation);
+
 	rb2d.runtime_body = body;
 
 	return body;
@@ -69,6 +103,7 @@ inline static b2Fixture* create_box_fixture(Entity entity, b2Body* body) {
 	auto& bc2d = entity.get_component<BoxCollider2D>();
 
 	b2PolygonShape box_shape;
+
 	box_shape.SetAsBox(bc2d.size.x * transform.get_scale().x,
 			bc2d.size.y * transform.get_scale().y,
 			b2Vec2(bc2d.offset.x, bc2d.offset.y),
@@ -81,7 +116,18 @@ inline static b2Fixture* create_box_fixture(Entity entity, b2Body* body) {
 	fixture_def.restitution = bc2d.restitution;
 	fixture_def.restitutionThreshold = bc2d.restitution_threshold;
 
+	// set user data
+	auto user_data = create_scope<FixtureUserData>();
+	user_data->entity = entity;
+	user_data->trigger_function = bc2d.trigger_function;
+
+	fixture_def.userData.pointer = reinterpret_cast<uintptr_t>(user_data.get());
+
+	s_fixture_user_datas.emplace_back(std::move(user_data));
+	user_data = nullptr;
+
 	b2Fixture* fixture = body->CreateFixture(&fixture_def);
+
 	bc2d.runtime_fixture = fixture;
 
 	return fixture;
@@ -101,6 +147,16 @@ inline static b2Fixture* create_circle_fixture(Entity entity, b2Body* body) {
 	fixture_def.friction = cc2d.friction;
 	fixture_def.restitution = cc2d.restitution;
 	fixture_def.restitutionThreshold = cc2d.restitution_threshold;
+
+	// set user data
+	auto user_data = create_scope<FixtureUserData>();
+	user_data->entity = entity;
+	user_data->trigger_function = cc2d.trigger_function;
+
+	fixture_def.userData.pointer = reinterpret_cast<uintptr_t>(user_data.get());
+
+	s_fixture_user_datas.emplace_back(std::move(user_data));
+	user_data = nullptr;
 
 	cc2d.runtime_fixture = body->CreateFixture(&fixture_def);
 
@@ -137,6 +193,8 @@ void PhysicsSystem::on_physics2d_stop() {
 
 	physics2d_world = nullptr;
 	scene = nullptr;
+
+	s_fixture_user_datas.clear();
 }
 
 void PhysicsSystem::on_physics2d_update(float dt) {

@@ -4,8 +4,8 @@
 #include "scene/components.h"
 
 class Scene;
-class b2World;
 
+class b2World;
 enum b2BodyType;
 
 struct PhysicsSettings {
@@ -27,7 +27,6 @@ public:
 
 private:
 	Scene* scene = nullptr;
-
 	b2World* physics2d_world = nullptr;
 
 	PhysicsSettings settings{};

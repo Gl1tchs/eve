@@ -25,6 +25,7 @@
 - [ ] Animations
 
 ## Scripting
+- [ ] Multiple scripts for one entity.
 - [ ] String script fields
 
 ## Physics
