@@ -35,8 +35,6 @@ private:
 
 	void _post_process();
 
-	void _render_entity_bounds(Entity entity);
-
 private:
 	Ref<FrameBuffer> frame_buffer;
 

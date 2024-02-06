@@ -36,8 +36,6 @@ private:
 	void _on_viewport_resize();
 
 	// scene controls
-	void _handle_entity_selection(Ref<FrameBuffer> frame_buffer);
-
 	void _save_active_scene();
 
 	void _save_active_scene_as();
@@ -62,6 +60,11 @@ private:
 	void _on_scene_step();
 
 	void _handle_shortcuts();
+
+	// custom rendering beheaviours
+	void _handle_entity_selection(Ref<FrameBuffer> frame_buffer);
+
+	void _render_entity_bounds(Entity entity);
 
 private:
 	Ref<SceneRenderer> scene_renderer;

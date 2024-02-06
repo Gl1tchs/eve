@@ -4,7 +4,6 @@
 #include "core/color.h"
 #include "renderer/frame_buffer.h"
 #include "renderer/post_processor.h"
-#include "renderer/primitives/text.h"
 #include "renderer/render_command.h"
 #include "renderer/renderer.h"
 #include "renderer/texture.h"
@@ -85,13 +84,6 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 		editor_camera->get_projection_matrix(),
 		editor_camera->zoom_level
 	};
-
-	// TODO this should not be affected by post processing
-	submit(RenderFuncTickFormat::ON_RENDER, [this, &scene](const Ref<FrameBuffer>& fb) {
-		for (auto entity : scene->get_selected_entities()) {
-			_render_entity_bounds(entity);
-		}
-	});
 
 	_render_scene(data);
 
@@ -212,37 +204,5 @@ void SceneRenderer::_post_process() {
 		if (volume.is_global) {
 			post_processed = post_processor->process(frame_buffer, volume);
 		}
-	}
-}
-
-void SceneRenderer::_render_entity_bounds(Entity entity) {
-	const Transform& transform = entity.get_transform();
-
-	if (entity.has_component<SpriteRenderer>()) {
-		Renderer::draw_box(transform, COLOR_GREEN);
-	}
-	if (entity.has_component<TextRenderer>()) {
-		const TextRenderer& text_renderer = entity.get_component<TextRenderer>();
-		if (text_renderer.is_screen_space) {
-			return;
-		}
-
-		Transform text_transform = transform;
-		glm::vec2 scale = text_transform.get_scale();
-
-		Ref<Font> font = AssetRegistry::get<Font>(text_renderer.font);
-
-		glm::vec2 text_size = get_text_size(text_renderer.text, font, text_renderer.kerning) * scale;
-
-		text_transform.local_position.y += (scale.y / 2.0f) - (text_size.y / 2.0f);
-
-		text_transform.local_scale.x = text_size.x;
-		text_transform.local_scale.y += text_size.y;
-
-		Renderer::draw_box(text_transform, COLOR_GREEN);
-	}
-
-	for (auto child : entity.get_children()) {
-		_render_entity_bounds(child);
 	}
 }
