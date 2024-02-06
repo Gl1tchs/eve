@@ -4,6 +4,7 @@
 #include "core/window.h"
 #include "scene/editor_camera.h"
 
+class Entity;
 class FrameBuffer;
 class PostProcessor;
 
@@ -33,6 +34,8 @@ private:
 	void _render_scene(const CameraData& data);
 
 	void _post_process();
+
+	void _render_entity_bounds(Entity entity);
 
 private:
 	Ref<FrameBuffer> frame_buffer;

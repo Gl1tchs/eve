@@ -10,14 +10,16 @@
 - [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
-- [ ] Shortcuts
+- [ ] if selected multiple entities show shared components and change values together.
 - [ ] Hierarchy set parent of multiple entities. 
 - [ ] Hierarchy entity search and sorting
 - [ ] New Scene
 - [ ] Texture viewer / metadata inspector
 
 ## Renderer
-- [ ] Physics collider bounds renderer
+- [ ] Physics collider bounds rendering.
+- [ ] Camera bounds rendering.
+- [ ] Gizmo texture rendering.
 - [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations
