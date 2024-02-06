@@ -5,6 +5,8 @@
 
 EditorCamera::EditorCamera() :
 		OrthographicCamera(), last_mouse_pos(0, 0) {
+	zoom_level = 5.0f;
+
 	reset_transform();
 
 	last_mouse_pos = Input::get_mouse_position();

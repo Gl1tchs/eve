@@ -207,6 +207,50 @@ static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst,
 	copy_component_if_exists<Component...>(dst, src);
 }
 
+void Scene::toggle_entity_selection(Entity entity) {
+	const auto it = std::find(selected_entities.begin(), selected_entities.end(), entity);
+
+	if (it != selected_entities.end()) {
+		// found
+		selected_entities.erase(it);
+	} else {
+		// not found
+		selected_entities.push_back(entity);
+	}
+}
+
+void Scene::select_entity_only(Entity entity) {
+	clear_selected_entities();
+	selected_entities.push_back(entity);
+}
+
+void Scene::select_entity(Entity entity) {
+	if (!is_entity_selected(entity)) {
+		selected_entities.push_back(entity);
+	}
+}
+
+void Scene::unselect_entity(Entity entity) {
+	const auto it = std::find(selected_entities.begin(), selected_entities.end(), entity);
+	if (it == selected_entities.end()) {
+		return;
+	}
+
+	selected_entities.erase(it);
+}
+
+void Scene::clear_selected_entities() {
+	selected_entities.clear();
+}
+
+bool Scene::is_entity_selected(Entity entity) const {
+	return std::find(selected_entities.begin(), selected_entities.end(), entity) != selected_entities.end();
+}
+
+const std::vector<Entity>& Scene::get_selected_entities() const {
+	return selected_entities;
+}
+
 Ref<Scene> Scene::copy(Ref<Scene> src) {
 	EVE_PROFILE_FUNCTION();
 

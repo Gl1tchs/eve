@@ -57,6 +57,8 @@ public:
 
 	static void draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color = COLOR_WHITE);
 
+	static void draw_box(const Transform& transform, const Color& color = COLOR_WHITE);
+
 	static const RendererStats& get_stats();
 
 	static void reset_stats();

@@ -18,13 +18,7 @@
 EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 		Application(info) {
 	scene_renderer = create_ref<SceneRenderer>();
-	// bind entity selection beheaviour
-	scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
-
 	editor_camera = create_ref<EditorCamera>();
-
-	hierarchy = create_ref<HierarchyPanel>();
-	inspector = create_ref<InspectorPanel>(hierarchy);
 
 	_setup_menubar();
 	_setup_toolbar();
@@ -44,6 +38,9 @@ void EditorApplication::_on_update(float dt) {
 			}
 
 			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
+				// bind entity selection beheaviour
+				scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
+
 				scene_renderer->render_editor(dt, editor_camera);
 			}
 
@@ -80,8 +77,8 @@ void EditorApplication::_on_imgui_update(float dt) {
 	viewport.render();
 	ImGui::PopStyleVar();
 
-	hierarchy->render();
-	inspector->render();
+	hierarchy.render();
+	inspector.render();
 
 	content_browser.render();
 	console.render();
@@ -112,9 +109,9 @@ void EditorApplication::_setup_menubar() {
 						[this]() { viewport.set_active(true); } },
 				{ "Toolbar", [this]() { toolbar.set_active(true); } },
 				{ "Hierarchy",
-						[this]() { hierarchy->set_active(true); } },
+						[this]() { hierarchy.set_active(true); } },
 				{ "Inspector",
-						[this]() { inspector->set_active(true); } },
+						[this]() { inspector.set_active(true); } },
 				{ "Content Browser", [this]() { content_browser.set_active(true); } },
 				{ "Console", [this]() { console.set_active(true); } },
 				{ "Stats", [this]() { stats.set_active(true); } },
@@ -161,14 +158,24 @@ void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) 
 		int pixel_data;
 		frame_buffer->read_pixel(1, mouse_x, mouse_y, FrameBufferTextureFormat::RED_INT, &pixel_data);
 
+		auto scene = SceneManager::get_active();
+
 		// Convert the pixel data to entity
 		Entity hovered_entity = (pixel_data == -1)
 				? INVALID_ENTITY
-				: Entity(entt::entity(pixel_data), SceneManager::get_active().get());
+				: Entity(entt::entity(pixel_data), scene.get());
 
 		// Check for left mouse click and a valid hovered entity
-		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && hovered_entity) {
-			hierarchy->set_selected_entity(hovered_entity);
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+			if (hovered_entity) {
+				if (!ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
+					scene->clear_selected_entities();
+				}
+
+				scene->toggle_entity_selection(hovered_entity);
+			} else {
+				scene->clear_selected_entities();
+			}
 		}
 	}
 }
@@ -215,13 +222,13 @@ void EditorApplication::_open_project() {
 	}
 
 	if (Ref<Project> project = Project::load(fs::path(path)); project) {
-		hierarchy->set_selected_entity(INVALID_ENTITY);
-
 		ScriptEngine::init();
 
 		// load the first scene
 		EVE_ASSERT_ENGINE(SceneManager::load_scene(project->get_starting_scene_path()));
+
 		editor_scene = SceneManager::get_active();
+		editor_scene->clear_selected_entities();
 	}
 }
 

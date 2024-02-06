@@ -8,13 +8,10 @@
 class InspectorPanel : public Panel {
 	EVE_IMPL_PANEL("Inspector")
 public:
-	InspectorPanel(Ref<HierarchyPanel> hierarchy);
+	InspectorPanel();
 
 protected:
 	void _draw() override;
-
-private:
-	Ref<HierarchyPanel> hierarchy;
 };
 
 #endif

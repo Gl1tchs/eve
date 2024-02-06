@@ -3,9 +3,31 @@
   "name": "scene",
   "entities": [
     {
-      "id": 16554862507967313981,
-      "tag": "Entity",
+      "id": 576348814685502556,
+      "tag": "environment",
       "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "id": 16554862507967313981,
+      "tag": "bottom wall",
+      "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           0.0,
@@ -18,7 +40,7 @@
           0.0
         ],
         "local_scale": [
-          20.0,
+          21.0,
           1.0,
           1.0
         ]
@@ -57,7 +79,7 @@
     },
     {
       "id": 8959252701979587220,
-      "tag": "Camera",
+      "tag": "camera",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
@@ -78,7 +100,7 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 1.4817204475402832,
+          "aspect_ratio": 1.3783230781555176,
           "zoom_level": 10.0,
           "near_clip": -1.0,
           "far_clip": 1.0
@@ -89,7 +111,7 @@
     },
     {
       "id": 7070123401178905868,
-      "tag": "my entity",
+      "tag": "physics box",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
@@ -100,7 +122,7 @@
         "local_rotation": [
           0.0,
           0.0,
-          -0.6000000238418579
+          3.0999999046325684
         ],
         "local_scale": [
           1.0,
@@ -137,7 +159,7 @@
         "density": 1.0,
         "friction": 0.5,
         "restitution": 1.0,
-        "restitution_threshold": 1.0
+        "restitution_threshold": 0.5
       },
       "post_process_volume": {
         "is_global": true,
@@ -187,7 +209,7 @@
     },
     {
       "id": 12517815595370061652,
-      "tag": "my text",
+      "tag": "text",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
@@ -207,7 +229,7 @@
         ]
       },
       "text_renderer_component": {
-        "text": "Hello World",
+        "text": "Hello, World",
         "font": "res://workbench.ttf",
         "fg_color": [
           1.0,
@@ -243,8 +265,8 @@
     },
     {
       "id": 2038558295031678942,
-      "tag": "Entity",
-      "parent_id": 0,
+      "tag": "left wall",
+      "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           -10.0,
@@ -296,8 +318,8 @@
     },
     {
       "id": 16105381538406036866,
-      "tag": "Entity",
-      "parent_id": 0,
+      "tag": "top wall",
+      "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           0.0,
@@ -310,7 +332,7 @@
           0.0
         ],
         "local_scale": [
-          20.0,
+          21.0,
           1.0,
           1.0
         ]
@@ -349,8 +371,8 @@
     },
     {
       "id": 12207773597134581231,
-      "tag": "Entity",
-      "parent_id": 0,
+      "tag": "right wall",
+      "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           10.0,

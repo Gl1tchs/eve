@@ -13,9 +13,7 @@ class HierarchyPanel : public Panel {
 public:
 	HierarchyPanel();
 
-	void set_selected_entity(Entity entity);
-
-	Entity get_selected_entity();
+	const std::vector<Entity>& get_selected_entities();
 
 protected:
 	void _draw() override;
@@ -30,7 +28,6 @@ private:
 	void _draw_entity_drag_drop_target(const Entity& new_parent);
 
 private:
-	Entity selected_entity;
 	std::vector<Entity> entities_to_remove;
 };
 

@@ -12,29 +12,19 @@ HierarchyPanel::HierarchyPanel() {
 	set_flags(ImGuiWindowFlags_HorizontalScrollbar);
 }
 
-void HierarchyPanel::set_selected_entity(Entity entity) {
-	selected_entity = entity;
-}
-
-Entity HierarchyPanel::get_selected_entity() {
-	if (selected_entity &&
-			!SceneManager::get_active()->exists(selected_entity)) {
-		return INVALID_ENTITY;
+const std::vector<Entity>& HierarchyPanel::get_selected_entities() {
+	auto scene = SceneManager::get_active();
+	if (!scene) {
+		return {};
 	}
 
-	return selected_entity;
+	return scene->get_selected_entities();
 }
 
 void HierarchyPanel::_draw() {
 	auto scene = SceneManager::get_active();
 	if (!scene) {
-		selected_entity = INVALID_ENTITY;
 		return;
-	}
-
-	// If scene changed during runtime
-	if (selected_entity.scene != scene.get()) {
-		selected_entity = Entity{ selected_entity.handle, scene.get() };
 	}
 
 	ImGui::TextUnformatted(scene->name.c_str());
@@ -45,7 +35,7 @@ void HierarchyPanel::_draw() {
 
 	if (ImGui::Button(ICON_FA_PLUS)) {
 		// create entity and set selected to new created entity
-		selected_entity = scene->create("Entity");
+		scene->select_entity(scene->create("Entity"));
 	}
 
 	ImGui::Separator();
@@ -69,8 +59,9 @@ void HierarchyPanel::_draw() {
 	// If an item dragged here it will set as top object.
 	_draw_entity_drag_drop_target(INVALID_ENTITY);
 
+	// remove all selected entities if clicked outside the bounds
 	if (ImGui::IsItemClicked()) {
-		selected_entity = INVALID_ENTITY;
+		scene->clear_selected_entities();
 	}
 
 	for (auto entity : entities_to_remove) {
@@ -83,11 +74,13 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 		return;
 	}
 
+	auto scene = SceneManager::get_active();
+
 	ImGui::PushID((uint64_t)entity.get_uid());
 
 	const std::string hierarchy_name = entity.get_name();
 
-	const bool is_selected = selected_entity == entity;
+	const bool is_selected = scene->is_entity_selected(entity);
 
 	static const float entity_indent = 0.75f;
 
@@ -97,7 +90,11 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 		ImGui::Bullet();
 
 		if (ImGui::Selectable(hierarchy_name.c_str(), is_selected)) {
-			set_selected_entity(entity);
+			if (!ImGui::IsKeyDown(ImGuiKey_LeftCtrl)) {
+				scene->clear_selected_entities();
+			}
+
+			scene->toggle_entity_selection(entity);
 		}
 
 		ImGui::PopStyleVar();
@@ -125,7 +122,7 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 
 		if (!ImGui::IsMouseDragging(ImGuiMouseButton_Left) &&
 				ImGui::IsItemClicked()) {
-			set_selected_entity(entity);
+			scene->select_entity_only(entity);
 		}
 
 		if (node_open) {

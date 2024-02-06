@@ -87,6 +87,25 @@ public:
 		registry.remove<T>(handle);
 	}
 
+	// adds | removes entity to the list based on if it already exists
+	void toggle_entity_selection(Entity entity);
+
+	// clears selected entities and adds entity to the list
+	void select_entity_only(Entity entity);
+
+	// adds entity to the list if not exists
+	void select_entity(Entity entity);
+
+	// removes entity from list if not exists
+	void unselect_entity(Entity entity);
+
+	// removes all entities from selected list.
+	void clear_selected_entities();
+
+	bool is_entity_selected(Entity entity) const;
+
+	const std::vector<Entity>& get_selected_entities() const;
+
 	// DISCLAIMER
 	//  only the components that are defined in components.h:AllComponents<>
 	//  component group will be copied.
@@ -107,6 +126,8 @@ private:
 
 	entt::registry registry;
 	std::unordered_map<UID, Entity> entity_map;
+
+	std::vector<Entity> selected_entities;
 
 	friend class HierarchyPanel;
 };

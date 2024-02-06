@@ -69,13 +69,12 @@ private:
 	// panels and widgets
 	MenuBar menubar;
 	ToolbarPanel toolbar;
+	ViewportPanel viewport;
+	HierarchyPanel hierarchy;
+	InspectorPanel inspector;
 	ContentBrowserPanel content_browser;
 	ConsolePanel console;
-	ViewportPanel viewport;
 	StatsPanel stats;
-
-	Ref<HierarchyPanel> hierarchy;
-	Ref<InspectorPanel> inspector;
 
 	friend class ViewportPanel;
 };

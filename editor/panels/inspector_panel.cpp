@@ -101,11 +101,16 @@ inline static void draw_component(const std::string& name, Entity entity,
 	ImGui::PopID();
 }
 
-InspectorPanel::InspectorPanel(Ref<HierarchyPanel> hierarchy) :
-		hierarchy(hierarchy) {}
+InspectorPanel::InspectorPanel() {}
 
 void InspectorPanel::_draw() {
-	auto selected_entity = hierarchy->get_selected_entity();
+	const auto scene = SceneManager::get_active();
+	if (!scene || scene->get_selected_entities().empty()) {
+		return;
+	}
+
+	// get last selected entity
+	auto selected_entity = scene->get_selected_entities().back();
 	if (!selected_entity) {
 		return;
 	}

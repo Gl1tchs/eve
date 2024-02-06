@@ -1,5 +1,6 @@
 #include "scene/entity.h"
 #include "core/uid.h"
+#include "entity.h"
 #include "scene/transform.h"
 
 RelationComponent& Entity::get_relation() {

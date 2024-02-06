@@ -265,43 +265,8 @@ void Renderer::draw_text(const std::string& text, Ref<Font> font, Transform tran
 
 	// center the text around the transform if its not in screen space
 	if (!is_screen_space) {
-		float text_size = 0;
-		for (size_t i = 0; i < text.size(); i++) {
-			char character = text[i];
-			if (character == '\r' || character == '\n') {
-				continue;
-			}
-
-			if (character == ' ') {
-				text_size += fs_scale * space_glyph_advance + kerning;
-				continue;
-			}
-
-			if (character == '\t') {
-				text_size += 4.0f * (fs_scale * space_glyph_advance + kerning);
-				continue;
-			}
-
-			auto glyph = font_geometry.getGlyph(character);
-			if (!glyph) {
-				glyph = font_geometry.getGlyph('?');
-			}
-			if (!glyph) {
-				continue;
-			}
-
-			if (i < text.size()) {
-				double advance = glyph->getAdvance();
-				const char next_character = text[i + 1];
-				font_geometry.getAdvance(advance, character, next_character);
-
-				text_size += fs_scale * advance + kerning;
-			}
-		}
-
-		text_size *= transform.get_scale().x;
-
-		transform.local_position.x -= text_size / 2.0f;
+		float text_width = get_text_size(text, font, kerning).x * transform.get_scale().x;
+		transform.local_position.x -= text_width / 2.0f;
 	}
 
 	const glm::mat4 transform_matrix = transform.get_transform_matrix();
@@ -442,6 +407,21 @@ void Renderer::draw_box(const glm::vec2& min, const glm::vec2& max, const Color&
 	draw_line({ min.x, max.y }, max, color);
 	draw_line(max, { max.x, min.y }, color);
 	draw_line({ max.x, min.y }, min, color);
+}
+
+void Renderer::draw_box(const Transform& transform, const Color& color) {
+	// https://en.wikipedia.org/wiki/Rotation_matrix
+	glm::mat4 transform_matrix = transform.get_transform_matrix();
+
+	glm::vec2 lb(transform_matrix * QUAD_VERTEX_POSITIONS[0]);
+	glm::vec2 lt(transform_matrix * QUAD_VERTEX_POSITIONS[1]);
+	glm::vec2 rt(transform_matrix * QUAD_VERTEX_POSITIONS[2]);
+	glm::vec2 rb(transform_matrix * QUAD_VERTEX_POSITIONS[3]);
+
+	draw_line(lb, lt, color);
+	draw_line(lt, rt, color);
+	draw_line(rt, rb, color);
+	draw_line(rb, lb, color);
 }
 
 const RendererStats& Renderer::get_stats() {

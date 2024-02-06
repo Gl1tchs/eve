@@ -4,23 +4,20 @@
 - [ ] Runtime camera aspect ratio not changing properly.
 
 ## General
-- [x] Box2D physics.
 - [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization
 - [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
-- [x] Open Project
+- [ ] Shortcuts
+- [ ] Hierarchy set parent of multiple entities. 
 - [ ] Hierarchy entity search and sorting
 - [ ] New Scene
 - [ ] Texture viewer / metadata inspector
-- [x] Content browser panel.
 
 ## Renderer
-- [ ] Selected item bounds renderer
 - [ ] Physics collider bounds renderer
-- [x] Center texts.
 - [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations
