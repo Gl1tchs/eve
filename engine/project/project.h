@@ -26,6 +26,8 @@ public:
 
 	static fs::path get_asset_directory();
 
+	static fs::path get_cache_directory(AssetType type = AssetType::NONE);
+
 	static std::string get_starting_scene_path();
 
 	static fs::path get_asset_path(const std::string& path);

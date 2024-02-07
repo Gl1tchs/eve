@@ -36,11 +36,6 @@ public:
 	WindowCursorMode get_cursor_mode() const;
 	void set_cursor_mode(WindowCursorMode mode);
 
-	// TODO:
-	// get/set title
-	// get/set vsync
-	// get/set window mode
-
 	GLFWwindow* get_native_window();
 
 private:

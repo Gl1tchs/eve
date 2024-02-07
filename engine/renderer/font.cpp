@@ -1,6 +1,7 @@
 #include "renderer/font.h"
 
 #include "data/fonts/roboto_regular.h"
+#include "project/project.h"
 #include "renderer/texture.h"
 
 #include <FontGeometry.h>
@@ -11,8 +12,19 @@ Ref<Font> Font::s_default_font = nullptr;
 inline static uint32_t s_memory_counter = 1;
 
 inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas::GlyphGeometry>& glyphs,
-		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height) {
+		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height, std::string name) {
 	EVE_PROFILE_FUNCTION();
+
+	// load cached font if already loaded
+	const fs::path cache_file_path = Project::get_cache_directory(AssetType::FONT) / std::format("{}.msdf.png", name);
+	if (fs::exists(cache_file_path)) {
+		TextureMetadata metadata;
+		metadata.format = TextureFormat::RGB;
+		metadata.generate_mipmaps = false;
+
+		Ref<Texture2D> texture = create_ref<Texture2D>(cache_file_path);
+		return texture;
+	}
 
 	msdf_atlas::GeneratorAttributes attributes;
 	attributes.config.overlapSupport = true;
@@ -34,8 +46,8 @@ inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas
 
 	msdfgen::BitmapConstRef<uint8_t, 3> bitmap = (msdfgen::BitmapConstRef<uint8_t, 3>)generator.atlasStorage();
 
-	// TODO maybe cache with a file
-	// msdfgen::savePng(bitmap, "myfont.png");
+	// cache bitmap to speed up loading for the next time
+	msdfgen::savePng(bitmap, cache_file_path.string().c_str());
 
 	TextureMetadata metadata;
 	metadata.format = TextureFormat::RGB;
@@ -98,7 +110,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		glyph.edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyph_seed);
 	}
 
-	return create_and_cache_atlas(data->glyphs, data->font_geometry, width, height);
+	return create_and_cache_atlas(data->glyphs, data->font_geometry, width, height, name);
 }
 
 Font::Font(const fs::path& path) {
@@ -114,7 +126,7 @@ Font::Font(const fs::path& path) {
 		return;
 	}
 
-	atlas_texture = create_texture_atlas(font, &msdf_data, path_str);
+	atlas_texture = create_texture_atlas(font, &msdf_data, path.filename().string());
 
 	msdfgen::destroyFont(font);
 	msdfgen::deinitializeFreetype(ft);

@@ -2,6 +2,7 @@
 
 ## Bugs
 - [ ] Runtime camera aspect ratio not changing properly.
+- [ ] Scene transition asset loading not working properly.
 
 ## General
 - [ ] Build script

@@ -61,6 +61,25 @@ fs::path Project::get_asset_directory() {
 	return get_project_directory() / s_active_project->config.asset_directory;
 }
 
+fs::path Project::get_cache_directory(AssetType type) {
+	EVE_PROFILE_FUNCTION();
+
+	EVE_ASSERT_ENGINE(s_active_project);
+
+	std::string asset_dir = serialize_asset_type(type);
+	std::transform(asset_dir.begin(), asset_dir.end(), asset_dir.begin(),
+			[](unsigned char c) { return std::tolower(c); });
+
+	const fs::path cache_dir = get_project_directory() / "cache" / asset_dir;
+
+	// create cache directory if not exists already
+	if (!fs::exists(cache_dir)) {
+		fs::create_directory(cache_dir);
+	}
+
+	return cache_dir;
+}
+
 std::string Project::get_starting_scene_path() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
@@ -68,6 +87,8 @@ std::string Project::get_starting_scene_path() {
 }
 
 fs::path Project::get_asset_path(const std::string& path) {
+	EVE_PROFILE_FUNCTION();
+
 	EVE_ASSERT_ENGINE(s_active_project);
 
 	const std::string_view proj_substr = "prj://";
@@ -89,6 +110,10 @@ fs::path Project::get_asset_path(const std::string& path) {
 }
 
 std::string Project::get_relative_asset_path(const fs::path& path) {
+	EVE_PROFILE_FUNCTION();
+
+	EVE_ASSERT_ENGINE(s_active_project);
+
 	const auto project_dir = get_project_directory();
 	const auto asset_dir = get_asset_directory();
 
