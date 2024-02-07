@@ -21,10 +21,10 @@ void Scene::start() {
 
 	running = true;
 
-	ScriptEngine::on_runtime_start(this);
-
 	{
-		auto script_view = view<ScriptComponent>();
+		ScriptEngine::on_runtime_start(this);
+
+		const auto script_view = view<ScriptComponent>();
 
 		// entity script instance creation should be done in two iterations
 		// because field type of entity depends on other entities
@@ -46,7 +46,7 @@ void Scene::start() {
 	}
 
 	// let scripts modify the values then start the physics system
-	physics_system.on_physics2d_start();
+	physics_system.start();
 }
 
 void Scene::update(float dt) {
@@ -61,7 +61,7 @@ void Scene::update(float dt) {
 		ScriptEngine::invoke_on_update_entity(entity, dt);
 	}
 
-	physics_system.on_physics2d_update(dt);
+	physics_system.update(dt);
 }
 
 void Scene::stop() {
@@ -76,7 +76,7 @@ void Scene::stop() {
 
 	ScriptEngine::on_runtime_stop();
 
-	physics_system.on_physics2d_stop();
+	physics_system.stop();
 }
 
 void Scene::set_paused(bool _paused) {
@@ -172,47 +172,6 @@ Entity Scene::find_by_name(const std::string& name) {
 	}
 }
 
-template <typename... Component>
-inline static void copy_component(
-		entt::registry& dst, entt::registry& src,
-		const std::unordered_map<UID, entt::entity>& entt_map) {
-	(
-			[&]() {
-				for (const entt::entity src_entity : src.view<Component>()) {
-					const entt::entity dst_entity =
-							entt_map.at(src.get<IdComponent>(src_entity).id);
-
-					const auto& src_component = src.get<Component>(src_entity);
-					dst.emplace_or_replace<Component>(dst_entity, src_component);
-				}
-			}(),
-			...);
-}
-
-template <typename... Component>
-static void copy_component(
-		ComponentGroup<Component...>, entt::registry& dst, entt::registry& src,
-		const std::unordered_map<UID, entt::entity>& entt_map) {
-	copy_component<Component...>(dst, src, entt_map);
-}
-
-template <typename... Component>
-static void copy_component_if_exists(Entity dst, Entity src) {
-	(
-			[&]() {
-				if (src.has_component<Component>()) {
-					dst.add_or_replace_component<Component>(src.get_component<Component>());
-				}
-			}(),
-			...);
-}
-
-template <typename... Component>
-static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst,
-		Entity src) {
-	copy_component_if_exists<Component...>(dst, src);
-}
-
 void Scene::toggle_entity_selection(Entity entity) {
 	const auto it = std::find(selected_entities.begin(), selected_entities.end(), entity);
 
@@ -255,6 +214,47 @@ bool Scene::is_entity_selected(Entity entity) const {
 
 const std::vector<Entity>& Scene::get_selected_entities() const {
 	return selected_entities;
+}
+
+template <typename... Component>
+inline static void copy_component(
+		entt::registry& dst, entt::registry& src,
+		const std::unordered_map<UID, entt::entity>& entt_map) {
+	(
+			[&]() {
+				for (const entt::entity src_entity : src.view<Component>()) {
+					const entt::entity dst_entity =
+							entt_map.at(src.get<IdComponent>(src_entity).id);
+
+					const auto& src_component = src.get<Component>(src_entity);
+					dst.emplace_or_replace<Component>(dst_entity, src_component);
+				}
+			}(),
+			...);
+}
+
+template <typename... Component>
+inline static void copy_component(
+		ComponentGroup<Component...>, entt::registry& dst, entt::registry& src,
+		const std::unordered_map<UID, entt::entity>& entt_map) {
+	copy_component<Component...>(dst, src, entt_map);
+}
+
+template <typename... Component>
+inline static void copy_component_if_exists(Entity dst, Entity src) {
+	(
+			[&]() {
+				if (src.has_component<Component>()) {
+					dst.add_or_replace_component<Component>(src.get_component<Component>());
+				}
+			}(),
+			...);
+}
+
+template <typename... Component>
+inline static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst,
+		Entity src) {
+	copy_component_if_exists<Component...>(dst, src);
 }
 
 Ref<Scene> Scene::copy(Ref<Scene> src) {

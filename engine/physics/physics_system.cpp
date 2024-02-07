@@ -38,7 +38,7 @@ class Physics2DContactListener : public b2ContactListener {
 	}
 };
 
-b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bodyType) {
+inline static b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bodyType) {
 	switch (bodyType) {
 		case Rigidbody2D::BodyType::STATIC:
 			return b2_staticBody;
@@ -53,7 +53,7 @@ b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bodyType) {
 	}
 }
 
-Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType bodyType) {
+inline static Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType bodyType) {
 	switch (bodyType) {
 		case b2_staticBody:
 			return Rigidbody2D::BodyType::STATIC;
@@ -72,14 +72,14 @@ static std::vector<Scope<FixtureUserData>> s_fixture_user_datas{};
 
 PhysicsSystem::PhysicsSystem(Scene* scene, const PhysicsSettings& settings) :
 		scene(scene), settings(settings) {
-	physics2d_world = new b2World({ settings.gravity.x, settings.gravity.y });
+	world2d = new b2World({ settings.gravity.x, settings.gravity.y });
 
 	static Physics2DContactListener s_physics2d_contact_listener{};
-	physics2d_world->SetContactListener(&s_physics2d_contact_listener);
+	world2d->SetContactListener(&s_physics2d_contact_listener);
 }
 
 PhysicsSystem::~PhysicsSystem() {
-	delete physics2d_world;
+	delete world2d;
 }
 
 inline static b2Body* create_body(Entity entity, b2World* world) {
@@ -169,15 +169,15 @@ inline static b2Fixture* create_circle_fixture(Entity entity, b2Body* body) {
 	return fixture;
 }
 
-void PhysicsSystem::on_physics2d_start() {
+void PhysicsSystem::start() {
 	EVE_PROFILE_FUNCTION();
 
-	physics2d_world->SetGravity({ settings.gravity.x, settings.gravity.y });
+	world2d->SetGravity({ settings.gravity.x, settings.gravity.y });
 
 	for (auto entity_id : scene->view<Rigidbody2D>()) {
 		Entity entity{ entity_id, scene };
 
-		b2Body* body = create_body(entity, physics2d_world);
+		b2Body* body = create_body(entity, world2d);
 
 		if (entity.has_component<BoxCollider2D>()) {
 			create_box_fixture(entity, body);
@@ -189,18 +189,18 @@ void PhysicsSystem::on_physics2d_start() {
 	}
 }
 
-void PhysicsSystem::on_physics2d_stop() {
+void PhysicsSystem::stop() {
 	EVE_PROFILE_FUNCTION();
 
-	delete physics2d_world;
+	delete world2d;
 
-	physics2d_world = nullptr;
+	world2d = nullptr;
 	scene = nullptr;
 
 	s_fixture_user_datas.clear();
 }
 
-void PhysicsSystem::on_physics2d_update(float dt) {
+void PhysicsSystem::update(float dt) {
 	if (!scene) {
 		EVE_LOG_ENGINE_ERROR("Could not update Physics2D, no scene context found!");
 		return;
@@ -211,7 +211,7 @@ void PhysicsSystem::on_physics2d_update(float dt) {
 	constexpr int velocity_iters = 6;
 	constexpr int position_iters = 2;
 
-	physics2d_world->Step(dt, velocity_iters, position_iters);
+	world2d->Step(dt, velocity_iters, position_iters);
 
 	// Retrieve transform from Box2D
 	for (auto e : scene->view<Rigidbody2D>()) {
@@ -222,7 +222,7 @@ void PhysicsSystem::on_physics2d_update(float dt) {
 
 		b2Body* body = (b2Body*)rb2d.runtime_body;
 		if (!body) {
-			body = create_body(entity, physics2d_world);
+			body = create_body(entity, world2d);
 		}
 
 		body->SetType(rigidbody2d_type_to_box2d_body(rb2d.type));

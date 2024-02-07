@@ -17,23 +17,20 @@ public:
 	PhysicsSystem(Scene* scene, const PhysicsSettings& settings = {});
 	~PhysicsSystem();
 
-	void on_physics2d_start();
+	void start();
 
-	void on_physics2d_stop();
+	void stop();
 
-	void on_physics2d_update(float dt);
+	void update(float dt);
 
 	PhysicsSettings& get_settings();
 
 private:
 	Scene* scene = nullptr;
-	b2World* physics2d_world = nullptr;
+
+	b2World* world2d = nullptr;
 
 	PhysicsSettings settings{};
 };
-
-b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType body_type);
-
-Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType body_type);
 
 #endif
