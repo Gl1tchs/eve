@@ -125,6 +125,8 @@ void Scene::destroy(Entity entity) {
 
 	if (is_running()) {
 		ScriptEngine::invoke_on_destroy_entity(entity);
+
+		physics_system.mark_deleted(entity);
 	}
 
 	// unselect if selected

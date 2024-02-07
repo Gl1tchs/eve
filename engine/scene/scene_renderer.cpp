@@ -96,12 +96,13 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 }
 
 void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
-	if (viewport_size == size) {
+	if (size.x == 0.0f || size.y == 0.0f) {
 		return;
 	}
 
 	viewport_size = size;
 
+	//! TODO make this cached
 	frame_buffer->resize(viewport_size.x, viewport_size.y);
 
 	const auto scene = SceneManager::get_active();

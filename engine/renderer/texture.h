@@ -39,7 +39,7 @@ public:
 	EVE_IMPL_ASSET(AssetType::TEXTURE)
 
 	Texture2D(const fs::path& path, bool flip_on_load = true);
-	Texture2D(const fs::path& path, const TextureMetadata& metadata, bool flip_on_load = true);
+	Texture2D(const fs::path& path, const TextureMetadata& metadata, bool flip_on_load = true, bool override_texture_format = false);
 	Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size);
 
 	virtual ~Texture2D();
@@ -47,7 +47,7 @@ public:
 	const glm::ivec2& get_size() const;
 
 	const TextureMetadata& get_metadata() const;
-	void set_metadata(const TextureMetadata& metadata);
+	void set_metadata(const TextureMetadata& _metadata);
 
 	uint32_t get_renderer_id() const;
 
@@ -58,7 +58,7 @@ public:
 	bool operator==(const Texture2D& other) const;
 
 private:
-	void _gen_texture(const TextureMetadata& metadata, const void* pixels = nullptr);
+	void _gen_texture(const TextureMetadata& _metadata, const void* pixels = nullptr);
 
 private:
 	uint32_t renderer_id;

@@ -67,6 +67,10 @@ bool Entity::is_child() const {
 }
 
 std::vector<Entity> Entity::get_children() const {
+	if (!has_component<RelationComponent>()) {
+		return {};
+	}
+
 	const std::vector<UID>& children_ids = get_relation().children_ids;
 
 	std::vector<Entity> children;

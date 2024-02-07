@@ -1,5 +1,14 @@
 ## eve Todo List
 
+## Game Demo Improvements
+- [ ] When multiple entities selected delete should remove everyone not only the first one.
+- [ ] Script engine wont work for the projects with names that has space in it.
+- [ ] Ability to just create predefined entities such as sprite, physics body etc.
+- [ ] UI Gizmos
+- [ ] Collision rotation were wrong.
+- [ ] Z Component rotation was calculating from the wrong axis.
+- [ ] Entity destruction on script was not deleting the script instance.
+
 ## Bugs
 - [ ] Runtime camera aspect ratio not changing properly.
 - [ ] Scene transition asset loading not working properly.
@@ -37,6 +46,7 @@
 - [ ] Velocity and forces
 
 ## Asset
+- [ ] Make assets a part of the scene system.
 - [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
 - [ ] Change occurencies of entities when an asset renamed or removed
 - [ ] Do not get asset type from extension but from format

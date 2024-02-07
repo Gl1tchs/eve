@@ -1,5 +1,6 @@
 #include "physics/physics_system.h"
 
+#include "core/application.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 
@@ -74,8 +75,8 @@ PhysicsSystem::PhysicsSystem(Scene* scene, const PhysicsSettings& settings) :
 		scene(scene), settings(settings) {
 	world2d = new b2World({ settings.gravity.x, settings.gravity.y });
 
-	static Physics2DContactListener s_physics2d_contact_listener{};
-	world2d->SetContactListener(&s_physics2d_contact_listener);
+	static Physics2DContactListener s_contact_listener2d{};
+	world2d->SetContactListener(&s_contact_listener2d);
 }
 
 PhysicsSystem::~PhysicsSystem() {
@@ -89,7 +90,7 @@ inline static b2Body* create_body(Entity entity, b2World* world) {
 	b2BodyDef body_def;
 	body_def.type = rigidbody2d_type_to_box2d_body(rb2d.type);
 	body_def.position.Set(transform.get_position().x, transform.get_position().y);
-	body_def.angle = transform.get_rotation().z;
+	body_def.angle = glm::radians(transform.get_rotation().z);
 
 	b2Body* body = world->CreateBody(&body_def);
 	body->SetFixedRotation(rb2d.fixed_rotation);
@@ -104,7 +105,6 @@ inline static b2Fixture* create_box_fixture(Entity entity, b2Body* body) {
 	auto& bc2d = entity.get_component<BoxCollider2D>();
 
 	b2PolygonShape box_shape;
-
 	box_shape.SetAsBox(bc2d.size.x * transform.get_scale().x,
 			bc2d.size.y * transform.get_scale().y,
 			b2Vec2(bc2d.offset.x, bc2d.offset.y),
@@ -208,6 +208,14 @@ void PhysicsSystem::update(float dt) {
 
 	EVE_PROFILE_FUNCTION();
 
+	{
+		for (auto body : bodies_to_remove) {
+			world2d->DestroyBody(body);
+		}
+
+		bodies_to_remove.clear();
+	}
+
 	constexpr int velocity_iters = 6;
 	constexpr int position_iters = 2;
 
@@ -237,6 +245,7 @@ void PhysicsSystem::update(float dt) {
 			}
 
 			if (fixture->GetShape()->GetType() == b2Shape::Type::e_polygon) {
+				//? TODO maybe cache it
 				b2PolygonShape* shape = (b2PolygonShape*)fixture->GetShape();
 				shape->SetAsBox(bc2d.size.x * transform.get_scale().x,
 						bc2d.size.y * transform.get_scale().y,
@@ -273,8 +282,23 @@ void PhysicsSystem::update(float dt) {
 		const auto& position = body->GetPosition();
 		transform.local_position.x = position.x;
 		transform.local_position.y = position.y;
-		transform.local_rotation.z = body->GetAngle();
+		transform.local_rotation.z = glm::degrees(body->GetAngle());
 	}
+}
+
+void PhysicsSystem::mark_deleted(Entity entity) {
+	if (!entity.has_component<Rigidbody2D>()) {
+		return;
+	}
+
+	const auto rb2d = entity.get_component<Rigidbody2D>();
+	if (!rb2d.runtime_body) {
+		return;
+	}
+
+	b2Body* body = (b2Body*)rb2d.runtime_body;
+
+	bodies_to_remove.push_back(body);
 }
 
 PhysicsSettings& PhysicsSystem::get_settings() {

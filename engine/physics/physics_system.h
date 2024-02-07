@@ -3,9 +3,11 @@
 
 #include "scene/components.h"
 
+class Entity;
 class Scene;
 
 class b2World;
+class b2Body;
 enum b2BodyType;
 
 struct PhysicsSettings {
@@ -23,12 +25,16 @@ public:
 
 	void update(float dt);
 
+	void mark_deleted(Entity entity);
+
 	PhysicsSettings& get_settings();
 
 private:
 	Scene* scene = nullptr;
 
 	b2World* world2d = nullptr;
+
+	std::vector<b2Body*> bodies_to_remove;
 
 	PhysicsSettings settings{};
 };

@@ -112,7 +112,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		// DISCLAIMER
 		//	we use stbi_write_png with msdfgen::Bitmap and the bitmap is reverse aligned on memory
 		//	that's why we need to flip the image in order to use it properly.
-		Ref<Texture2D> texture = create_ref<Texture2D>(cache_file_path, metadata, false);
+		Ref<Texture2D> texture = create_ref<Texture2D>(cache_file_path, metadata, false, true);
 
 		return texture;
 	}

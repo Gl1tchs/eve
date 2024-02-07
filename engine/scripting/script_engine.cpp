@@ -146,8 +146,8 @@ void ScriptEngine::init(bool is_runtime) {
 	}
 
 	auto script_module_path =
-			Project::get_project_directory() /
-			std::format("out/{}.dll", Project::get_name());
+			Project::get_project_directory() / "out" /
+			std::format("{}.dll", Project::get_name());
 	status = load_app_assembly(script_module_path);
 	if (!status) {
 		EVE_LOG_ENGINE_ERROR("Could not load app assembly.");

@@ -64,8 +64,11 @@ glm::mat4 Transform::get_transform_matrix() const {
 	transform =
 			glm::rotate(transform, glm::radians(local_rotation.x), VEC3_RIGHT);
 	transform = glm::rotate(transform, glm::radians(local_rotation.y), VEC3_UP);
+
+	//! TODO simple hack to make rotations work
+	//! definitely will not work with 3D
 	transform =
-			glm::rotate(transform, glm::radians(local_rotation.z), VEC3_FORWARD);
+			glm::rotate(transform, glm::radians(local_rotation.z), -VEC3_FORWARD);
 	transform = glm::scale(transform, local_scale);
 
 	if (parent) {

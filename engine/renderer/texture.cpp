@@ -97,7 +97,7 @@ Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, bool flip_on_load) :
+Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, bool flip_on_load, bool override_texture_format) :
 		renderer_id(0) {
 	EVE_PROFILE_FUNCTION();
 
@@ -110,10 +110,14 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, boo
 		stbi_image_free(data);
 		EVE_LOG_ENGINE_ERROR("Unable to load texture from: {}", path.string());
 		EVE_ASSERT_ENGINE(false);
+
+		return;
 	}
 
 	TextureMetadata texture_metadata;
-	texture_metadata.format = _metadata.format;
+	texture_metadata.format = override_texture_format
+			? _metadata.format
+			: get_texture_format_from_channels(channels);
 	texture_metadata.min_filter = _metadata.min_filter;
 	texture_metadata.mag_filter = _metadata.mag_filter;
 	texture_metadata.wrap_s = _metadata.wrap_s;
@@ -188,12 +192,12 @@ bool Texture2D::operator==(const Texture2D& other) const {
 	return renderer_id == other.get_renderer_id();
 }
 
-void Texture2D::_gen_texture(const TextureMetadata& metadata,
+void Texture2D::_gen_texture(const TextureMetadata& _metadata,
 		const void* pixels) {
 	glGenTextures(1, &renderer_id);
 	glBindTexture(GL_TEXTURE_2D, renderer_id);
 
-	set_metadata(metadata);
+	set_metadata(_metadata);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, texture_format_to_gl(metadata.format),
 			size.x, size.y, 0,

@@ -96,6 +96,10 @@ inline static void debug_log_fatal(MonoString* string) {
 #pragma region Entity
 
 inline static void entity_destroy(UID entity_id) {
+	if (!entity_id) {
+		return;
+	}
+
 	Scene* scene = get_scene_context();
 	Entity entity = get_entity(entity_id);
 
