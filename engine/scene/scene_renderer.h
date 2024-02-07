@@ -43,9 +43,7 @@ private:
 
 	glm::uvec2 viewport_size;
 
-	std::vector<RenderFunc> before_render_functions;
-	std::vector<RenderFunc> on_render_functions;
-	std::vector<RenderFunc> after_render_functions;
+	std::unordered_map<RenderFuncTickFormat, std::vector<RenderFunc>> render_functions;
 };
 
 #endif

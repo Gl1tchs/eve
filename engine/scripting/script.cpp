@@ -96,7 +96,7 @@ MonoObject* ScriptInstance::get_managed_object() {
 	return instance;
 }
 
-bool ScriptInstance::get_field_value_internal(const std::string& name,
+bool ScriptInstance::_get_field_value_internal(const std::string& name,
 		void* buffer) {
 	const auto& fields = script_class->get_fields();
 	auto it = fields.find(name);
@@ -134,7 +134,7 @@ bool ScriptInstance::get_field_value_internal(const std::string& name,
 	return true;
 }
 
-bool ScriptInstance::set_field_value_internal(const std::string& name,
+bool ScriptInstance::_set_field_value_internal(const std::string& name,
 		const void* value) {
 	const auto& fields = script_class->get_fields();
 	auto it = fields.find(name);

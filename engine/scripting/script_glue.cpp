@@ -17,14 +17,15 @@
 #include <mono/metadata/object.h>
 #include <mono/metadata/reflection.h>
 
-static std::unordered_map<MonoType*, std::function<bool(Entity)>>
+typedef bool (*HasComponentFunc)(Entity);
+
+inline static std::unordered_map<MonoType*, HasComponentFunc>
 		entity_has_component_funcs;
 
-static std::unordered_map<MonoType*, std::function<void(Entity)>>
-		entity_add_component_funcs;
+typedef void (*AddComponentFunc)(Entity);
 
-#define ADD_INTERNAL_CALL(Name) \
-	mono_add_internal_call("EveEngine.Interop::" #Name, Name)
+inline static std::unordered_map<MonoType*, AddComponentFunc>
+		entity_add_component_funcs;
 
 inline static std::string mono_string_to_string(MonoString* string) {
 	char* c_str = mono_string_to_utf8(string);
@@ -818,26 +819,28 @@ inline static void asset_registry_unload(AssetHandle handle) {
 #pragma endregion
 
 template <typename... Component>
-
 inline static void register_component() {
 	(
 			[]() {
-				std::string_view type_name = typeid(Component).name();
-				size_t pos = type_name.find_last_of(' ');
-				std::string_view struct_name = type_name.substr(pos + 1);
+				const std::string_view type_name = typeid(Component).name();
+				const size_t pos = type_name.find_last_of(' ');
+				const std::string_view struct_name = type_name.substr(pos + 1);
+
 				std::string managed_type_name =
 						std::format("EveEngine.{}", struct_name);
 
-				MonoType* managed_type = mono_reflection_type_from_name(
+				MonoType* const managed_type = mono_reflection_type_from_name(
 						managed_type_name.data(), ScriptEngine::get_core_assembly_image());
 				if (!managed_type) {
 					EVE_LOG_ENGINE_ERROR("Could not find component type {}",
 							managed_type_name);
 					return;
 				}
+
 				entity_has_component_funcs[managed_type] = [](Entity entity) {
 					return entity.has_component<Component>();
 				};
+
 				entity_add_component_funcs[managed_type] = [](Entity entity) {
 					entity.add_component<Component>();
 					EVE_ASSERT_ENGINE(entity.has_component<Component>());
@@ -847,10 +850,12 @@ inline static void register_component() {
 }
 
 template <typename... Component>
-
 inline static void register_component(ComponentGroup<Component...>) {
 	register_component<Component...>();
 }
+
+#define EVE_ADD_INTERNAL_CALL(name) \
+	mono_add_internal_call("EveEngine.Interop::" #name, name)
 
 namespace script_glue {
 
@@ -860,150 +865,150 @@ void register_components() {
 }
 
 void register_functions() {
-	ADD_INTERNAL_CALL(get_script_instance);
+	EVE_ADD_INTERNAL_CALL(get_script_instance);
 
 	// Begin Application
-	ADD_INTERNAL_CALL(application_quit);
+	EVE_ADD_INTERNAL_CALL(application_quit);
 
 	// Begin Window
-	ADD_INTERNAL_CALL(window_get_cursor_mode);
-	ADD_INTERNAL_CALL(window_set_cursor_mode);
+	EVE_ADD_INTERNAL_CALL(window_get_cursor_mode);
+	EVE_ADD_INTERNAL_CALL(window_set_cursor_mode);
 
 	// Begin Debug
-	ADD_INTERNAL_CALL(debug_Log);
-	ADD_INTERNAL_CALL(debug_log_info);
-	ADD_INTERNAL_CALL(debug_log_warning);
-	ADD_INTERNAL_CALL(debug_log_error);
-	ADD_INTERNAL_CALL(debug_log_fatal);
+	EVE_ADD_INTERNAL_CALL(debug_Log);
+	EVE_ADD_INTERNAL_CALL(debug_log_info);
+	EVE_ADD_INTERNAL_CALL(debug_log_warning);
+	EVE_ADD_INTERNAL_CALL(debug_log_error);
+	EVE_ADD_INTERNAL_CALL(debug_log_fatal);
 
 	// Begin Entity
-	ADD_INTERNAL_CALL(entity_destroy);
-	ADD_INTERNAL_CALL(entity_get_parent);
-	ADD_INTERNAL_CALL(entity_get_name);
-	ADD_INTERNAL_CALL(entity_has_component);
-	ADD_INTERNAL_CALL(entity_add_component);
-	ADD_INTERNAL_CALL(entity_find_by_name);
-	ADD_INTERNAL_CALL(entity_instantiate);
-	ADD_INTERNAL_CALL(entity_assign_script);
+	EVE_ADD_INTERNAL_CALL(entity_destroy);
+	EVE_ADD_INTERNAL_CALL(entity_get_parent);
+	EVE_ADD_INTERNAL_CALL(entity_get_name);
+	EVE_ADD_INTERNAL_CALL(entity_has_component);
+	EVE_ADD_INTERNAL_CALL(entity_add_component);
+	EVE_ADD_INTERNAL_CALL(entity_find_by_name);
+	EVE_ADD_INTERNAL_CALL(entity_instantiate);
+	EVE_ADD_INTERNAL_CALL(entity_assign_script);
 
 	// Begin TransformComponent
-	ADD_INTERNAL_CALL(transform_component_get_local_position);
-	ADD_INTERNAL_CALL(transform_component_set_local_position);
-	ADD_INTERNAL_CALL(transform_component_get_local_rotation);
-	ADD_INTERNAL_CALL(transform_component_set_local_rotation);
-	ADD_INTERNAL_CALL(transform_component_get_local_scale);
-	ADD_INTERNAL_CALL(transform_component_set_local_scale);
-	ADD_INTERNAL_CALL(transform_component_get_position);
-	ADD_INTERNAL_CALL(transform_component_get_rotation);
-	ADD_INTERNAL_CALL(transform_component_get_scale);
-	ADD_INTERNAL_CALL(transform_component_get_forward);
-	ADD_INTERNAL_CALL(transform_component_get_right);
-	ADD_INTERNAL_CALL(transform_component_get_up);
-	ADD_INTERNAL_CALL(transform_component_translate);
-	ADD_INTERNAL_CALL(transform_component_rotate);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_local_position);
+	EVE_ADD_INTERNAL_CALL(transform_component_set_local_position);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_local_rotation);
+	EVE_ADD_INTERNAL_CALL(transform_component_set_local_rotation);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_local_scale);
+	EVE_ADD_INTERNAL_CALL(transform_component_set_local_scale);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_position);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_rotation);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_scale);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_forward);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_right);
+	EVE_ADD_INTERNAL_CALL(transform_component_get_up);
+	EVE_ADD_INTERNAL_CALL(transform_component_translate);
+	EVE_ADD_INTERNAL_CALL(transform_component_rotate);
 
 	// Begin CameraComponent
-	ADD_INTERNAL_CALL(camera_component_camera_get_aspect_ratio);
-	ADD_INTERNAL_CALL(camera_component_camera_set_aspect_ratio);
-	ADD_INTERNAL_CALL(camera_component_camera_get_zoom_level);
-	ADD_INTERNAL_CALL(camera_component_camera_set_zoom_level);
-	ADD_INTERNAL_CALL(camera_component_camera_get_near_clip);
-	ADD_INTERNAL_CALL(camera_component_camera_set_near_clip);
-	ADD_INTERNAL_CALL(camera_component_camera_get_far_clip);
-	ADD_INTERNAL_CALL(camera_component_camera_set_far_clip);
-	ADD_INTERNAL_CALL(camera_component_get_is_primary);
-	ADD_INTERNAL_CALL(camera_component_set_is_primary);
-	ADD_INTERNAL_CALL(camera_component_get_is_fixed_aspect_ratio);
-	ADD_INTERNAL_CALL(camera_component_set_is_fixed_aspect_ratio);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_get_aspect_ratio);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_set_aspect_ratio);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_get_zoom_level);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_set_zoom_level);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_get_near_clip);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_set_near_clip);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_get_far_clip);
+	EVE_ADD_INTERNAL_CALL(camera_component_camera_set_far_clip);
+	EVE_ADD_INTERNAL_CALL(camera_component_get_is_primary);
+	EVE_ADD_INTERNAL_CALL(camera_component_set_is_primary);
+	EVE_ADD_INTERNAL_CALL(camera_component_get_is_fixed_aspect_ratio);
+	EVE_ADD_INTERNAL_CALL(camera_component_set_is_fixed_aspect_ratio);
 
 	// Begin ScriptComponent
-	ADD_INTERNAL_CALL(script_component_get_class_name);
+	EVE_ADD_INTERNAL_CALL(script_component_get_class_name);
 
 	// Begin SpriteRenderer
-	ADD_INTERNAL_CALL(sprite_renderer_component_get_texture);
-	ADD_INTERNAL_CALL(sprite_renderer_component_set_texture);
-	ADD_INTERNAL_CALL(sprite_renderer_component_get_color);
-	ADD_INTERNAL_CALL(sprite_renderer_component_set_color);
-	ADD_INTERNAL_CALL(sprite_renderer_component_get_tex_tiling);
-	ADD_INTERNAL_CALL(sprite_renderer_component_set_tex_tiling);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_texture);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_texture);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_color);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_color);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_tex_tiling);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_tex_tiling);
 
 	// Begin TextRenderer
-	ADD_INTERNAL_CALL(text_renderer_component_get_text);
-	ADD_INTERNAL_CALL(text_renderer_component_set_text);
-	ADD_INTERNAL_CALL(text_renderer_component_get_font);
-	ADD_INTERNAL_CALL(text_renderer_component_set_font);
-	ADD_INTERNAL_CALL(text_renderer_component_get_fg_color);
-	ADD_INTERNAL_CALL(text_renderer_component_set_fg_color);
-	ADD_INTERNAL_CALL(text_renderer_component_get_bg_color);
-	ADD_INTERNAL_CALL(text_renderer_component_set_bg_color);
-	ADD_INTERNAL_CALL(text_renderer_component_get_kerning);
-	ADD_INTERNAL_CALL(text_renderer_component_set_kerning);
-	ADD_INTERNAL_CALL(text_renderer_component_get_line_spacing);
-	ADD_INTERNAL_CALL(text_renderer_component_set_line_spacing);
-	ADD_INTERNAL_CALL(text_renderer_component_get_is_screen_space);
-	ADD_INTERNAL_CALL(text_renderer_component_set_is_screen_space);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_text);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_text);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_font);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_font);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_fg_color);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_fg_color);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_bg_color);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_bg_color);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_kerning);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_kerning);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_line_spacing);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_line_spacing);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_is_screen_space);
+	EVE_ADD_INTERNAL_CALL(text_renderer_component_set_is_screen_space);
 
 	// Begin Rigidbody2D
-	ADD_INTERNAL_CALL(rigidbody2d_component_get_type);
-	ADD_INTERNAL_CALL(rigidbody2d_component_set_type);
-	ADD_INTERNAL_CALL(rigidbody2d_component_get_fixed_rotation);
-	ADD_INTERNAL_CALL(rigidbody2d_component_set_fixed_rotation);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_get_type);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_set_type);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_get_fixed_rotation);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_set_fixed_rotation);
 
 	// Begin BoxCollider2DComponent
-	ADD_INTERNAL_CALL(box_collider2d_component_get_offset);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_offset);
-	ADD_INTERNAL_CALL(box_collider2d_component_get_size);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_size);
-	ADD_INTERNAL_CALL(box_collider2d_component_get_density);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_density);
-	ADD_INTERNAL_CALL(box_collider2d_component_get_friction);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_friction);
-	ADD_INTERNAL_CALL(box_collider2d_component_get_restitution);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_restitution);
-	ADD_INTERNAL_CALL(box_collider2d_component_get_restitution_threshold);
-	ADD_INTERNAL_CALL(box_collider2d_component_set_restitution_threshold);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_offset);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_offset);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_size);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_size);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_density);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_density);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_friction);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_friction);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_restitution);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_restitution);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_restitution_threshold);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_restitution_threshold);
 
 	// Begin CircleCollider2D
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_offset);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_offset);
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_radius);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_radius);
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_density);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_density);
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_friction);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_friction);
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution);
-	ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution_threshold);
-	ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution_threshold);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_offset);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_offset);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_radius);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_radius);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_density);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_density);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_friction);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_friction);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_restitution_threshold);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_restitution_threshold);
 
 	// Begin PostProcessVolume
-	ADD_INTERNAL_CALL(post_process_volume_component_get_is_global);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_is_global);
-	ADD_INTERNAL_CALL(post_process_volume_component_get_gray_scale);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_gray_scale);
-	ADD_INTERNAL_CALL(post_process_volume_component_get_chromatic_aberration);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_chromatic_aberration);
-	ADD_INTERNAL_CALL(post_process_volume_component_get_blur);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_blur);
-	ADD_INTERNAL_CALL(post_process_volume_component_get_sharpen);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_sharpen);
-	ADD_INTERNAL_CALL(post_process_volume_component_get_vignette);
-	ADD_INTERNAL_CALL(post_process_volume_component_set_vignette);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_is_global);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_is_global);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_gray_scale);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_gray_scale);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_chromatic_aberration);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_chromatic_aberration);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_blur);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_blur);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_sharpen);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_sharpen);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_get_vignette);
+	EVE_ADD_INTERNAL_CALL(post_process_volume_component_set_vignette);
 
 	// Begin Scene Manager
-	ADD_INTERNAL_CALL(scene_manager_load_scene);
+	EVE_ADD_INTERNAL_CALL(scene_manager_load_scene);
 
 	// Begin Input
-	ADD_INTERNAL_CALL(input_is_key_pressed);
-	ADD_INTERNAL_CALL(input_is_key_released);
-	ADD_INTERNAL_CALL(input_is_mouse_pressed);
-	ADD_INTERNAL_CALL(input_is_mouse_released);
-	ADD_INTERNAL_CALL(input_get_mouse_position);
-	ADD_INTERNAL_CALL(input_get_scroll_offset);
+	EVE_ADD_INTERNAL_CALL(input_is_key_pressed);
+	EVE_ADD_INTERNAL_CALL(input_is_key_released);
+	EVE_ADD_INTERNAL_CALL(input_is_mouse_pressed);
+	EVE_ADD_INTERNAL_CALL(input_is_mouse_released);
+	EVE_ADD_INTERNAL_CALL(input_get_mouse_position);
+	EVE_ADD_INTERNAL_CALL(input_get_scroll_offset);
 
-	ADD_INTERNAL_CALL(asset_registry_load);
-	ADD_INTERNAL_CALL(asset_registry_unload);
+	EVE_ADD_INTERNAL_CALL(asset_registry_load);
+	EVE_ADD_INTERNAL_CALL(asset_registry_unload);
 }
 
 } // namespace script_glue

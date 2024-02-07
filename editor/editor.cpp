@@ -242,11 +242,11 @@ void EditorApplication::_open_project() {
 		return;
 	}
 
-	if (Ref<Project> project = Project::load(fs::path(path)); project) {
+	if (Project::load(fs::path(path))) {
 		ScriptEngine::init();
 
 		// load the first scene
-		EVE_ASSERT_ENGINE(SceneManager::load_scene(project->get_starting_scene_path()));
+		EVE_ASSERT_ENGINE(SceneManager::load_scene(Project::get_starting_scene_path()));
 
 		editor_scene = SceneManager::get_active();
 		editor_scene->clear_selected_entities();
@@ -334,6 +334,7 @@ void EditorApplication::_render_entity_bounds(Entity entity) {
 	if (entity.has_component<SpriteRenderer>()) {
 		renderer::draw_box(transform, COLOR_GREEN);
 	}
+
 	if (entity.has_component<TextRenderer>()) {
 		const TextRenderer& text_renderer = entity.get_component<TextRenderer>();
 		if (text_renderer.is_screen_space) {

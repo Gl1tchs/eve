@@ -29,20 +29,19 @@ static std::unordered_map<std::string, ScriptFieldType> script_field_type_map = 
 	{ "System.UInt16", ScriptFieldType::USHORT },
 	{ "System.UInt32", ScriptFieldType::UINT },
 	{ "System.UInt64", ScriptFieldType::ULONG },
-
 	{ "EveEngine.Vector2", ScriptFieldType::VECTOR2 },
 	{ "EveEngine.Vector3", ScriptFieldType::VECTOR3 },
 	{ "EveEngine.Vector4", ScriptFieldType::VECTOR4 },
 	{ "EveEngine.Color", ScriptFieldType::COLOR },
-
 	{ "EveEngine.Entity", ScriptFieldType::ENTITY },
 };
 
-static MonoAssembly* load_mono_assembly(const fs::path& assembly_path,
+inline static MonoAssembly* load_mono_assembly(const fs::path& assembly_path,
 		bool load_pdb = false) {
 	ScopedBuffer file_data = file_system::read_to_buffer(assembly_path);
 
-	// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
+	// NOTE: We can't use this image for anything other than loading the assembly because
+	// this image doesn't have a reference to the assembly
 	MonoImageOpenStatus status;
 	MonoImage* image = mono_image_open_from_data_full(
 			file_data.as<char>(), file_data.get_size(), 1, &status, 0);
@@ -66,7 +65,7 @@ static MonoAssembly* load_mono_assembly(const fs::path& assembly_path,
 		}
 	}
 
-	std::string path_string = assembly_path.string();
+	const std::string path_string = assembly_path.string();
 	MonoAssembly* assembly =
 			mono_assembly_load_from_full(image, path_string.c_str(), &status, 0);
 	mono_image_close(image);
@@ -179,54 +178,13 @@ void ScriptEngine::shutdown() {
 	EVE_PROFILE_FUNCTION();
 
 	_shutdown_mono();
+
 	delete s_data;
 	s_data = nullptr;
 }
 
 bool ScriptEngine::is_initialized() {
 	return s_data != nullptr;
-}
-
-void ScriptEngine::_init_mono() {
-	EVE_PROFILE_FUNCTION();
-
-	mono_set_assemblies_path("mono/lib");
-
-	if (s_data->enable_debugging) {
-		const char* argv[2] = {
-			"--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,"
-			"suspend=n,loglevel=3,logfile=MonoDebugger.log",
-			"--soft-breakpoints"
-		};
-
-		mono_jit_parse_options(2, (char**)argv);
-		mono_debug_init(MONO_DEBUG_FORMAT_MONO);
-	}
-
-	s_data->root_domain = mono_jit_init("EveJITRuntime");
-	EVE_ASSERT_ENGINE(s_data->root_domain);
-
-	if (s_data->enable_debugging) {
-		mono_debug_domain_create(s_data->root_domain);
-	}
-
-	mono_thread_set_main(mono_thread_current());
-}
-
-void ScriptEngine::_shutdown_mono() {
-	EVE_PROFILE_FUNCTION();
-
-	mono_domain_set(mono_get_root_domain(), false);
-
-	mono_domain_unload(s_data->app_domain);
-	s_data->app_domain = nullptr;
-
-	mono_jit_cleanup(s_data->root_domain);
-	s_data->root_domain = nullptr;
-
-	if (s_data->enable_debugging) {
-		mono_debug_cleanup();
-	}
 }
 
 bool ScriptEngine::load_assembly(const fs::path& filepath) {
@@ -239,8 +197,9 @@ bool ScriptEngine::load_assembly(const fs::path& filepath) {
 
 	s_data->core_assembly_path = filepath;
 	s_data->core_assembly = load_mono_assembly(filepath, s_data->enable_debugging);
-	if (s_data->core_assembly == nullptr)
+	if (s_data->core_assembly == nullptr) {
 		return false;
+	}
 
 	s_data->core_assembly_image = mono_assembly_get_image(s_data->core_assembly);
 	return true;
@@ -307,7 +266,7 @@ void ScriptEngine::create_entity_instance(Entity entity) {
 				continue;
 			}
 
-			instance->set_field_value_internal(name, field_instance.buffer);
+			instance->_set_field_value_internal(name, field_instance.buffer);
 		}
 	}
 }
@@ -325,7 +284,7 @@ void ScriptEngine::set_entity_managed_field_values(Entity entity) {
 				continue;
 			}
 
-			instance->set_field_value_internal(name, field_instance.buffer);
+			instance->_set_field_value_internal(name, field_instance.buffer);
 		}
 	}
 }
@@ -382,11 +341,12 @@ ScriptClass ScriptEngine::get_entity_class() {
 }
 
 Ref<ScriptClass> ScriptEngine::get_entity_class(const std::string& name) {
-	if (s_data->entity_classes.find(name) == s_data->entity_classes.end()) {
+	const auto it = s_data->entity_classes.find(name);
+	if (it == s_data->entity_classes.end()) {
 		return nullptr;
 	}
 
-	return s_data->entity_classes.at(name);
+	return it->second;
 }
 
 void ScriptEngine::on_runtime_start(Scene* scene) {
@@ -410,6 +370,77 @@ ScriptFieldMap& ScriptEngine::get_script_field_map(Entity entity) {
 	return s_data->entity_script_fields[entity_id];
 }
 
+MonoImage* ScriptEngine::get_core_assembly_image() {
+	return s_data->core_assembly_image;
+}
+
+MonoImage* ScriptEngine::get_app_assembly_image() {
+	return s_data->app_assembly_image;
+}
+
+MonoObject* ScriptEngine::get_managed_instance(UID uuid) {
+	const auto it = s_data->entity_instances.find(uuid);
+	if (it == s_data->entity_instances.end()) {
+		return nullptr;
+	}
+
+	return it->second->get_managed_object();
+}
+
+MonoString* ScriptEngine::create_mono_string(const char* string) {
+	return mono_string_new(s_data->app_domain, string);
+}
+
+void ScriptEngine::_init_mono() {
+	EVE_PROFILE_FUNCTION();
+
+	mono_set_assemblies_path("mono/lib");
+
+	if (s_data->enable_debugging) {
+		const char* argv[2] = {
+			"--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,"
+			"suspend=n,loglevel=3,logfile=MonoDebugger.log",
+			"--soft-breakpoints"
+		};
+
+		mono_jit_parse_options(2, (char**)argv);
+		mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+	}
+
+	s_data->root_domain = mono_jit_init("EveJITRuntime");
+	EVE_ASSERT_ENGINE(s_data->root_domain);
+
+	if (s_data->enable_debugging) {
+		mono_debug_domain_create(s_data->root_domain);
+	}
+
+	mono_thread_set_main(mono_thread_current());
+}
+
+void ScriptEngine::_shutdown_mono() {
+	EVE_PROFILE_FUNCTION();
+
+	mono_domain_set(mono_get_root_domain(), false);
+
+	mono_domain_unload(s_data->app_domain);
+	s_data->app_domain = nullptr;
+
+	mono_jit_cleanup(s_data->root_domain);
+	s_data->root_domain = nullptr;
+
+	if (s_data->enable_debugging) {
+		mono_debug_cleanup();
+	}
+}
+
+MonoObject* ScriptEngine::_instantiate_class(MonoClass* mono_class) {
+	EVE_PROFILE_FUNCTION();
+
+	MonoObject* instance = mono_object_new(s_data->app_domain, mono_class);
+	mono_runtime_object_init(instance);
+	return instance;
+}
+
 void ScriptEngine::_load_assembly_classes() {
 	EVE_PROFILE_FUNCTION();
 
@@ -418,9 +449,9 @@ void ScriptEngine::_load_assembly_classes() {
 	const MonoTableInfo* type_definitions_table =
 			mono_image_get_table_info(s_data->app_assembly_image, MONO_TABLE_TYPEDEF);
 
-	int num_types = mono_table_info_get_rows(type_definitions_table);
+	const int num_types = mono_table_info_get_rows(type_definitions_table);
 
-	MonoClass* entity_class =
+	MonoClass* const entity_class =
 			mono_class_from_name(s_data->core_assembly_image, "EveEngine", "Entity");
 
 	for (int32_t i = 0; i < num_types; i++) {
@@ -440,34 +471,34 @@ void ScriptEngine::_load_assembly_classes() {
 			full_name = class_name;
 		}
 
-		MonoClass* mono_class = mono_class_from_name(s_data->app_assembly_image,
+		MonoClass* const mono_class = mono_class_from_name(s_data->app_assembly_image,
 				class_namespace, class_name);
 		if (mono_class == entity_class) {
 			continue;
 		}
 
-		bool is_entity = mono_class_is_subclass_of(mono_class, entity_class, false);
+		const bool is_entity = mono_class_is_subclass_of(mono_class, entity_class, false);
 		if (!is_entity) {
 			continue;
 		}
 
-		Ref<ScriptClass> script_class =
+		const Ref<ScriptClass> script_class =
 				create_ref<ScriptClass>(class_namespace, class_name);
 		s_data->entity_classes[full_name] = script_class;
 
-		int field_count = mono_class_num_fields(mono_class);
+		const int field_count = mono_class_num_fields(mono_class);
 
 #ifdef EVE_DEBUG
 		EVE_LOG_ENGINE_WARNING("{} has {} fields:", class_name, field_count);
 #endif
 
 		void* iterator = nullptr;
-		while (MonoClassField* field =
+		while (MonoClassField* const field =
 						mono_class_get_fields(mono_class, &iterator)) {
 			const char* field_name = mono_field_get_name(field);
 			uint32_t flags = mono_field_get_flags(field);
 			if (flags & FIELD_ATTRIBUTE_PUBLIC) {
-				MonoType* type = mono_field_get_type(field);
+				MonoType* const type = mono_field_get_type(field);
 
 				ScriptFieldType field_type = mono_type_to_script_field_type(type);
 
@@ -489,32 +520,4 @@ void ScriptEngine::_load_assembly_classes() {
 			}
 		}
 	}
-}
-
-MonoImage* ScriptEngine::get_core_assembly_image() {
-	return s_data->core_assembly_image;
-}
-
-MonoImage* ScriptEngine::get_app_assembly_image() {
-	return s_data->app_assembly_image;
-}
-
-MonoObject* ScriptEngine::get_managed_instance(UID uuid) {
-	if (s_data->entity_instances.find(uuid) == s_data->entity_instances.end()) {
-		return nullptr;
-	}
-
-	return s_data->entity_instances.at(uuid)->get_managed_object();
-}
-
-MonoString* ScriptEngine::create_mono_string(const char* string) {
-	return mono_string_new(s_data->app_domain, string);
-}
-
-MonoObject* ScriptEngine::_instantiate_class(MonoClass* mono_class) {
-	EVE_PROFILE_FUNCTION();
-
-	MonoObject* instance = mono_object_new(s_data->app_domain, mono_class);
-	mono_runtime_object_init(instance);
-	return instance;
 }

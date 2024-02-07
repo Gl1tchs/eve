@@ -160,11 +160,9 @@ Entity Scene::find_by_id(UID uid) {
 }
 
 Entity Scene::find_by_name(const std::string& name) {
-	auto view = registry.view<IdComponent>();
-
-	auto entity_it = std::find_if(view.begin(), view.end(), [&](const auto& entity) {
-		const IdComponent& id_comp = get_component<IdComponent>(entity);
-		return id_comp.tag == name;
+	const auto view = registry.view<IdComponent>();
+	const auto entity_it = std::find_if(view.begin(), view.end(), [&](const auto& entity) {
+		return get_component<IdComponent>(entity).tag == name;
 	});
 
 	if (entity_it != view.end()) {
@@ -180,12 +178,11 @@ inline static void copy_component(
 		const std::unordered_map<UID, entt::entity>& entt_map) {
 	(
 			[&]() {
-				auto view = src.view<Component>();
-				for (auto src_entity : view) {
-					entt::entity dst_entity =
+				for (const entt::entity src_entity : src.view<Component>()) {
+					const entt::entity dst_entity =
 							entt_map.at(src.get<IdComponent>(src_entity).id);
 
-					auto& src_component = src.get<Component>(src_entity);
+					const auto& src_component = src.get<Component>(src_entity);
 					dst.emplace_or_replace<Component>(dst_entity, src_component);
 				}
 			}(),
@@ -270,8 +267,7 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	std::unordered_map<UID, entt::entity> entt_map;
 
 	// Create entities in new scene
-	auto id_view = src_registry.view<IdComponent>();
-	for (auto entity_id : id_view) {
+	for (auto entity_id : src_registry.view<IdComponent>()) {
 		const auto& id_comp = src->get_component<IdComponent>(entity_id);
 
 		const UID& uid = id_comp.id;
@@ -290,15 +286,18 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	copy_component(AllComponents{}, dst_registry, src_registry,
 			entt_map);
 
+	const auto has_parent = [](const auto& pair) -> bool {
+		const auto& relation = pair.second.get_relation();
+		return (bool)relation.parent_id;
+	};
+
 	// set child/parent relations
-	for (auto& [uid, entity] : dst->entity_map) {
+	for (auto& [uid, entity] : dst->entity_map | std::views::filter(has_parent)) {
 		// Set parent entity
 		auto& relation = entity.get_relation();
-		if (relation.parent_id) {
-			auto parent_entity = dst->find_by_id(relation.parent_id);
-			if (parent_entity) {
-				entity.set_parent(parent_entity);
-			}
+		auto parent_entity = dst->find_by_id(relation.parent_id);
+		if (parent_entity) {
+			entity.set_parent(parent_entity);
 		}
 	}
 

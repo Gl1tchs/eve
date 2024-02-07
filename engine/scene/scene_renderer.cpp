@@ -33,15 +33,19 @@ void SceneRenderer::render_runtime(float ds) {
 		return;
 	}
 
-	Entity camera;
+	Entity camera = [scene]() -> Entity {
+		const auto view = scene->view<CameraComponent>();
+		const auto camera_it = std::find_if(view.begin(), view.end(), [&](const auto& entity_handle) {
+			const Entity camera_candidate{ entity_handle, scene.get() };
+			return camera_candidate && camera_candidate.has_component<CameraComponent>();
+		});
 
-	auto view = scene->view<CameraComponent>();
-	for (auto entity_handle : view) {
-		const Entity camera_candidate{ entity_handle, scene.get() };
-		if (camera_candidate && camera_candidate.has_component<CameraComponent>()) {
-			camera = camera_candidate;
+		if (camera_it != view.end()) {
+			return { *camera_it, scene.get() };
 		}
-	}
+
+		return INVALID_ENTITY;
+	}();
 
 	if (camera) {
 		const auto& cc = camera.get_component<CameraComponent>();
@@ -110,25 +114,12 @@ void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
 				if (cc.is_fixed_aspect_ratio) {
 					return;
 				}
-
 				cc.camera.aspect_ratio = ((float)size.x / (float)size.y);
 			});
 }
 
 void SceneRenderer::submit(const RenderFuncTickFormat format, const RenderFunc& function) {
-	switch (format) {
-		case RenderFuncTickFormat::BEFORE_RENDER:
-			before_render_functions.push_back(function);
-			break;
-		case RenderFuncTickFormat::ON_RENDER:
-			on_render_functions.push_back(function);
-			break;
-		case RenderFuncTickFormat::AFTER_RENDER:
-			after_render_functions.push_back(function);
-			break;
-		default:
-			break;
-	}
+	render_functions[format].push_back(function);
 }
 
 uint32_t SceneRenderer::get_final_texture_id() const {
@@ -157,10 +148,10 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 		int attachment_data = -1;
 		frame_buffer->clear_attachment(1, &attachment_data);
 
-		for (const auto function : before_render_functions) {
+		for (const auto function : render_functions[RenderFuncTickFormat::BEFORE_RENDER]) {
 			function(frame_buffer);
 		}
-		before_render_functions.clear();
+		render_functions[RenderFuncTickFormat::BEFORE_RENDER].clear();
 
 		renderer::begin_pass(camera_data);
 		{
@@ -176,17 +167,17 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 						renderer::draw_text(text_component, transform, (uint32_t)entity_id);
 					});
 
-			for (const auto function : on_render_functions) {
+			for (const auto function : render_functions[RenderFuncTickFormat::ON_RENDER]) {
 				function(frame_buffer);
 			}
-			on_render_functions.clear();
+			render_functions[RenderFuncTickFormat::ON_RENDER].clear();
 		}
 		renderer::end_pass();
 
-		for (const auto function : after_render_functions) {
+		for (const auto function : render_functions[RenderFuncTickFormat::AFTER_RENDER]) {
 			function(frame_buffer);
 		}
-		after_render_functions.clear();
+		render_functions[RenderFuncTickFormat::AFTER_RENDER].clear();
 	}
 
 	frame_buffer->unbind();
@@ -196,11 +187,16 @@ void SceneRenderer::_post_process() {
 	post_processed = false;
 
 	const auto scene = SceneManager::get_active();
-	for (const entt::entity entity_id : scene->view<PostProcessVolume>()) {
+
+	const auto is_global_volume = [scene](const auto& entity_id) {
+		return scene->get_component<PostProcessVolume>(entity_id).is_global;
+	};
+
+	const auto view = scene->view<PostProcessVolume>();
+
+	// TODO implement local effects
+	for (const auto& entity_id : view | std::views::filter(is_global_volume)) {
 		const PostProcessVolume& volume = scene->get_component<PostProcessVolume>(entity_id);
-		// TODO implement local effects
-		if (volume.is_global) {
-			post_processed = post_processor->process(frame_buffer, volume);
-		}
+		post_processed = post_processor->process(frame_buffer, volume);
 	}
 }

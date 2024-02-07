@@ -121,7 +121,7 @@ public:
 	inline T get_field_value(const std::string& name) {
 		static_assert(sizeof(T) <= 16, "Type too large!");
 
-		bool success = get_field_value_internal(name, field_value_buffer);
+		bool success = _get_field_value_internal(name, field_value_buffer);
 		if (!success) {
 			return T();
 		}
@@ -133,14 +133,14 @@ public:
 	inline void set_field_value(const std::string& name, T value) {
 		static_assert(sizeof(T) <= 16, "Type too large!");
 
-		set_field_value_internal(name, &value);
+		_set_field_value_internal(name, &value);
 	}
 
 	MonoObject* get_managed_object();
 
 private:
-	bool get_field_value_internal(const std::string& name, void* buffer);
-	bool set_field_value_internal(const std::string& name, const void* value);
+	bool _get_field_value_internal(const std::string& name, void* buffer);
+	bool _set_field_value_internal(const std::string& name, const void* value);
 
 private:
 	Ref<ScriptClass> script_class;
