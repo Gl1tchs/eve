@@ -1,5 +1,7 @@
 namespace EveEngine
 {
+	public delegate void ColliderOnTriggerDelegate();
+
 	public class Rigidbody2D : Component
 	{
 		public enum BodyType

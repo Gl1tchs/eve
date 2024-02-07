@@ -12,6 +12,9 @@ namespace Sample
 			var rb2d = GetComponent<Rigidbody2D>();
 			rb2d.Type = Rigidbody2D.BodyType.Dynamic;
 
+			var col2d = GetComponent<BoxCollider2D>();
+			col2d.OnTrigger = OnTrigger;
+
 			var volume = GetComponent<PostProcessVolume>();
 			volume.Vignette = new PostProcessVolume.VignetteSettings
 			{
@@ -39,6 +42,11 @@ namespace Sample
 			{
 				Transform.Translate(Vector3.Right * Speed * dt);
 			}
+		}
+
+		private void OnTrigger()
+		{
+			Debug.LogWarning("Hello");
 		}
 	}
 }

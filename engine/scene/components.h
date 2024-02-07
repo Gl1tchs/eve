@@ -42,21 +42,23 @@ struct Rigidbody2D {
 	void* runtime_body = nullptr;
 };
 
-typedef void (*CollisionTriggerFunction)(UID uid);
+typedef void (*CollisionTriggerFunction)();
 
 struct BoxCollider2D {
 	glm::vec2 offset = { 0.0f, 0.0f };
 	glm::vec2 size = { 0.5f, 0.5f };
+
+	bool is_trigger = false;
+
+	// function which will be triggered uppon trigger event
+	// will be setted from script
+	CollisionTriggerFunction trigger_function = nullptr;
 
 	// TODO create a physics material
 	float density = 1.0f;
 	float friction = 0.5f;
 	float restitution = 0.0f;
 	float restitution_threshold = 0.5f;
-
-	// function which will be triggered uppon trigger event
-	// will be setted from script
-	CollisionTriggerFunction trigger_function = nullptr;
 
 	// Storage for runtime
 	void* runtime_fixture = nullptr;
@@ -66,15 +68,17 @@ struct CircleCollider2D {
 	glm::vec2 offset = { 0.0f, 0.0f };
 	float radius = 0.5f;
 
+	bool is_trigger = false;
+
+	// function which will be triggered uppon trigger event
+	// will be setted from script
+	CollisionTriggerFunction trigger_function = nullptr;
+
 	// TODO create a physics material
 	float density = 1.0f;
 	float friction = 0.5f;
 	float restitution = 0.0f;
 	float restitution_threshold = 0.5f;
-
-	// function which will be triggered uppon trigger event
-	// will be setted from script
-	CollisionTriggerFunction trigger_function = nullptr;
 
 	// Storage for runtime
 	void* runtime_fixture = nullptr;

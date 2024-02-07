@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace EveEngine
 {
 	public class BoxCollider2D : Component
@@ -20,6 +22,20 @@ namespace EveEngine
 				return size;
 			}
 			set => Interop.box_collider2d_component_set_size(Entity.Id, ref value);
+		}
+
+		public bool IsTrigger
+		{
+			get => Interop.box_collider2d_component_get_is_trigger(Entity.Id);
+			set => Interop.box_collider2d_component_set_is_trigger(Entity.Id, value);
+		}
+
+		public ColliderOnTriggerDelegate OnTrigger
+		{
+			set
+			{
+				Interop.box_collider2d_component_set_on_trigger(Entity.Id, Marshal.GetFunctionPointerForDelegate(value));
+			}
 		}
 
 		public float Density

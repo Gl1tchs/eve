@@ -562,6 +562,24 @@ inline static void box_collider2d_component_set_size(UID entity_id, const glm::v
 	entity.get_component<BoxCollider2D>().size = *size;
 }
 
+inline static bool box_collider2d_component_get_is_trigger(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<BoxCollider2D>().is_trigger;
+}
+
+inline static void box_collider2d_component_set_is_trigger(UID entity_id, bool is_trigger) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().is_trigger = is_trigger;
+}
+
+inline static void box_collider2d_component_set_on_trigger(UID entity_id, CollisionTriggerFunction on_trigger) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<BoxCollider2D>().trigger_function = on_trigger;
+}
+
 inline static float box_collider2d_component_get_density(UID entity_id) {
 	Entity entity = get_entity(entity_id);
 
@@ -635,6 +653,24 @@ inline static void circle_collider2d_component_set_radius(UID entity_id, float r
 	Entity entity = get_entity(entity_id);
 
 	entity.get_component<CircleCollider2D>().radius = radius;
+}
+
+inline static bool circle_collider2d_component_get_is_trigger(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<CircleCollider2D>().is_trigger;
+}
+
+inline static void circle_collider2d_component_set_is_trigger(UID entity_id, bool is_trigger) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().is_trigger = is_trigger;
+}
+
+inline static void circle_collider2d_component_set_on_trigger(UID entity_id, CollisionTriggerFunction on_trigger) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<CircleCollider2D>().trigger_function = on_trigger;
 }
 
 inline static float circle_collider2d_component_get_density(UID entity_id) {
@@ -959,6 +995,9 @@ void register_functions() {
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_offset);
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_size);
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_size);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_is_trigger);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_is_trigger);
+	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_on_trigger);
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_density);
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_set_density);
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_friction);
@@ -973,6 +1012,9 @@ void register_functions() {
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_offset);
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_radius);
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_radius);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_is_trigger);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_is_trigger);
+	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_on_trigger);
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_density);
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_set_density);
 	EVE_ADD_INTERNAL_CALL(circle_collider2d_component_get_friction);

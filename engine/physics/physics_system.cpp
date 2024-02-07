@@ -12,6 +12,7 @@
 
 struct FixtureUserData {
 	Entity entity = INVALID_ENTITY;
+	bool is_trigger = false;
 	CollisionTriggerFunction trigger_function = nullptr;
 };
 
@@ -27,12 +28,12 @@ class Physics2DContactListener : public b2ContactListener {
 			return;
 		}
 
-		if (user_data_a->trigger_function && user_data_b->entity) {
-			user_data_a->trigger_function(user_data_b->entity.get_uid());
+		if (user_data_a->is_trigger && user_data_a->trigger_function && user_data_b->entity) {
+			user_data_a->trigger_function(/* user_data_b->entity.get_uid() */);
 		}
 
-		if (user_data_b->trigger_function && user_data_a->entity) {
-			user_data_b->trigger_function(user_data_a->entity.get_uid());
+		if (user_data_b->is_trigger && user_data_b->trigger_function && user_data_a->entity) {
+			user_data_b->trigger_function(/* user_data_a->entity.get_uid() */);
 		}
 	}
 };
@@ -119,6 +120,7 @@ inline static b2Fixture* create_box_fixture(Entity entity, b2Body* body) {
 	// set user data
 	auto user_data = create_scope<FixtureUserData>();
 	user_data->entity = entity;
+	user_data->is_trigger = bc2d.is_trigger;
 	user_data->trigger_function = bc2d.trigger_function;
 
 	fixture_def.userData.pointer = reinterpret_cast<uintptr_t>(user_data.get());
@@ -151,6 +153,7 @@ inline static b2Fixture* create_circle_fixture(Entity entity, b2Body* body) {
 	// set user data
 	auto user_data = create_scope<FixtureUserData>();
 	user_data->entity = entity;
+	user_data->is_trigger = cc2d.is_trigger;
 	user_data->trigger_function = cc2d.trigger_function;
 
 	fixture_def.userData.pointer = reinterpret_cast<uintptr_t>(user_data.get());

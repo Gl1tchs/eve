@@ -396,6 +396,7 @@ static Json serialize_entity(Entity& entity) {
 		out["box_collider"] = Json{
 			{ "offset", box_collider.offset },
 			{ "size", box_collider.size },
+			{ "is_trigger", box_collider.is_trigger },
 			{ "density", box_collider.density },
 			{ "friction", box_collider.friction },
 			{ "restitution", box_collider.restitution },
@@ -409,6 +410,7 @@ static Json serialize_entity(Entity& entity) {
 		out["circle_collider"] = Json{
 			{ "offset", circle_collider.offset },
 			{ "radius", circle_collider.radius },
+			{ "is_trigger", circle_collider.is_trigger },
 			{ "density", circle_collider.density },
 			{ "friction", circle_collider.friction },
 			{ "restitution", circle_collider.restitution },
@@ -651,6 +653,8 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			box_collider.offset = box_collider_json["offset"].get<glm::vec2>();
 			box_collider.size = box_collider_json["size"].get<glm::vec2>();
 
+			box_collider.is_trigger = box_collider_json["is_trigger"].get<bool>();
+
 			box_collider.density = box_collider_json["density"].get<float>();
 			box_collider.friction = box_collider_json["friction"].get<float>();
 			box_collider.restitution = box_collider_json["restitution"].get<float>();
@@ -663,6 +667,8 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 			circle_collider.offset = circle_collider_json["offset"].get<glm::vec2>();
 			circle_collider.radius = circle_collider_json["radius"].get<float>();
+
+			circle_collider.is_trigger = circle_collider_json["is_trigger"].get<bool>();
 
 			circle_collider.density = circle_collider_json["density"].get<float>();
 			circle_collider.friction = circle_collider_json["friction"].get<float>();

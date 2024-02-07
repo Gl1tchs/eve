@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace EveEngine
 {
 	public class CircleCollider2D : Component
@@ -16,6 +18,20 @@ namespace EveEngine
 		{
 			get => Interop.circle_collider2d_component_get_radius(Entity.Id);
 			set => Interop.circle_collider2d_component_set_radius(Entity.Id, value);
+		}
+
+		public bool IsTrigger
+		{
+			get => Interop.circle_collider2d_component_get_is_trigger(Entity.Id);
+			set => Interop.circle_collider2d_component_set_is_trigger(Entity.Id, value);
+		}
+
+		public ColliderOnTriggerDelegate OnTrigger
+		{
+			set
+			{
+				Interop.circle_collider2d_component_set_on_trigger(Entity.Id, Marshal.GetFunctionPointerForDelegate(value));
+			}
 		}
 
 		public float Density

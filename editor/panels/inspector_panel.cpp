@@ -498,6 +498,14 @@ void InspectorPanel::_draw() {
 		}
 		END_FIELD();
 
+		BEGIN_FIELD("IsTrigger");
+		{
+			if (ImGui::Checkbox("##BoxColliderIsTrigger", &box_collider.is_trigger)) {
+				g_modify_info.set_modified();
+			}
+		}
+		END_FIELD();
+
 		BEGIN_FIELD("Density");
 		{
 			if (ImGui::DragFloat("##BoxColliderDensity", &box_collider.density)) {
@@ -543,6 +551,14 @@ void InspectorPanel::_draw() {
 		BEGIN_FIELD("Size");
 		{
 			if (ImGui::DragFloat("##CircleColliderSize", &circle_collider.radius)) {
+				g_modify_info.set_modified();
+			}
+		}
+		END_FIELD();
+
+		BEGIN_FIELD("IsTrigger");
+		{
+			if (ImGui::Checkbox("##BoxColliderIsTrigger", &circle_collider.is_trigger)) {
 				g_modify_info.set_modified();
 			}
 		}

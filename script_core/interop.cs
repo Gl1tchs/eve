@@ -256,6 +256,15 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void box_collider2d_component_set_size(ulong entityId, ref Vector2 size);
+		
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern bool box_collider2d_component_get_is_trigger(ulong entityId);
+		
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_is_trigger(ulong entityId, bool isTrigger);
+		
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void box_collider2d_component_set_on_trigger(ulong entityId, IntPtr onTriggerFunction);
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern float box_collider2d_component_get_density(ulong entityId);
@@ -295,6 +304,15 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void circle_collider2d_component_set_radius(ulong entityId, float radius);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern bool circle_collider2d_component_get_is_trigger(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_is_trigger(ulong entityId, bool isTrigger);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void circle_collider2d_component_set_on_trigger(ulong entityId, IntPtr onTriggerFunction);
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern float circle_collider2d_component_get_density(ulong entityId);
