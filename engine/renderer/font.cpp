@@ -7,24 +7,16 @@
 #include <FontGeometry.h>
 #include <GlyphGeometry.h>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 Ref<Font> Font::s_default_font = nullptr;
 
 inline static uint32_t s_memory_counter = 1;
 
 inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas::GlyphGeometry>& glyphs,
-		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height, std::string name) {
+		const msdf_atlas::FontGeometry& font_geometry, uint32_t width, uint32_t height, const std::string& cache_file_path) {
 	EVE_PROFILE_FUNCTION();
-
-	// load cached font if already loaded
-	const fs::path cache_file_path = Project::get_cache_directory(AssetType::FONT) / std::format("{}.msdf.png", name);
-	if (fs::exists(cache_file_path)) {
-		TextureMetadata metadata;
-		metadata.format = TextureFormat::RGB;
-		metadata.generate_mipmaps = false;
-
-		Ref<Texture2D> texture = create_ref<Texture2D>(cache_file_path);
-		return texture;
-	}
 
 	msdf_atlas::GeneratorAttributes attributes;
 	attributes.config.overlapSupport = true;
@@ -47,7 +39,7 @@ inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas
 	msdfgen::BitmapConstRef<uint8_t, 3> bitmap = (msdfgen::BitmapConstRef<uint8_t, 3>)generator.atlasStorage();
 
 	// cache bitmap to speed up loading for the next time
-	msdfgen::savePng(bitmap, cache_file_path.string().c_str());
+	stbi_write_png(cache_file_path.c_str(), bitmap.width, bitmap.height, 3 /* RGB */, bitmap.pixels, bitmap.width * 3);
 
 	TextureMetadata metadata;
 	metadata.format = TextureFormat::RGB;
@@ -58,7 +50,7 @@ inline static Ref<Texture2D> create_and_cache_atlas(const std::vector<msdf_atlas
 }
 
 inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
-		MSDFData* data, const std::string& name) {
+		MSDFData* data, const std::string& file_name) {
 	EVE_PROFILE_FUNCTION();
 
 	struct CharsetRange {
@@ -94,7 +86,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 	atlas_packer.setPadding(0);
 	atlas_packer.setScale(em_size);
 
-	int remaining = atlas_packer.pack(data->glyphs.data(), (int)data->glyphs.size());
+	const int remaining = atlas_packer.pack(data->glyphs.data(), (int)data->glyphs.size());
 	EVE_ASSERT_ENGINE(remaining == 0);
 
 	int width, height;
@@ -110,43 +102,67 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 		glyph.edgeColoring(msdfgen::edgeColoringInkTrap, DEFAULT_ANGLE_THRESHOLD, glyph_seed);
 	}
 
-	return create_and_cache_atlas(data->glyphs, data->font_geometry, width, height, name);
+	// load cached font if already loaded
+	const fs::path cache_file_path = Project::get_cache_directory(AssetType::FONT) / std::format("{}.msdf.png", file_name);
+	if (fs::exists(cache_file_path)) {
+		TextureMetadata metadata;
+		metadata.format = TextureFormat::RGB;
+		metadata.generate_mipmaps = false;
+
+		// DISCLAIMER
+		//	we use stbi_write_png with msdfgen::Bitmap and the bitmap is reverse aligned on memory
+		//	that's why we need to flip the image in order to use it properly.
+		Ref<Texture2D> texture = create_ref<Texture2D>(cache_file_path, metadata, false);
+
+		return texture;
+	}
+
+	return create_and_cache_atlas(data->glyphs, data->font_geometry, width, height, cache_file_path.string());
 }
 
 Font::Font(const fs::path& path) {
 	EVE_PROFILE_FUNCTION();
 
-	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
+	atlas_texture = [&]() -> Ref<Texture2D> {
+		msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 
-	const std::string path_str = path.string();
+		const std::string path_str = path.string();
+		msdfgen::FontHandle* font = msdfgen::loadFont(ft, path_str.c_str());
+		if (!font) {
+			EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path_str.c_str());
+			return nullptr;
+		}
 
-	msdfgen::FontHandle* font = msdfgen::loadFont(ft, path_str.c_str());
-	if (!font) {
-		EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path_str.c_str());
-		return;
-	}
+		Ref<Texture2D> texture = create_texture_atlas(font, &msdf_data, path.filename().string());
 
-	atlas_texture = create_texture_atlas(font, &msdf_data, path.filename().string());
+		msdfgen::destroyFont(font);
+		msdfgen::deinitializeFreetype(ft);
 
-	msdfgen::destroyFont(font);
-	msdfgen::deinitializeFreetype(ft);
+		return texture;
+	}();
 }
 
 Font::Font(const uint8_t* bytes, uint32_t length) {
 	EVE_PROFILE_FUNCTION();
 
-	msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
+	atlas_texture = [&]() -> Ref<Texture2D> {
+		const std::string cache_file_name = "memory_font_" + std::to_string(s_memory_counter++);
 
-	msdfgen::FontHandle* font = msdfgen::loadFontData(ft, bytes, length);
-	if (!font) {
-		EVE_LOG_ENGINE_ERROR("Failed to load memory font!");
-		return;
-	}
+		msdfgen::FreetypeHandle* ft = msdfgen::initializeFreetype();
 
-	atlas_texture = create_texture_atlas(font, &msdf_data, "memory_font_" + std::to_string(s_memory_counter++));
+		msdfgen::FontHandle* font = msdfgen::loadFontData(ft, bytes, length);
+		if (!font) {
+			EVE_LOG_ENGINE_ERROR("Failed to load memory font!");
+			return nullptr;
+		}
 
-	msdfgen::destroyFont(font);
-	msdfgen::deinitializeFreetype(ft);
+		Ref<Texture2D> texture = create_texture_atlas(font, &msdf_data, cache_file_name);
+
+		msdfgen::destroyFont(font);
+		msdfgen::deinitializeFreetype(ft);
+
+		return texture;
+	}();
 }
 
 const MSDFData& Font::get_msdf_data() const {

@@ -113,7 +113,7 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, boo
 	}
 
 	TextureMetadata texture_metadata;
-	texture_metadata.format = get_texture_format_from_channels(channels);
+	texture_metadata.format = _metadata.format;
 	texture_metadata.min_filter = _metadata.min_filter;
 	texture_metadata.mag_filter = _metadata.mag_filter;
 	texture_metadata.wrap_s = _metadata.wrap_s;
@@ -193,10 +193,10 @@ void Texture2D::_gen_texture(const TextureMetadata& metadata,
 	glGenTextures(1, &renderer_id);
 	glBindTexture(GL_TEXTURE_2D, renderer_id);
 
+	set_metadata(metadata);
+
 	glTexImage2D(GL_TEXTURE_2D, 0, texture_format_to_gl(metadata.format),
 			size.x, size.y, 0,
 			texture_format_to_gl(metadata.format), GL_UNSIGNED_BYTE,
 			pixels);
-
-	set_metadata(metadata);
 }
