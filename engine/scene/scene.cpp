@@ -127,6 +127,11 @@ void Scene::destroy(Entity entity) {
 		ScriptEngine::invoke_on_destroy_entity(entity);
 	}
 
+	// unselect if selected
+	if (is_entity_selected(entity)) {
+		unselect_entity(entity);
+	}
+
 	entity_map.erase(entity.get_uid());
 	registry.destroy(entity);
 }
