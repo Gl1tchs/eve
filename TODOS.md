@@ -1,12 +1,12 @@
 ## eve Todo List
 
 ## Game Demo Improvements
-- [ ] When multiple entities selected delete should remove everyone not only the first one.
+- [x] When multiple entities selected delete should remove everyone not only the first one.
 - [ ] Script engine wont work for the projects with names that has space in it.
 - [ ] Ability to just create predefined entities such as sprite, physics body etc.
 - [ ] UI Gizmos
-- [ ] Collision rotation were wrong.
-- [ ] Z Component rotation was calculating from the wrong axis.
+- [x] Collision rotation were wrong.
+- [x] Z Component rotation was calculating from the wrong axis.
 - [ ] Entity destruction on script was not deleting the script instance.
 
 ## Bugs

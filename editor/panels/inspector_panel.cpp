@@ -132,7 +132,9 @@ void InspectorPanel::_draw() {
 
 	ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - (plus_button_width + 3 * padding));
 
-	ImGui::InputText("##tag", &id_comp.tag);
+	if (ImGui::InputText("##tag", &id_comp.tag)) {
+		g_modify_info.set_modified();
+	}
 
 	ImGui::PopItemWidth();
 
