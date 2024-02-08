@@ -30,11 +30,11 @@ class Physics2DContactListener : public b2ContactListener {
 		}
 
 		if (user_data_a->is_trigger && user_data_a->trigger_function && user_data_b->entity) {
-			user_data_a->trigger_function(/* user_data_b->entity.get_uid() */);
+			user_data_a->trigger_function(user_data_b->entity.get_uid());
 		}
 
 		if (user_data_b->is_trigger && user_data_b->trigger_function && user_data_a->entity) {
-			user_data_b->trigger_function(/* user_data_a->entity.get_uid() */);
+			user_data_b->trigger_function(user_data_a->entity.get_uid());
 		}
 	}
 };

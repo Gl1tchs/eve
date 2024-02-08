@@ -1,6 +1,6 @@
 namespace EveEngine
 {
-	public delegate void ColliderOnTriggerDelegate();
+	public delegate void ColliderOnTriggerDelegate(ulong entityId);
 
 	public class Rigidbody2D : Component
 	{

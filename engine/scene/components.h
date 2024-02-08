@@ -42,7 +42,7 @@ struct Rigidbody2D {
 	void* runtime_body = nullptr;
 };
 
-typedef void (*CollisionTriggerFunction)();
+typedef void (*CollisionTriggerFunction)(uint64_t id);
 
 struct BoxCollider2D {
 	glm::vec2 offset = { 0.0f, 0.0f };

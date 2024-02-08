@@ -44,7 +44,7 @@ namespace Sample
 			}
 		}
 
-		private void OnTrigger()
+		private void OnTrigger(ulong entityId)
 		{
 			Debug.LogWarning("Hello");
 		}
