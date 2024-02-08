@@ -7,10 +7,13 @@ namespace Sample
 		public Entity Camera;
 		public float Speed = 10.0f;
 
+		private Rigidbody2D _rb2d;
+
 		protected override void OnCreate()
 		{
-			var rb2d = GetComponent<Rigidbody2D>();
-			rb2d.Type = Rigidbody2D.BodyType.Dynamic;
+			_rb2d = GetComponent<Rigidbody2D>();
+
+			_rb2d.ApplyForce(Vector2.Right * 50);
 
 			var col2d = GetComponent<BoxCollider2D>();
 			col2d.OnTrigger = OnTrigger;

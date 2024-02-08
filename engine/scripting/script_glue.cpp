@@ -539,6 +539,42 @@ inline static void rigidbody2d_component_set_fixed_rotation(UID entity_id, bool 
 	entity.get_component<Rigidbody2D>().fixed_rotation = fixed_rotation;
 }
 
+inline static void rigidbody2d_component_get_velocity(UID entity_id, glm::vec2* out_velocity) {
+	Entity entity = get_entity(entity_id);
+
+	*out_velocity = entity.get_component<Rigidbody2D>().velocity;
+}
+
+inline static float rigidbody2d_component_get_angular_velocity(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<Rigidbody2D>().angular_velocity;
+}
+
+inline static void rigidbody2d_component_add_force(UID entity_id, Rigidbody2D::ForceMode mode, const glm::vec2* force, const glm::vec2* offset) {
+	Entity entity = get_entity(entity_id);
+
+	Rigidbody2D::ForceInfo force_info = {
+		.mode = mode,
+		.force = *force,
+		.offset = *offset,
+	};
+
+	entity.get_component<Rigidbody2D>().forces.push_back(force_info);
+}
+
+inline static void rigidbody2d_component_add_angular_impulse(UID entity_id, float angular_impulse) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<Rigidbody2D>().angular_impulse += angular_impulse;
+}
+
+inline static void rigidbody2d_component_add_torque(UID entity_id, float torque) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<Rigidbody2D>().torque += torque;
+}
+
 #pragma endregion
 #pragma region BoxCollider2DComponent
 
@@ -993,6 +1029,11 @@ void register_functions() {
 	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_set_type);
 	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_get_fixed_rotation);
 	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_set_fixed_rotation);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_get_velocity);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_get_angular_velocity);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_add_force);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_add_angular_impulse);
+	EVE_ADD_INTERNAL_CALL(rigidbody2d_component_add_torque);
 
 	// Begin BoxCollider2DComponent
 	EVE_ADD_INTERNAL_CALL(box_collider2d_component_get_offset);

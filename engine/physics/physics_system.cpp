@@ -17,6 +17,8 @@ struct FixtureUserData {
 	CollisionTriggerFunction trigger_function = nullptr;
 };
 
+static std::vector<Scope<FixtureUserData>> s_fixture_user_datas{};
+
 class Physics2DContactListener : public b2ContactListener {
 	inline void BeginContact(b2Contact* contact) override {
 		b2Fixture* fixture_a = contact->GetFixtureA();
@@ -69,18 +71,12 @@ inline static Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType 
 	}
 }
 
-static std::vector<Scope<FixtureUserData>> s_fixture_user_datas{};
-
-PhysicsSystem::PhysicsSystem(Scene* scene, const PhysicsSettings& settings) :
-		scene(scene), settings(settings) {
-	world2d = new b2World({ settings.gravity.x, settings.gravity.y });
-
-	static Physics2DContactListener s_contact_listener2d{};
-	world2d->SetContactListener(&s_contact_listener2d);
+inline static b2Vec2 vec2_to_b2Vec2(const glm::vec2& v) {
+	return b2Vec2{ v.x, v.y };
 }
 
-PhysicsSystem::~PhysicsSystem() {
-	delete world2d;
+inline static glm::vec2 b2Vec2_to_vec2(const b2Vec2& v) {
+	return glm::vec2{ v.x, v.y };
 }
 
 inline static b2Body* create_body(Entity entity, b2World* world) {
@@ -167,6 +163,18 @@ inline static b2Fixture* create_circle_fixture(Entity entity, b2Body* body) {
 	cc2d.runtime_fixture = fixture;
 
 	return fixture;
+}
+
+PhysicsSystem::PhysicsSystem(Scene* scene, const PhysicsSettings& settings) :
+		scene(scene), settings(settings) {
+	world2d = new b2World({ settings.gravity.x, settings.gravity.y });
+
+	static Physics2DContactListener s_contact_listener2d{};
+	world2d->SetContactListener(&s_contact_listener2d);
+}
+
+PhysicsSystem::~PhysicsSystem() {
+	delete world2d;
 }
 
 void PhysicsSystem::start() {
@@ -278,6 +286,39 @@ void PhysicsSystem::update(float dt) {
 			fixture->SetRestitution(cc2d.restitution);
 			fixture->SetRestitutionThreshold(cc2d.restitution_threshold);
 		}
+
+		for (const auto force : rb2d.forces) {
+			switch (force.mode) {
+				case Rigidbody2D::ForceMode::FORCE: {
+					body->ApplyForce(
+							vec2_to_b2Vec2(force.force),
+							body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
+							true);
+					break;
+				}
+				case Rigidbody2D::ForceMode::IMPULSE: {
+					body->ApplyLinearImpulse(
+							vec2_to_b2Vec2(force.force),
+							body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
+							true);
+					break;
+				}
+				default:
+					break;
+			}
+		}
+
+		if (rb2d.torque != 0.0f) {
+			body->ApplyTorque(rb2d.torque, true);
+		}
+
+		if (rb2d.angular_impulse != 0.0f) {
+			body->ApplyAngularImpulse(rb2d.angular_impulse, true);
+		}
+
+		//! TODO add ability to set these values too
+		rb2d.velocity = b2Vec2_to_vec2(body->GetLinearVelocity());
+		rb2d.angular_velocity = body->GetAngularVelocity();
 
 		const auto& position = body->GetPosition();
 		transform.local_position.x = position.x;

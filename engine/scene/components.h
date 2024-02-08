@@ -35,8 +35,29 @@ struct Rigidbody2D {
 		DYNAMIC,
 		KINEMATIC };
 
+	enum ForceMode {
+		FORCE,
+		IMPULSE,
+	};
+
+	struct ForceInfo {
+		ForceMode mode;
+		glm::vec2 force;
+		glm::vec2 offset;
+	};
+
 	BodyType type = BodyType::STATIC;
 	bool fixed_rotation = false;
+
+	glm::vec2 velocity;
+	float angular_velocity;
+
+	std::vector<ForceInfo> forces;
+
+	// kgmm/s
+	float angular_impulse;
+	// N-m
+	float torque;
 
 	// Storage for runtime
 	void* runtime_body = nullptr;
@@ -50,7 +71,7 @@ struct BoxCollider2D {
 
 	bool is_trigger = false;
 
-	// function which will be triggered uppon trigger event
+	// function which wills be triggered uppon trigger event
 	// will be setted from script
 	CollisionTriggerFunction trigger_function = nullptr;
 

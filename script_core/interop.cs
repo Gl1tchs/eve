@@ -240,7 +240,25 @@ namespace EveEngine
 		internal static extern bool rigidbody2d_component_get_fixed_rotation(ulong entityId);
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_get_velocity(ulong entityId, out Vector2 velocity);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern float rigidbody2d_component_get_angular_velocity(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void rigidbody2d_component_set_fixed_rotation(ulong entityId, bool fixedRotation);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_add_force(ulong entityId,
+			Rigidbody2D.ForceMode mode,
+			ref Vector2 force,
+			ref Vector2 offset);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_add_angular_impulse(ulong entityId, float angularImpulse);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal static extern void rigidbody2d_component_add_torque(ulong entityId, float torque);
 
 		#endregion
 		#region BoxCollider2DComponent
@@ -256,13 +274,13 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void box_collider2d_component_set_size(ulong entityId, ref Vector2 size);
-		
+
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern bool box_collider2d_component_get_is_trigger(ulong entityId);
-		
+
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void box_collider2d_component_set_is_trigger(ulong entityId, bool isTrigger);
-		
+
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal static extern void box_collider2d_component_set_on_trigger(ulong entityId, IntPtr onTriggerFunction);
 
