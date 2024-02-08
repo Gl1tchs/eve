@@ -164,7 +164,9 @@ void HierarchyPanel::_draw_entity_context_menu(Entity& entity) {
 
 		if (ImGui::MenuItem("Delete")) {
 			// Handle logic to remove the entity
-			entities_to_remove.push_back(entity);
+			const auto selected_entities = scene->get_selected_entities();
+
+			entities_to_remove.insert(entities_to_remove.end(), selected_entities.begin(), selected_entities.end());
 
 			g_modify_info.set_modified();
 		}
