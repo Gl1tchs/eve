@@ -5,7 +5,6 @@ namespace EveEngine
 	/// </summary>
 	public enum MouseCode
 	{
-#pragma warning disable CS1591
 		Button1 = 0,
 		Button2 = 1,
 		Button3 = 2,
@@ -17,6 +16,5 @@ namespace EveEngine
 		Left = Button1,
 		Right = Button2,
 		Middle = Button3,
-#pragma warning restore CS1591
 	}
 }

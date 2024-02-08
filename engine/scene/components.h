@@ -42,7 +42,7 @@ struct Rigidbody2D {
 
 	struct ForceInfo {
 		ForceMode mode;
-		glm::vec2 force;
+		glm::vec2 amount;
 		glm::vec2 offset;
 	};
 

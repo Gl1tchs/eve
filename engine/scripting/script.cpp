@@ -30,7 +30,20 @@ MonoMethod* ScriptClass::get_method(const std::string& name, int param_count) {
 MonoObject* ScriptClass::invoke_method(MonoObject* instance, MonoMethod* method,
 		void** params) {
 	MonoObject* exception = nullptr;
-	return mono_runtime_invoke(method, instance, params, &exception);
+	MonoObject* result = mono_runtime_invoke(method, instance, params, &exception);
+
+	// Check if an exception occurred
+	if (exception != nullptr) {
+		MonoString* exception_message = mono_object_to_string(exception, nullptr);
+
+		char* message_utf8 = mono_string_to_utf8(exception_message);
+
+		EVE_LOG_ENGINE_ERROR("[SCRIPT ENGINE] [EXCEPTION]:\n{}", message_utf8);
+
+		mono_free(message_utf8);
+	}
+
+	return result;
 }
 
 const std::unordered_map<std::string, ScriptField>& ScriptClass::get_fields() const {

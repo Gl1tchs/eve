@@ -8,8 +8,12 @@
 ## Bugs
 - [ ] Runtime camera aspect ratio not changing properly.
 - [ ] Scene transition asset loading not working properly.
+- [ ] BoxCollider2D for Texts not working properly due to its transform. 
+- [ ] Mono is not logging the errors
+- [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Write your own interpreter
 - [ ] Build script
 - [ ] More functional aproach for everything.
 - [ ] Cross platform scripting.
@@ -39,7 +43,8 @@
 
 ## Physics
 - [ ] Collision layer checks.
-- [ ] Velocity and forces
+- [ ] Velocity and forces.
+- [ ] Add is affected by gravity field to rigidbody.
 
 ## Asset
 - [ ] Make assets a part of the scene system.

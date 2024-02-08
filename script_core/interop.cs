@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using static EveEngine.PostProcessVolume;
-using System.Runtime.InteropServices;
 
 namespace EveEngine
 {

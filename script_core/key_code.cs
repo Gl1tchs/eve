@@ -1,11 +1,10 @@
-﻿namespace EveEngine
+namespace EveEngine
 {
   /// <summary>
   /// Enum representing a key code for a keyboard.
   /// </summary>
   public enum KeyCode
   {
-#pragma warning disable CS1591
     None = 0,
     Space = 32,
     Apostrophe = 39,
@@ -127,6 +126,5 @@
     RightAlt = 346,
     RightSuper = 347,
     Menu = 348,
-#pragma warning restore CS1591
   }
 }

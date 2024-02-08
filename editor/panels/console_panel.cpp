@@ -153,6 +153,8 @@ void ConsolePanel::_draw() {
 				continue;
 			}
 
+			ImGui::PushID(i);
+
 			ImVec4 color;
 			bool has_color = false;
 			switch (message.level) {
@@ -161,19 +163,19 @@ void ConsolePanel::_draw() {
 					break;
 				case LogLevel::INFO:
 					has_color = true;
-					color = ImVec4(0.0f, 1.0f, 0.77f, 1.0f);
+					color = ImVec4(0.5f, 1.0f, 0.88f, 1.0f);
 					break;
 				case LogLevel::WARNING:
 					has_color = true;
-					color = ImVec4(0.77f, 0.77f, 0.0f, 1.0f);
+					color = ImVec4(0.88f, 0.88f, 0.5f, 1.0f);
 					break;
 				case LogLevel::ERROR:
 					has_color = true;
-					color = ImVec4(0.77f, 0.0f, 0.0f, 1.0f);
+					color = ImVec4(0.88f, 0.5f, 0.5f, 1.0f);
 					break;
 				case LogLevel::FATAL:
 					has_color = true;
-					color = ImVec4(0.86f, 0.08f, 0.24f, 1.0f);
+					color = ImVec4(0.93f, 0.38f, 0.54f, 1.0f);
 					break;
 				default:
 					break;
@@ -187,15 +189,23 @@ void ConsolePanel::_draw() {
 					std::format("[{}] [{}] [{}] {}", message.time_stamp,
 							deserialize_log_sender(message.sender),
 							deserialize_log_level(message.level), message.string);
-			ImGui::PushID(i);
+
 			if (ImGui::Selectable(log.c_str(), selected_log_idx == i)) {
 				selected_log_idx = (selected_log_idx == i) ? -1 : i;
 			}
-			ImGui::PopID();
 
 			if (has_color) {
 				ImGui::PopStyleColor();
 			}
+
+			if (ImGui::BeginPopupContextItem()) {
+				if (ImGui::Selectable("Copy")) {
+					ImGui::SetClipboardText(log.c_str());
+				}
+				ImGui::EndPopup();
+			}
+
+			ImGui::PopID();
 
 			i++;
 		}

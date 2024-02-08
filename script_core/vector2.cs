@@ -17,14 +17,12 @@ namespace EveEngine
 		/// </summary>
 		public float y;
 
-#pragma warning disable CS1591
 		public static Vector2 Zero => new(0.0f);
 		public static Vector2 One => new(1.0f);
 		public static Vector2 Up => new(0.0f, 1.0f);
 		public static Vector2 Down => new(0.0f, -1.0f);
 		public static Vector2 Right => new(1.0f, 0.0f);
 		public static Vector2 Left => new(-1.0f, 0.0f);
-#pragma warning restore CS1591
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Vector2"/> struct with both components set to a specified value.

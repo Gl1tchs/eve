@@ -255,7 +255,7 @@
         ]
       },
       "rigidbody2d_component": {
-        "type": "static",
+        "type": "dynamic",
         "fixed_rotation": false
       },
       "box_collider": {
@@ -268,9 +268,9 @@
           0.5
         ],
         "is_trigger": false,
-        "density": 1.0,
+        "density": 0.10000000149011612,
         "friction": 0.5,
-        "restitution": 1.0,
+        "restitution": 0.25,
         "restitution_threshold": 0.5
       },
       "post_process_volume": {
@@ -314,7 +314,7 @@
           {
             "name": "Speed",
             "type": "Float",
-            "data": 10.0
+            "data": 5.0
           }
         ]
       }
@@ -342,7 +342,7 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 1.4785276651382446,
+          "aspect_ratio": 2.150141716003418,
           "zoom_level": 10.0,
           "near_clip": -1.0,
           "far_clip": 1.0

@@ -14,7 +14,7 @@ namespace EveEngine
 		public enum ForceMode
 		{
 			Force = 0,
-			Impulse
+			Impulse,
 		}
 
 		public BodyType Type

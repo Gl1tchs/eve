@@ -287,38 +287,42 @@ void PhysicsSystem::update(float dt) {
 			fixture->SetRestitutionThreshold(cc2d.restitution_threshold);
 		}
 
-		for (const auto force : rb2d.forces) {
-			switch (force.mode) {
-				case Rigidbody2D::ForceMode::FORCE: {
-					body->ApplyForce(
-							vec2_to_b2Vec2(force.force),
-							body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
-							true);
-					break;
+		{
+			for (const auto force : rb2d.forces) {
+				switch (force.mode) {
+					case Rigidbody2D::ForceMode::FORCE: {
+						body->ApplyForce(
+								vec2_to_b2Vec2(force.amount),
+								body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
+								true);
+						break;
+					}
+					case Rigidbody2D::ForceMode::IMPULSE: {
+						body->ApplyLinearImpulse(
+								vec2_to_b2Vec2(force.amount),
+								body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
+								true);
+						break;
+					}
+					default:
+						break;
 				}
-				case Rigidbody2D::ForceMode::IMPULSE: {
-					body->ApplyLinearImpulse(
-							vec2_to_b2Vec2(force.force),
-							body->GetWorldCenter() + vec2_to_b2Vec2(force.offset),
-							true);
-					break;
-				}
-				default:
-					break;
 			}
-		}
 
-		if (rb2d.torque != 0.0f) {
-			body->ApplyTorque(rb2d.torque, true);
-		}
+			rb2d.forces.clear();
 
-		if (rb2d.angular_impulse != 0.0f) {
-			body->ApplyAngularImpulse(rb2d.angular_impulse, true);
-		}
+			if (rb2d.torque != 0.0f) {
+				body->ApplyTorque(rb2d.torque, true);
+			}
 
-		//! TODO add ability to set these values too
-		rb2d.velocity = b2Vec2_to_vec2(body->GetLinearVelocity());
-		rb2d.angular_velocity = body->GetAngularVelocity();
+			rb2d.torque = 0.0f;
+
+			if (rb2d.angular_impulse != 0.0f) {
+				body->ApplyAngularImpulse(rb2d.angular_impulse, true);
+			}
+
+			rb2d.angular_impulse = 0.0f;
+		}
 
 		const auto& position = body->GetPosition();
 		transform.local_position.x = position.x;

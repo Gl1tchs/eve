@@ -1,4 +1,5 @@
 using EveEngine;
+using System;
 
 namespace Sample
 {
@@ -12,8 +13,6 @@ namespace Sample
 		protected override void OnCreate()
 		{
 			_rb2d = GetComponent<Rigidbody2D>();
-
-			_rb2d.ApplyForce(Vector2.Right * 50);
 
 			var col2d = GetComponent<BoxCollider2D>();
 			col2d.OnTrigger = OnTrigger;
@@ -30,20 +29,20 @@ namespace Sample
 		{
 			if (Input.IsKeyPressed(KeyCode.Up))
 			{
-				Transform.Translate(Vector3.Up * Speed * dt);
+				_rb2d.ApplyForce(Vector2.Up * Speed);
 			}
 			if (Input.IsKeyPressed(KeyCode.Down))
 			{
-				Transform.Translate(Vector3.Down * Speed * dt);
+				_rb2d.ApplyForce(Vector2.Down * Speed);
 			}
 
 			if (Input.IsKeyPressed(KeyCode.Left))
 			{
-				Transform.Translate(Vector3.Left * Speed * dt);
+				_rb2d.ApplyForce(Vector2.Left * Speed);
 			}
 			if (Input.IsKeyPressed(KeyCode.Right))
 			{
-				Transform.Translate(Vector3.Right * Speed * dt);
+				_rb2d.ApplyForce(Vector2.Right * Speed);
 			}
 		}
 

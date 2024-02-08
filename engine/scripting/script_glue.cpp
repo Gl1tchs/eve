@@ -556,7 +556,7 @@ inline static void rigidbody2d_component_add_force(UID entity_id, Rigidbody2D::F
 
 	Rigidbody2D::ForceInfo force_info = {
 		.mode = mode,
-		.force = *force,
+		.amount = *force,
 		.offset = *offset,
 	};
 
