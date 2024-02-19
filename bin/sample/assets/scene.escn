@@ -203,21 +203,6 @@
         "kerning": 0.0,
         "line_spacing": 0.0,
         "is_screen_space": false
-      },
-      "script_component": {
-        "class_name": "Sample.Text",
-        "script_fields": [
-          {
-            "name": "color",
-            "type": "Color",
-            "data": [
-              1.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          }
-        ]
       }
     },
     {
@@ -302,21 +287,6 @@
           "strength": 0.800000011920929,
           "curvature": 0.5
         }
-      },
-      "script_component": {
-        "class_name": "Sample.MyEntity",
-        "script_fields": [
-          {
-            "name": "Camera",
-            "type": "Entity",
-            "data": 8959252701979587220
-          },
-          {
-            "name": "Speed",
-            "type": "Float",
-            "data": 5.0
-          }
-        ]
       }
     },
     {
@@ -342,7 +312,7 @@
       },
       "camera_component": {
         "camera": {
-          "aspect_ratio": 2.150141716003418,
+          "aspect_ratio": 1.5878660678863525,
           "zoom_level": 10.0,
           "near_clip": -1.0,
           "far_clip": 1.0

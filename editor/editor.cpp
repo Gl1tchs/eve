@@ -11,7 +11,6 @@
 #include "renderer/renderer.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
-#include "scripting/script_engine.h"
 
 #include <imgui.h>
 #include <tinyfiledialogs.h>
@@ -243,8 +242,6 @@ void EditorApplication::_open_project() {
 	}
 
 	if (Project::load(fs::path(path))) {
-		ScriptEngine::init();
-
 		// load the first scene
 		EVE_ASSERT_ENGINE(SceneManager::load_scene(Project::get_starting_scene_path()));
 

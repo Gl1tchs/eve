@@ -105,10 +105,6 @@ struct CircleCollider2D {
 	void* runtime_fixture = nullptr;
 };
 
-struct ScriptComponent {
-	std::string class_name;
-};
-
 template <typename... Component>
 struct ComponentGroup {};
 
@@ -116,7 +112,6 @@ using AllComponents =
 		ComponentGroup<Transform, CameraComponent,
 				SpriteRenderer, TextRenderer,
 				Rigidbody2D, BoxCollider2D,
-				CircleCollider2D, PostProcessVolume,
-				ScriptComponent>;
+				CircleCollider2D, PostProcessVolume>;
 
 #endif

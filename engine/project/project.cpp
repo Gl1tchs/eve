@@ -70,9 +70,15 @@ fs::path Project::get_cache_directory(AssetType type) {
 	std::transform(asset_dir.begin(), asset_dir.end(), asset_dir.begin(),
 			[](unsigned char c) { return std::tolower(c); });
 
-	const fs::path cache_dir = get_project_directory() / "cache" / asset_dir;
+	fs::path cache_dir = get_project_directory() / "cache";
 
 	// create cache directory if not exists already
+	if (!fs::exists(cache_dir)) {
+		fs::create_directory(cache_dir);
+	}
+
+	cache_dir /= asset_dir;
+
 	if (!fs::exists(cache_dir)) {
 		fs::create_directory(cache_dir);
 	}

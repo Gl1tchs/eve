@@ -1,11 +1,11 @@
 ## eve Todo List
 
 ## Game Demo Improvements
-- [ ] Script engine wont work for the projects with names that has space in it.
 - [ ] Ability to just create predefined entities such as sprite, physics body etc.
 - [ ] UI Gizmos
 
 ## Bugs
+- [ ] Drag-Drop scene loading not working.
 - [ ] Runtime camera aspect ratio not changing properly.
 - [ ] Scene transition asset loading not working properly.
 - [ ] BoxCollider2D for Texts not working properly due to its transform. 

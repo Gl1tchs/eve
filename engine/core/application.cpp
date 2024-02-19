@@ -6,11 +6,11 @@
 #include "imgui/imgui_layer.h"
 #include "renderer/font.h"
 #include "renderer/renderer.h"
-#include "scripting/script_engine.h"
 
 Application* Application::s_instance = nullptr;
 
-Application::Application(const ApplicationCreateInfo& info) {
+Application::Application(const ApplicationCreateInfo& info) :
+		imgui_layer(nullptr) {
 	EVE_PROFILE_FUNCTION();
 
 	EVE_ASSERT_ENGINE(!s_instance, "Only on instance can exists at a time!");
@@ -36,7 +36,6 @@ Application::~Application() {
 		Font::s_default_font.reset();
 	}
 
-	ScriptEngine::shutdown();
 	renderer::shutdown();
 }
 

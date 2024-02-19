@@ -19,16 +19,15 @@ PUBLIC
     ${VENDOR_DIR}/glm
     ${VENDOR_DIR}/entt/src
     ${VENDOR_DIR}/json/include
-	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
-	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
+		${VENDOR_DIR}/msdf-atlas-gen/msdfgen
+		${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
     ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
     ${VENDOR_DIR}/imgui
     ${VENDOR_DIR}/stb
-	${VENDOR_DIR}/filewatch
-	${VENDOR_DIR}/mono/include
-	${VENDOR_DIR}/box2d/include
+		${VENDOR_DIR}/filewatch
+		${VENDOR_DIR}/box2d/include
 )
 
 target_link_libraries(eve
@@ -38,15 +37,9 @@ PUBLIC
 PRIVATE
     glad
     glfw
-	imgui
-	msdf-atlas-gen
-	mono
-	box2d
+		imgui
+		msdf-atlas-gen
+		box2d
 )
 
 target_compile_definitions(eve PRIVATE GLFW_INCLUDE_NONE)
-
-add_custom_command(TARGET eve PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${VENDOR_DIR}/mono/bin/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-  COMMENT "Copying Mono DLL to the build destination."
-)

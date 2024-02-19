@@ -9,7 +9,6 @@
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/transform.h"
-#include "scripting/script_engine.h"
 
 Scene::Scene(const std::string& name) :
 		name(name),
@@ -20,30 +19,6 @@ void Scene::start() {
 	EVE_PROFILE_FUNCTION();
 
 	running = true;
-
-	{
-		ScriptEngine::on_runtime_start(this);
-
-		const auto script_view = view<ScriptComponent>();
-
-		// entity script instance creation should be done in two iterations
-		// because field type of entity depends on other entities
-		// thats why we are creating the mono instance first and
-		// assign not managed fields, then assigning the managed fields.
-
-		// first iteration create mono instances
-		for (auto entity_id : script_view) {
-			Entity entity = { entity_id, this };
-			ScriptEngine::create_entity_instance(entity);
-		}
-
-		// second iteration set field values and invoke on create
-		for (auto entity_id : script_view) {
-			Entity entity = { entity_id, this };
-			ScriptEngine::set_entity_managed_field_values(entity);
-			ScriptEngine::invoke_on_create_entity(entity);
-		}
-	}
 
 	// let scripts modify the values then start the physics system
 	physics_system.start();
@@ -56,11 +31,6 @@ void Scene::update(float dt) {
 
 	EVE_PROFILE_FUNCTION();
 
-	for (auto entity_id : view<ScriptComponent>()) {
-		Entity entity = { entity_id, this };
-		ScriptEngine::invoke_on_update_entity(entity, dt);
-	}
-
 	physics_system.update(dt);
 }
 
@@ -68,13 +38,6 @@ void Scene::stop() {
 	EVE_PROFILE_FUNCTION();
 
 	running = false;
-
-	for (auto entity_id : view<ScriptComponent>()) {
-		Entity entity = { entity_id, this };
-		ScriptEngine::invoke_on_destroy_entity(entity);
-	}
-
-	ScriptEngine::on_runtime_stop();
 
 	physics_system.stop();
 }
@@ -123,8 +86,9 @@ void Scene::destroy(Entity entity) {
 		destroy(child);
 	}
 
+
 	if (is_running()) {
-		ScriptEngine::invoke_on_destroy_entity(entity);
+		// TODO destroy object on script
 
 		physics_system.mark_deleted(entity);
 	}
@@ -311,18 +275,6 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	return dst;
 }
 
-#define WRITE_SCRIPT_FIELD(FieldType, Type)                         \
-	case ScriptFieldType::FieldType:                                \
-		script_field_json["data"] = script_field.get_value<Type>(); \
-		break
-
-#define READ_SCRIPT_FIELD(FieldType, Type)                 \
-	case ScriptFieldType::FieldType: {                     \
-		Type data = script_field_json["data"].get<Type>(); \
-		field_instance.set_value(data);                    \
-		break;                                             \
-	}
-
 NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType, {
 															{ Rigidbody2D::BodyType::STATIC, "static" },
 															{ Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
@@ -452,57 +404,6 @@ static Json serialize_entity(Entity& entity) {
 								  { "curvature", volume.vignette.curvature },
 						  } }
 		};
-	}
-
-	if (entity.has_component<ScriptComponent>()) {
-		auto& sc = entity.get_component<ScriptComponent>();
-
-		Json script_component_json = { { "class_name", sc.class_name },
-			{ "script_fields", Json::array() } };
-
-		Ref<ScriptClass> entity_class = ScriptEngine::get_entity_class(sc.class_name);
-		const auto& fields = entity_class->get_fields();
-		if (!fields.empty()) {
-			for (const auto& [name, field] : fields) {
-				auto& entity_fields = ScriptEngine::get_script_field_map(entity);
-
-				if (entity_fields.find(name) != entity_fields.end()) {
-					Json script_field_json = {
-						{ "name", name },
-						{ "type", serialize_script_field_type(field.type) },
-						{ "data", nullptr } // Placeholder for the data
-					};
-
-					ScriptFieldInstance& script_field = entity_fields.at(name);
-
-					switch (field.type) {
-						WRITE_SCRIPT_FIELD(FLOAT, float);
-						WRITE_SCRIPT_FIELD(DOUBLE, double);
-						WRITE_SCRIPT_FIELD(BOOL, bool);
-						WRITE_SCRIPT_FIELD(CHAR, char);
-						WRITE_SCRIPT_FIELD(BYTE, int8_t);
-						WRITE_SCRIPT_FIELD(SHORT, int16_t);
-						WRITE_SCRIPT_FIELD(INT, int32_t);
-						WRITE_SCRIPT_FIELD(LONG, int64_t);
-						WRITE_SCRIPT_FIELD(UBYTE, uint8_t);
-						WRITE_SCRIPT_FIELD(USHORT, uint16_t);
-						WRITE_SCRIPT_FIELD(UINT, uint32_t);
-						WRITE_SCRIPT_FIELD(ULONG, uint64_t);
-						WRITE_SCRIPT_FIELD(VECTOR2, glm::vec2);
-						WRITE_SCRIPT_FIELD(VECTOR3, glm::vec3);
-						WRITE_SCRIPT_FIELD(VECTOR4, glm::vec4);
-						WRITE_SCRIPT_FIELD(COLOR, Color);
-						WRITE_SCRIPT_FIELD(ENTITY, UID);
-						default:
-							break;
-					}
-
-					script_component_json["script_fields"].push_back(script_field_json);
-				}
-			}
-		}
-
-		out["script_component"] = script_component_json;
 	}
 
 	return out;
@@ -718,61 +619,6 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 				post_process_volume.vignette.outer = vignette_json["outer"].get<float>();
 				post_process_volume.vignette.strength = vignette_json["strength"].get<float>();
 				post_process_volume.vignette.curvature = vignette_json["curvature"].get<float>();
-			}
-		}
-
-		if (auto script_component_json = entity_json["script_component"];
-				!script_component_json.is_null()) {
-			auto& sc = deserialing_entity.add_component<ScriptComponent>();
-
-			sc.class_name = script_component_json["class_name"].get<std::string>();
-
-			auto script_fields_json = script_component_json["script_fields"];
-			if (!script_fields_json.is_null()) {
-				Ref<ScriptClass> entity_class =
-						ScriptEngine::get_entity_class(sc.class_name);
-				if (entity_class) {
-					const auto& fields = entity_class->get_fields();
-					auto& entity_fields =
-							ScriptEngine::get_script_field_map(deserialing_entity);
-
-					for (const auto& script_field_json : script_fields_json) {
-						std::string name = script_field_json["name"].get<std::string>();
-						std::string type_string =
-								script_field_json["type"].get<std::string>();
-						ScriptFieldType type = deserialize_script_field_type(type_string);
-
-						ScriptFieldInstance& field_instance = entity_fields[name];
-
-						if (fields.find(name) == fields.end()) {
-							continue;
-						}
-
-						field_instance.field = fields.at(name);
-
-						switch (type) {
-							READ_SCRIPT_FIELD(FLOAT, float);
-							READ_SCRIPT_FIELD(DOUBLE, double);
-							READ_SCRIPT_FIELD(BOOL, bool);
-							READ_SCRIPT_FIELD(CHAR, char);
-							READ_SCRIPT_FIELD(BYTE, int8_t);
-							READ_SCRIPT_FIELD(SHORT, int16_t);
-							READ_SCRIPT_FIELD(INT, int32_t);
-							READ_SCRIPT_FIELD(LONG, int64_t);
-							READ_SCRIPT_FIELD(UBYTE, uint8_t);
-							READ_SCRIPT_FIELD(USHORT, uint16_t);
-							READ_SCRIPT_FIELD(UINT, uint32_t);
-							READ_SCRIPT_FIELD(ULONG, uint64_t);
-							READ_SCRIPT_FIELD(VECTOR2, glm::vec2);
-							READ_SCRIPT_FIELD(VECTOR3, glm::vec3);
-							READ_SCRIPT_FIELD(VECTOR4, glm::vec4);
-							READ_SCRIPT_FIELD(COLOR, Color);
-							READ_SCRIPT_FIELD(ENTITY, UID);
-							default:
-								break;
-						}
-					}
-				}
 			}
 		}
 	}

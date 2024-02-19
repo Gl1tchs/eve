@@ -6,9 +6,9 @@ A yet another cross platform game engine which is easy to use and performant.
 
 - 2D Renderer
 - Asset System
-- C# Mono Scripting
 - Post Processing
 - 2D Physics
+- (Coming Soon) Scripting
 - (Coming Soon) Animations
 - (Coming Soon) Particle System
 - (Coming Soon) VFX
@@ -19,7 +19,18 @@ A yet another cross platform game engine which is easy to use and performant.
 - (Coming Soon) Plugins
 - (Coming Soon) 3D Renderer
 
-## Docs
+## Building
 
-- [Building](docs/BUILDING.md)
-- [Scripting](docs/SCRIPTING.md)
+- First clone the github repository:
+```bash
+git clone https://github.com/gl1tchs/eve.git
+git submodule update --init --recursive
+```
+
+- Then build the engine in desired configuration:
+```bash
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+cmake --build .
+```

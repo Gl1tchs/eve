@@ -9,7 +9,7 @@ uniform sampler2D u_screen_texture;
 void main() {
 	o_color = texture(u_screen_texture, v_tex_coord);
 
-	float average = (o_color.r + o_color.g + o_color.b) / 3.0;
+	float average = 0.2126 * o_color.r + 0.7152 * o_color.g + 0.0722 * o_color.b;
 
 	o_color = vec4(average, average, average, o_color.a);
 }
