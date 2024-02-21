@@ -10,7 +10,8 @@
 
 Application* Application::s_instance = nullptr;
 
-Application::Application(const ApplicationCreateInfo& info) {
+Application::Application(const ApplicationCreateInfo& info) :
+		imgui_layer(nullptr) {
 	EVE_PROFILE_FUNCTION();
 
 	EVE_ASSERT_ENGINE(!s_instance, "Only on instance can exists at a time!");
@@ -24,10 +25,14 @@ Application::Application(const ApplicationCreateInfo& info) {
 			[this](const auto& _event) { running = false; });
 
 	renderer::init();
+
+	imgui_layer = new ImGuiLayer(window);
 }
 
 Application::~Application() {
 	EVE_PROFILE_FUNCTION();
+
+	delete imgui_layer;
 
 	// FIXME
 	// 	perhaps there is a better way to
@@ -42,8 +47,6 @@ Application::~Application() {
 
 void Application::run() {
 	EVE_PROFILE_FUNCTION();
-
-	imgui_layer = new ImGuiLayer(window);
 
 	{
 		EVE_PROFILE_SCOPE("Application::_on_start");
@@ -61,8 +64,6 @@ void Application::run() {
 
 		_on_destroy();
 	}
-
-	delete imgui_layer;
 }
 
 void Application::enque_main_thread(MainThreadFunc func) {
