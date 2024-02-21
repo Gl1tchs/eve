@@ -319,6 +319,10 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 		}
 	}
 
+	// copy asset registry
+	//? TODO maybe moving is better?
+	dst->asset_registry = src->asset_registry;
+
 	return dst;
 }
 

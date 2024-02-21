@@ -3,12 +3,12 @@
   "name": "scene",
   "entities": [
     {
-      "id": 12207773597134581231,
-      "tag": "right wall",
-      "parent_id": 576348814685502556,
+      "id": 576348814685502556,
+      "tag": "environment",
+      "parent_id": 0,
       "transform_component": {
         "local_position": [
-          10.0,
+          0.0,
           0.0,
           0.0
         ],
@@ -19,51 +19,19 @@
         ],
         "local_scale": [
           1.0,
-          11.0,
-          1.0
-        ]
-      },
-      "sprite_renderer_component": {
-        "texture": 0,
-        "color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "tex_tiling": [
           1.0,
           1.0
         ]
-      },
-      "rigidbody2d_component": {
-        "type": "static",
-        "fixed_rotation": false
-      },
-      "box_collider": {
-        "offset": [
-          0.0,
-          0.0
-        ],
-        "size": [
-          0.5,
-          0.5
-        ],
-        "is_trigger": false,
-        "density": 1.0,
-        "friction": 0.5,
-        "restitution": 0.0,
-        "restitution_threshold": 0.5
       }
     },
     {
-      "id": 16105381538406036866,
-      "tag": "top wall",
+      "id": 16554862507967313981,
+      "tag": "bottom wall",
       "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           0.0,
-          5.0,
+          -5.0,
           0.0
         ],
         "local_rotation": [
@@ -111,67 +79,13 @@
       }
     },
     {
-      "id": 2038558295031678942,
-      "tag": "left wall",
-      "parent_id": 576348814685502556,
-      "transform_component": {
-        "local_position": [
-          -10.0,
-          0.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          1.0,
-          11.0,
-          1.0
-        ]
-      },
-      "sprite_renderer_component": {
-        "texture": 0,
-        "color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "tex_tiling": [
-          1.0,
-          1.0
-        ]
-      },
-      "rigidbody2d_component": {
-        "type": "static",
-        "fixed_rotation": false
-      },
-      "box_collider": {
-        "offset": [
-          0.0,
-          0.0
-        ],
-        "size": [
-          0.5,
-          0.5
-        ],
-        "is_trigger": false,
-        "density": 1.0,
-        "friction": 0.5,
-        "restitution": 0.0,
-        "restitution_threshold": 0.5
-      }
-    },
-    {
-      "id": 12517815595370061652,
-      "tag": "text",
+      "id": 8959252701979587220,
+      "tag": "camera",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
           0.0,
-          2.0,
+          0.0,
           0.0
         ],
         "local_rotation": [
@@ -185,39 +99,15 @@
           1.0
         ]
       },
-      "text_renderer_component": {
-        "text": "Hello, World",
-        "font": 4822175711476655378,
-        "fg_color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "bg_color": [
-          0.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        "kerning": 0.0,
-        "line_spacing": 0.0,
-        "is_screen_space": false
-      },
-      "script_component": {
-        "class_name": "Sample.Text",
-        "script_fields": [
-          {
-            "name": "color",
-            "type": "Color",
-            "data": [
-              1.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          }
-        ]
+      "camera_component": {
+        "camera": {
+          "aspect_ratio": 1.5696202516555786,
+          "zoom_level": 10.0,
+          "near_clip": -1.0,
+          "far_clip": 1.0
+        },
+        "is_primary": true,
+        "is_fixed_aspect_ratio": false
       }
     },
     {
@@ -320,14 +210,14 @@
       }
     },
     {
-      "id": 8959252701979587220,
-      "tag": "camera",
+      "id": 12517815595370061652,
+      "tag": "text",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
           0.0,
-          0.0,
-          0.0
+          2.0,
+          -0.5
         ],
         "local_rotation": [
           0.0,
@@ -340,25 +230,103 @@
           1.0
         ]
       },
-      "camera_component": {
-        "camera": {
-          "aspect_ratio": 1.5762711763381958,
-          "zoom_level": 10.0,
-          "near_clip": -1.0,
-          "far_clip": 1.0
-        },
-        "is_primary": true,
-        "is_fixed_aspect_ratio": false
+      "text_renderer_component": {
+        "text": "Hello, World",
+        "font": 4822175711476655378,
+        "fg_color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bg_color": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "kerning": 0.0,
+        "line_spacing": 0.0,
+        "is_screen_space": false
+      },
+      "script_component": {
+        "class_name": "Sample.Text",
+        "script_fields": [
+          {
+            "name": "color",
+            "type": "Color",
+            "data": [
+              1.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          }
+        ]
       }
     },
     {
-      "id": 16554862507967313981,
-      "tag": "bottom wall",
+      "id": 2038558295031678942,
+      "tag": "left wall",
+      "parent_id": 576348814685502556,
+      "transform_component": {
+        "local_position": [
+          -10.0,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          11.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": 0,
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          1.0,
+          1.0
+        ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "is_trigger": false,
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
+      }
+    },
+    {
+      "id": 16105381538406036866,
+      "tag": "top wall",
       "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
           0.0,
-          -5.0,
+          5.0,
           0.0
         ],
         "local_rotation": [
@@ -406,12 +374,12 @@
       }
     },
     {
-      "id": 576348814685502556,
-      "tag": "environment",
-      "parent_id": 0,
+      "id": 12207773597134581231,
+      "tag": "right wall",
+      "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
-          0.0,
+          10.0,
           0.0,
           0.0
         ],
@@ -422,9 +390,41 @@
         ],
         "local_scale": [
           1.0,
+          11.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": 0,
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
           1.0,
           1.0
         ]
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "is_trigger": false,
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
       }
     }
   ],
@@ -432,12 +432,12 @@
     {
       "handle": 14309419123582907854,
       "path": "res://texture.png",
-			"type": "texture"
+      "type": "texture"
     },
     {
       "handle": 4822175711476655378,
       "path": "res://workbench.ttf",
-			"type": "font"
+      "type": "font"
     }
   ]
 }
