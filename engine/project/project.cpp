@@ -72,9 +72,8 @@ fs::path Project::get_cache_directory(AssetType type) {
 
 	const fs::path cache_dir = get_project_directory() / "cache" / asset_dir;
 
-	// create cache directory if not exists already
 	if (!fs::exists(cache_dir)) {
-		fs::create_directory(cache_dir);
+		fs::create_directories(cache_dir);
 	}
 
 	return cache_dir;
