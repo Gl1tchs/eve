@@ -145,9 +145,7 @@ void ScriptEngine::init(bool is_runtime) {
 		return;
 	}
 
-	auto script_module_path =
-			Project::get_project_directory() / "out" /
-			std::format("{}.dll", Project::get_name());
+	auto script_module_path = Project::get_script_dll_path();
 	status = load_app_assembly(script_module_path);
 	if (!status) {
 		EVE_LOG_ENGINE_ERROR("Could not load app assembly.");
@@ -167,9 +165,7 @@ void ScriptEngine::reinit() {
 		return;
 	}
 
-	s_data->app_assembly_path =
-			Project::get_project_directory() /
-			std::format("out/{}.dll", Project::get_name());
+	s_data->app_assembly_path = Project::get_script_dll_path();
 
 	reload_assembly();
 }
@@ -210,8 +206,9 @@ bool ScriptEngine::load_app_assembly(const fs::path& filepath) {
 
 	s_data->app_assembly_path = filepath;
 	s_data->app_assembly = load_mono_assembly(filepath, s_data->enable_debugging);
-	if (s_data->app_assembly == nullptr)
+	if (s_data->app_assembly == nullptr) {
 		return false;
+	}
 
 	s_data->app_assembly_image = mono_assembly_get_image(s_data->app_assembly);
 

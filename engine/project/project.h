@@ -6,6 +6,7 @@
 struct ProjectConfig {
 	std::string name;
 	fs::path asset_directory;
+	fs::path script_dll;
 	std::string starting_scene;
 
 	static void serialize(const ProjectConfig& config, const fs::path& path);
@@ -29,6 +30,8 @@ public:
 	static fs::path get_cache_directory(AssetType type = AssetType::NONE);
 
 	static std::string get_starting_scene_path();
+
+	static fs::path get_script_dll_path();
 
 	static fs::path get_asset_path(const std::string& path);
 

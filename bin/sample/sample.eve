@@ -1,5 +1,6 @@
 {
   "name": "sample",
   "asset_directory": "assets",
+	"script_dll" : "out/sample.dll",
   "starting_scene": "res://scene.escn"
 }

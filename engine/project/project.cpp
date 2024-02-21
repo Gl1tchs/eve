@@ -10,6 +10,7 @@ void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path)
 	Json out{
 		{ "name", config.name },
 		{ "asset_directory", config.asset_directory },
+		{ "script_dll", config.script_dll },
 		{ "starting_scene", config.starting_scene },
 	};
 
@@ -25,6 +26,7 @@ bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 
 	config.name = json["name"].get<std::string>();
 	config.asset_directory = json["asset_directory"].get<std::string>();
+	config.script_dll = json["script_dll"].get<std::string>();
 	config.starting_scene = json["starting_scene"].get<std::string>();
 
 	return true;
@@ -83,6 +85,12 @@ std::string Project::get_starting_scene_path() {
 	EVE_ASSERT_ENGINE(s_active_project);
 
 	return s_active_project->config.starting_scene;
+}
+
+fs::path Project::get_script_dll_path() {
+	EVE_ASSERT_ENGINE(s_active_project);
+
+	return s_active_project->get_project_directory() / s_active_project->config.script_dll;
 }
 
 fs::path Project::get_asset_path(const std::string& path) {
