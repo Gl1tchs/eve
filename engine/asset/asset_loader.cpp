@@ -131,15 +131,4 @@ Ref<Font> load_font(const fs::path& path) {
 	return font;
 }
 
-Ref<Scene> load_scene(const fs::path& path) {
-	EVE_PROFILE_FUNCTION();
-
-	Ref<Scene> scene = create_ref<Scene>();
-	if (!Scene::deserialize(scene, path.string())) {
-		return nullptr;
-	}
-
-	return scene;
-}
-
 } //namespace asset_loader

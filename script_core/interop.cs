@@ -422,14 +422,5 @@ namespace EveEngine
 		internal extern static void input_get_scroll_offset(out Vector2 offset);
 
 		#endregion
-		#region AssetRegistry
-
-		[MethodImplAttribute(MethodImplOptions.InternalCall)]
-		internal extern static ulong asset_registry_load(string path, AssetType type);
-
-		[MethodImplAttribute(MethodImplOptions.InternalCall)]
-		internal extern static void asset_registry_unload(ulong handle);
-
-		#endregion
 	}
 }

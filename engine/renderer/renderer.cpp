@@ -1,7 +1,5 @@
 #include "renderer/renderer.h"
 
-#include "asset/asset_registry.h"
-#include "core/application.h"
 #include "core/buffer.h"
 #include "renderer/font.h"
 #include "renderer/primitives/line.h"
@@ -172,17 +170,6 @@ void end_pass() {
 	flush();
 }
 
-void draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id) {
-	Ref<Texture2D> texture = asset_registry::get_asset<Texture2D>(sprite.texture);
-
-	draw_quad(
-			transform,
-			texture,
-			sprite.color,
-			sprite.tex_tiling,
-			entity_id);
-}
-
 void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id) {
 	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
 }
@@ -221,19 +208,6 @@ void draw_quad(const Transform& transform,
 	s_data->stats.quad_count++;
 	s_data->stats.vertex_count += QUAD_VERTEX_COUNT;
 	s_data->stats.index_count += QUAD_INDEX_COUNT;
-}
-
-void draw_text(const TextRenderer& text_comp,
-		const Transform& transform, uint32_t entity_id) {
-	Ref<Font> font = asset_registry::get_asset<Font>(text_comp.font);
-	if (!font) {
-		font = Font::get_default();
-	}
-
-	draw_text(text_comp.text, font ? font : Font::get_default(),
-			transform, text_comp.fg_color, text_comp.bg_color,
-			text_comp.kerning, text_comp.line_spacing,
-			text_comp.is_screen_space, entity_id);
 }
 
 void draw_text(const std::string& text, const Transform& transform,

@@ -2,7 +2,6 @@
 #define SCENE_MANAGER_H
 
 #include "scene/entity.h"
-#include "scene/scene.h"
 
 class SceneManager {
 public:

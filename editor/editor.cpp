@@ -2,13 +2,13 @@
 
 #include "widgets/dock_space.h"
 
-#include "asset/asset_registry.h"
 #include "core/entrypoint.h"
 #include "core/input.h"
 #include "project/project.h"
 #include "renderer/frame_buffer.h"
 #include "renderer/primitives/text.h"
 #include "renderer/renderer.h"
+#include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
 #include "scripting/script_engine.h"
@@ -204,8 +204,8 @@ void EditorApplication::_save_active_scene() {
 		return;
 	}
 
-	if (!editor_scene->path.empty()) {
-		Scene::serialize(editor_scene, editor_scene->path);
+	if (!editor_scene->get_path().empty()) {
+		Scene::serialize(editor_scene, editor_scene->get_path());
 
 		_on_scene_save();
 	} else {
@@ -344,7 +344,7 @@ void EditorApplication::_render_entity_bounds(Entity entity) {
 		Transform text_transform = transform;
 		glm::vec2 scale = text_transform.get_scale();
 
-		Ref<Font> font = asset_registry::get_asset<Font>(text_renderer.font);
+		Ref<Font> font = editor_scene->get_asset_registry().get_asset<Font>(text_renderer.font);
 
 		glm::vec2 text_size = get_text_size(text_renderer.text, font, text_renderer.kerning) * scale;
 

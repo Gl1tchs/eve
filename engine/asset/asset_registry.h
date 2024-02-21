@@ -3,41 +3,54 @@
 
 #include "asset/asset.h"
 
-namespace asset_registry {
+using AssetPack = std::unordered_map<AssetHandle, Ref<Asset>>;
 
-using AssetRegistryMap = std::unordered_map<AssetHandle, Ref<Asset>>;
+class AssetRegistry {
+public:
+	AssetRegistry();
+	~AssetRegistry();
 
-void init();
+	Ref<Asset> get_asset(const AssetHandle& handle);
 
-Ref<Asset> get_asset(const AssetHandle& handle);
+	template <typename T>
 
-template <typename T>
-inline Ref<T> get_asset(const AssetHandle& handle) {
-	if (handle == 0) {
-		return nullptr;
+	inline Ref<T> get_asset(const AssetHandle& handle) {
+		if (handle == 0) {
+			return nullptr;
+		}
+
+		Ref<Asset> asset = get_asset(handle);
+		return std::static_pointer_cast<T>(asset);
 	}
 
-	Ref<Asset> asset = get_asset(handle);
-	return std::static_pointer_cast<T>(asset);
-}
+	// TODO make an async version
 
-// TODO make an async version
-AssetHandle load_asset(const std::string& path, AssetType type);
+	AssetHandle load_asset(const std::string& path, AssetType type, AssetHandle handle = AssetHandle());
 
-void unload_asset(const AssetHandle& handle);
+	void unload_asset(const AssetHandle& handle);
 
-void unload_asset(const std::string& path);
+	void unload_asset(const std::string& path);
 
-void unload_all_assets();
+	void unload_all_assets();
 
-bool is_asset_loaded(const AssetHandle& handle);
+	bool is_asset_loaded(const AssetHandle& handle);
 
-AssetHandle get_handle_from_path(const std::string& path);
+	AssetHandle get_handle_from_path(const std::string& path);
 
-void on_asset_rename(const fs::path& old_path, const fs::path& new_path);
+	AssetPack& get_assets();
 
-AssetRegistryMap& get_loaded_assets();
+	AssetPack::iterator begin();
+	AssetPack::const_iterator begin() const;
 
-} //namespace asset_registry
+	AssetPack::iterator end();
+	AssetPack::const_iterator end() const;
+
+private:
+	void _on_asset_rename(const fs::path& old_path, const fs::path& new_path);
+
+private:
+	AssetPack assets;
+	std::unordered_map<fs::path, AssetHandle> file_uid_cache;
+};
 
 #endif

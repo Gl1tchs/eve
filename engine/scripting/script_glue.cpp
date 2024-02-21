@@ -1,9 +1,7 @@
 #include "scripting/script_glue.h"
 
-#include "asset/asset_registry.h"
 #include "core/application.h"
 #include "core/color.h"
-#include "core/event_system.h"
 #include "core/input.h"
 #include "renderer/post_processor.h"
 #include "scene/components.h"
@@ -882,17 +880,6 @@ scene_manager_load_scene(MonoString* path) {
 }
 
 #pragma endregion
-#pragma region AssetRegistry
-
-inline static uint64_t asset_registry_load(MonoString* path, AssetType type) {
-	return asset_registry::load_asset(mono_string_to_string(path), type);
-}
-
-inline static void asset_registry_unload(AssetHandle handle) {
-	asset_registry::unload_asset(handle);
-}
-
-#pragma endregion
 
 template <typename... Component>
 inline static void register_component() {
@@ -1093,9 +1080,6 @@ void register_functions() {
 	EVE_ADD_INTERNAL_CALL(input_is_mouse_released);
 	EVE_ADD_INTERNAL_CALL(input_get_mouse_position);
 	EVE_ADD_INTERNAL_CALL(input_get_scroll_offset);
-
-	EVE_ADD_INTERNAL_CALL(asset_registry_load);
-	EVE_ADD_INTERNAL_CALL(asset_registry_unload);
 }
 
 } // namespace script_glue

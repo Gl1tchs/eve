@@ -11,8 +11,6 @@ Ref<Texture2D> load_texture(const fs::path& path);
 
 Ref<Font> load_font(const fs::path& path);
 
-Ref<Scene> load_scene(const fs::path& path);
-
 } //namespace asset_loader
 
 #endif

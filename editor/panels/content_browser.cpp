@@ -1,8 +1,8 @@
 #include "panels/content_browser.h"
 
-#include "asset/asset_registry.h"
 #include "data/fonts/font_awesome.h"
 #include "project/project.h"
+#include "scene/scene_manager.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -51,6 +51,11 @@ void ContentBrowserPanel::_draw() {
 void ContentBrowserPanel::_draw_file(const fs::path& path) {
 	// hide .meta files
 	// TODO make this a filter and make user define other filters
+	auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
+
 	if (path.extension() == ".meta") {
 		return;
 	}
@@ -64,8 +69,8 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 
 	// is file an asset or not
 	if (!fs::is_directory(path)) {
-		const AssetHandle handle = asset_registry::get_handle_from_path(path.string());
-		const bool is_loaded = handle && asset_registry::is_asset_loaded(handle);
+		const AssetHandle handle = scene->get_asset_registry().get_handle_from_path(path.string());
+		const bool is_loaded = handle && scene->get_asset_registry().is_asset_loaded(handle);
 
 		if (!is_renaming) {
 			const std::string label = std::format("{1}  {0}", filename, (is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
@@ -86,7 +91,7 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 				const std::string path_str = path.string();
 
 				ImGui::SetDragDropPayload("DND_PAYLOAD_SCENE", path_str.data(),
-						path_str.size());
+						path_str.size() + 1);
 
 				ImGui::SetTooltip("%s", "SCENE");
 
@@ -158,20 +163,25 @@ void ContentBrowserPanel::_draw_rename_file_dialog(const fs::path& path) {
 }
 
 void ContentBrowserPanel::_draw_popup_context(const fs::path& path) {
+	auto scene = SceneManager::get_active();
+	if (!scene) {
+		return;
+	}
+
 	if (ImGui::BeginPopupContextItem()) {
 		// import if not asset
 		const AssetType type = get_asset_type_from_extension(path.extension().string());
 
 		// do not let scenes to be imported here
 		if ((type != AssetType::NONE && type != AssetType::SCENE) && ImGui::MenuItem("Load")) {
-			asset_registry::load_asset(
+			scene->get_asset_registry().load_asset(
 					Project::get_relative_asset_path(path.string()),
 					type);
 		}
 
-		if (const AssetHandle handle = asset_registry::get_handle_from_path(path.string());
-				asset_registry::is_asset_loaded(handle) && ImGui::MenuItem("Unload")) {
-			asset_registry::unload_asset(handle);
+		if (const AssetHandle handle = scene->get_asset_registry().get_handle_from_path(path.string());
+				scene->get_asset_registry().is_asset_loaded(handle) && ImGui::MenuItem("Unload")) {
+			scene->get_asset_registry().unload_asset(handle);
 		}
 
 		if (ImGui::MenuItem("Rename")) {

@@ -19,8 +19,8 @@ PUBLIC
     ${VENDOR_DIR}/glm
     ${VENDOR_DIR}/entt/src
     ${VENDOR_DIR}/json/include
-	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
-	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
+		${VENDOR_DIR}/msdf-atlas-gen/msdfgen
+		${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
     ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
@@ -45,6 +45,10 @@ PRIVATE
 )
 
 target_compile_definitions(eve PRIVATE GLFW_INCLUDE_NONE)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	target_compile_options(eve PRIVATE -Wno-microsoft-cast)
+endif()
 
 add_custom_command(TARGET eve PRE_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${VENDOR_DIR}/mono/bin/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/

@@ -3,7 +3,8 @@
 
 #include "core/color.h"
 #include "renderer/camera.h"
-#include "scene/components.h"
+#include "renderer/font.h"
+#include "renderer/texture.h"
 #include "scene/transform.h"
 
 constexpr uint64_t MAX_TEXTURE_COUNT = 32;
@@ -25,8 +26,6 @@ void begin_pass(const CameraData& camera_data);
 
 void end_pass();
 
-void draw_sprite(const SpriteRenderer& sprite, const Transform& transform, uint32_t entity_id = -1);
-
 void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id = -1);
 
 void draw_quad(const Transform& transform, Ref<Texture2D> texture,
@@ -36,9 +35,6 @@ void draw_quad(const Transform& transform,
 		Ref<Texture2D> texture, const Color& color,
 		const glm::vec2& tex_tiling, uint32_t entity_id = -1);
 
-void draw_text(const TextRenderer& text_comp,
-		const Transform& transform, uint32_t entity_id = -1);
-
 void draw_text(const std::string& text, const Transform& transform,
 		const Color& fg_color, const Color& bg_color,
 		float kerning, float line_spacing,
@@ -47,9 +43,9 @@ void draw_text(const std::string& text, const Transform& transform,
 // TODO If camera zooms out characters are breaking down.
 void draw_text(const std::string& text, Ref<Font> font,
 		Transform transform, const Color& fg_color,
-		const Color& bg_color,
-		float kerning, float line_spacing,
-		bool is_screen_space = false, uint32_t entity_id = -1);
+		const Color& bg_color, float kerning,
+		float line_spacing, bool is_screen_space = false,
+		uint32_t entity_id = -1);
 
 void draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color = COLOR_WHITE);
 

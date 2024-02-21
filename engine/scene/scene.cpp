@@ -1,6 +1,5 @@
 #include "scene/scene.h"
 
-#include "asset/asset_registry.h"
 #include "core/json_utils.h"
 #include "core/uid.h"
 #include "physics/physics_system.h"
@@ -219,6 +218,18 @@ bool Scene::is_entity_selected(Entity entity) const {
 	return std::find(selected_entities.begin(), selected_entities.end(), entity) != selected_entities.end();
 }
 
+const std::string& Scene::get_name() {
+	return name;
+}
+
+const std::string& Scene::get_path() {
+	return path;
+}
+
+AssetRegistry& Scene::get_asset_registry() {
+	return asset_registry;
+}
+
 const std::vector<Entity>& Scene::get_selected_entities() const {
 	return selected_entities;
 }
@@ -329,7 +340,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType, {
 															{ Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
 													})
 
-static Json serialize_entity(Entity& entity) {
+static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	bool has_required_components = entity.has_component<IdComponent, RelationComponent, Transform>();
 	EVE_ASSERT_ENGINE(has_required_components);
 
@@ -363,10 +374,10 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<SpriteRenderer>()) {
 		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
-		const auto texture = asset_registry::get_asset<Texture2D>(sc.texture);
+		const auto texture = scene->get_asset_registry().get_asset<Texture2D>(sc.texture);
 
 		out["sprite_renderer_component"] = Json{
-			{ "texture", texture ? texture->path : "" },
+			{ "texture", texture->handle },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
 		};
@@ -375,11 +386,11 @@ static Json serialize_entity(Entity& entity) {
 	if (entity.has_component<TextRenderer>()) {
 		const TextRenderer& tc = entity.get_component<TextRenderer>();
 
-		const auto font = asset_registry::get_asset<Font>(tc.font);
+		const auto font = scene->get_asset_registry().get_asset<Font>(tc.font);
 
 		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
-			{ "font", font ? font->path : "" },
+			{ "font", font->handle },
 			{ "fg_color", tc.fg_color },
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
@@ -522,9 +533,17 @@ void Scene::serialize(Ref<Scene> scene, std::string path) {
 			return;
 		}
 
-		Json entity_json = serialize_entity(entity);
+		Json entity_json = serialize_entity(scene, entity);
 		scene_json["entities"].push_back(entity_json);
 	});
+
+	for (const auto& [uid, asset] : scene->get_asset_registry()) {
+		scene_json["assets"].push_back(Json{
+				{ "handle", asset->handle },
+				{ "path", asset->path },
+				{ "type", asset->get_type() },
+		});
+	}
 
 	json_utils::write_file(path, scene_json);
 }
@@ -548,8 +567,18 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 	scene->name = data["name"].get<std::string>();
 	scene->path = Project::get_relative_asset_path(path);
 
-	if (!data.contains("entities")) {
+	if (!data.contains("entities") || !data.contains("assets")) {
 		return false;
+	}
+
+	auto& asset_registry = scene->get_asset_registry();
+
+	Json assets_json = data["assets"];
+	for (const auto& asset_json : assets_json) {
+		asset_registry.load_asset(
+				asset_json["path"].get<std::string>(),
+				asset_json["type"].get<AssetType>(),
+				asset_json["handle"].get<UID>());
 	}
 
 	Json entities_json = data["entities"];
@@ -611,15 +640,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			auto& sprite_component =
 					deserialing_entity.add_component<SpriteRenderer>();
 
-			const std::string texture_path = sprite_comp_json["texture"].get<std::string>();
-
-			sprite_component.texture = INVALID_UID;
-			if (fs::exists(Project::get_asset_path(texture_path))) {
-				if (AssetHandle handle = asset_registry::load_asset(texture_path, AssetType::TEXTURE); handle) {
-					sprite_component.texture = handle;
-				}
-			}
-
+			sprite_component.texture = sprite_comp_json["texture"].get<UID>();
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
@@ -630,15 +651,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 			text_component.text = text_comp_json["text"].get<std::string>();
 
-			const std::string font_path = text_comp_json["font"].get<std::string>();
-
-			text_component.font = INVALID_UID;
-			if (fs::exists(Project::get_asset_path(font_path))) {
-				if (AssetHandle handle = asset_registry::load_asset(font_path, AssetType::FONT); handle) {
-					text_component.font = handle;
-				}
-			}
-
+			text_component.font = text_comp_json["font"].get<UID>();
 			text_component.fg_color = text_comp_json["fg_color"].get<Color>();
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();

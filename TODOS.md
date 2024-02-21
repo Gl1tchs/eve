@@ -6,16 +6,11 @@
 - [ ] UI Gizmos
 
 ## Bugs
-- [ ] Runtime camera aspect ratio not changing properly.
-- [ ] Scene transition asset loading not working properly.
 - [ ] BoxCollider2D for Texts not working properly due to its transform. 
 - [ ] Mono is not logging the errors
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
-- [ ] Write your own interpreter
-- [ ] Build script
-- [ ] More functional aproach for everything.
 - [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization
@@ -33,7 +28,6 @@
 - [ ] Physics collider bounds rendering.
 - [ ] Camera bounds rendering.
 - [ ] Gizmo texture rendering.
-- [ ] Cache font atlasses.
 - [ ] Texture atlasses.
 - [ ] Animations
 
@@ -47,8 +41,6 @@
 - [ ] Add is affected by gravity field to rigidbody.
 
 ## Asset
-- [ ] Make assets a part of the scene system.
 - [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
 - [ ] Change occurencies of entities when an asset renamed or removed
 - [ ] Do not get asset type from extension but from format
-- [ ] Load all assets on scene opening and register assets to the scene

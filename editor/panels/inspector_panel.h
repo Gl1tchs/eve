@@ -3,8 +3,6 @@
 
 #include "panels/panel.h"
 
-#include "panels/hierarchy_panel.h"
-
 class InspectorPanel : public Panel {
 	EVE_IMPL_PANEL("Inspector")
 public:

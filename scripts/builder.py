@@ -69,15 +69,20 @@ def configure_cmake(config: BuildConfig):
 
 
 def build_engine(config: BuildConfig, clean_build: bool):
-    # TODO only if required
-    configure_cmake(config)
+    cwd = file_path.parent / "build"
+
+    cache_path = cwd / "CMakeCache.txt"
+
+    if clean_build and Path.exists(cache_path):
+        os.remove(cache_path)
+
+    if not Path.exists(cache_path):
+        configure_cmake(config)
 
     args = ["cmake", "--build", "."]
 
     if clean_build:
         args.append("--clean-first")
-
-    cwd = file_path.parent / "build"
 
     try:
         subprocess.check_call(args=args, cwd=cwd)

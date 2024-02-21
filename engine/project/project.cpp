@@ -1,6 +1,5 @@
 #include "project/project.h"
 
-#include "asset/asset_registry.h"
 #include "core/json_utils.h"
 #include "project.h"
 
@@ -151,8 +150,6 @@ Ref<Project> Project::create(const fs::path& path) {
 
 	s_active_project = project;
 
-	asset_registry::init();
-
 	return project;
 }
 
@@ -164,8 +161,6 @@ Ref<Project> Project::load(const fs::path& path) {
 	}
 
 	s_active_project = create_ref<Project>(path, config);
-
-	asset_registry::init();
 
 	return s_active_project;
 }

@@ -1,17 +1,15 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "asset/asset.h"
+#include "asset/asset_registry.h"
 #include "physics/physics_system.h"
 
 #include <entt/entt.hpp>
 
 class Entity;
 
-class Scene : public Asset {
+class Scene {
 public:
-	EVE_IMPL_ASSET(AssetType::SCENE)
-
 	Scene(const std::string& name = "default");
 
 	// runtime beheaviours
@@ -106,6 +104,12 @@ public:
 
 	bool is_entity_selected(Entity entity) const;
 
+	const std::string& get_name();
+
+	const std::string& get_path();
+
+	AssetRegistry& get_asset_registry();
+
 	const std::vector<Entity>& get_selected_entities() const;
 
 	// DISCLAIMER
@@ -118,7 +122,9 @@ public:
 	static bool deserialize(Ref<Scene>& scene, std::string path);
 
 private:
+	AssetHandle handle;
 	std::string name;
+	std::string path;
 
 	PhysicsSystem physics_system;
 
@@ -128,6 +134,8 @@ private:
 
 	entt::registry registry;
 	std::unordered_map<UID, Entity> entity_map;
+
+	AssetRegistry asset_registry;
 
 	std::vector<Entity> selected_entities;
 

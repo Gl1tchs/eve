@@ -157,15 +157,30 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 		renderer::begin_pass(camera_data);
 		{
 			scene->view<Transform, SpriteRenderer>().each(
-					[this](entt::entity entity_id, const Transform& transform,
+					[this, scene](entt::entity entity_id, const Transform& transform,
 							const SpriteRenderer& sprite) {
-						renderer::draw_sprite(sprite, transform, (uint32_t)entity_id);
+						Ref<Texture2D> texture = scene->get_asset_registry().get_asset<Texture2D>(sprite.texture);
+
+						renderer::draw_quad(
+								transform,
+								texture,
+								sprite.color,
+								sprite.tex_tiling,
+								(uint32_t)entity_id);
 					});
 
 			scene->view<Transform, TextRenderer>().each(
-					[this](entt::entity entity_id, const Transform& transform,
+					[this, scene](entt::entity entity_id, const Transform& transform,
 							const TextRenderer& text_component) {
-						renderer::draw_text(text_component, transform, (uint32_t)entity_id);
+						Ref<Font> font = scene->get_asset_registry().get_asset<Font>(text_component.font);
+						if (!font) {
+							font = Font::get_default();
+						}
+
+						renderer::draw_text(text_component.text, font ? font : Font::get_default(),
+								transform, text_component.fg_color, text_component.bg_color,
+								text_component.kerning, text_component.line_spacing,
+								text_component.is_screen_space, (uint32_t)entity_id);
 					});
 
 			for (const auto function : render_functions[RenderFuncTickFormat::ON_RENDER]) {

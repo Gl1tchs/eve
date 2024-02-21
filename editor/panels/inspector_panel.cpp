@@ -110,7 +110,7 @@ inline static void draw_component(const std::string& name, Entity entity,
 InspectorPanel::InspectorPanel() {}
 
 void InspectorPanel::_draw() {
-	const auto scene = SceneManager::get_active();
+	auto scene = SceneManager::get_active();
 	if (!scene || scene->get_selected_entities().empty()) {
 		return;
 	}
@@ -264,10 +264,10 @@ void InspectorPanel::_draw() {
 
 	draw_component<SpriteRenderer>(
 			"Sprite Renderer", selected_entity,
-			[this](SpriteRenderer& sprite_comp) {
+			[&](SpriteRenderer& sprite_comp) {
 				Ref<Texture2D> texture =
 						sprite_comp.texture != 0
-						? asset_registry::get_asset<Texture2D>(sprite_comp.texture)
+						? scene->get_asset_registry().get_asset<Texture2D>(sprite_comp.texture)
 						: nullptr;
 
 				if (!texture) {
@@ -282,7 +282,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (asset_registry::is_asset_loaded(handle)) {
+							if (scene->get_asset_registry().is_asset_loaded(handle)) {
 								sprite_comp.texture = handle;
 
 								g_modify_info.set_modified();
@@ -300,7 +300,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (asset_registry::is_asset_loaded(handle)) {
+								if (scene->get_asset_registry().is_asset_loaded(handle)) {
 									sprite_comp.texture = handle;
 
 									g_modify_info.set_modified();
@@ -337,7 +337,7 @@ void InspectorPanel::_draw() {
 
 	draw_component<TextRenderer>(
 			"Text Renderer", selected_entity,
-			[this](TextRenderer& text_comp) {
+			[&](TextRenderer& text_comp) {
 				BEGIN_FIELD("Text");
 				{
 					if (ImGui::InputTextMultiline("##TextControl", &text_comp.text)) {
@@ -348,7 +348,7 @@ void InspectorPanel::_draw() {
 
 				Ref<Font> font =
 						text_comp.font != 0
-						? asset_registry::get_asset<Font>(text_comp.font)
+						? scene->get_asset_registry().get_asset<Font>(text_comp.font)
 						: nullptr;
 
 				if (!font) {
@@ -363,7 +363,7 @@ void InspectorPanel::_draw() {
 						if (const ImGuiPayload* payload =
 										ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (asset_registry::is_asset_loaded(handle)) {
+							if (scene->get_asset_registry().is_asset_loaded(handle)) {
 								text_comp.font = handle;
 
 								g_modify_info.set_modified();
@@ -381,7 +381,7 @@ void InspectorPanel::_draw() {
 							if (const ImGuiPayload* payload =
 											ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
 								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (asset_registry::is_asset_loaded(handle)) {
+								if (scene->get_asset_registry().is_asset_loaded(handle)) {
 									text_comp.font = handle;
 
 									g_modify_info.set_modified();
@@ -730,8 +730,7 @@ void InspectorPanel::_draw() {
 
 	draw_component<ScriptComponent>(
 			"Script", selected_entity,
-			[selected_entity,
-					scene = SceneManager::get_active()](auto& component) mutable {
+			[selected_entity, scene](auto& component) {
 				bool script_class_exists =
 						ScriptEngine::does_entity_class_exists(component.class_name);
 
@@ -794,6 +793,8 @@ void InspectorPanel::_draw() {
 							}
 						}
 					}
+
+					ImGui::TreePop();
 				}
 			});
 
