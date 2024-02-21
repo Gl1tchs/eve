@@ -34,6 +34,11 @@ bool SceneManager::load_scene(const std::string& path) {
 	return true;
 }
 
+void SceneManager::set_active(Ref<Scene> scene) {
+	s_active_scene.reset();
+	s_active_scene = scene;
+}
+
 Ref<Scene>& SceneManager::get_active() {
 	return s_active_scene;
 }

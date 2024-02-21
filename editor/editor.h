@@ -47,8 +47,11 @@ private:
 	// scene runtime
 	void _set_scene_state(SceneState _state);
 
+	void _create_scene();
+
 	void _on_scene_open();
 
+	// scene controls
 	void _on_scene_play();
 
 	void _on_scene_stop();

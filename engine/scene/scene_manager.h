@@ -8,6 +8,8 @@ public:
 	// TODO	Make an async version
 	static bool load_scene(const std::string& path);
 
+	static void set_active(Ref<Scene> scene);
+
 	static Ref<Scene>& get_active();
 
 private:

@@ -4,7 +4,6 @@
 #include "core/uid.h"
 #include "physics/physics_system.h"
 #include "project/project.h"
-#include "renderer/font.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/transform.h"
@@ -526,6 +525,7 @@ void Scene::serialize(Ref<Scene> scene, std::string path) {
 	scene_json["uid"] = scene->handle;
 	scene_json["name"] = scene->name;
 	scene_json["entities"] = Json::array();
+	scene_json["assets"] = Json::array();
 
 	scene->view<entt::entity>().each([&](auto entity_id) {
 		Entity entity = { entity_id, scene.get() };

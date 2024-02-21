@@ -139,6 +139,7 @@ private:
 
 	std::vector<Entity> selected_entities;
 
+	friend class EditorApplication;
 	friend class HierarchyPanel;
 };
 

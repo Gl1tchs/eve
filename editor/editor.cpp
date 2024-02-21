@@ -114,6 +114,7 @@ void EditorApplication::_setup_menubar() {
 		"File",
 		{
 				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
+				{ "New Scene", "", BIND_FUNC(_create_scene) },
 				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
 				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) },
 				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(quit) },
@@ -227,6 +228,8 @@ void EditorApplication::_save_active_scene_as() {
 		return;
 	}
 
+	editor_scene->path = path;
+
 	Scene::serialize(editor_scene, path);
 
 	_on_scene_save();
@@ -265,6 +268,13 @@ void EditorApplication::_on_scene_save() {
 void EditorApplication::_set_scene_state(SceneState _state) {
 	state = _state;
 	toolbar.set_state(state);
+}
+
+void EditorApplication::_create_scene() {
+	editor_scene = create_ref<Scene>();
+	SceneManager::set_active(editor_scene);
+
+	g_modify_info.set_modified();
 }
 
 void EditorApplication::_on_scene_open() {

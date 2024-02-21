@@ -131,6 +131,10 @@ void AssetRegistry::unload_asset(const AssetHandle& handle) {
 
 void AssetRegistry::unload_asset(const std::string& path) {
 	AssetHandle handle = get_handle_from_path(path);
+	if (!handle) {
+		return;
+	}
+
 	unload_asset(handle);
 }
 
@@ -146,6 +150,9 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 	EVE_PROFILE_FUNCTION();
 
 	const fs::path path_abs = Project::get_asset_path(path);
+	if (!fs::exists(path)) {
+		return INVALID_UID;
+	}
 
 	// return handle from cache if found
 	if (const auto it = file_uid_cache.find(path_abs); it != file_uid_cache.end()) {

@@ -3,6 +3,7 @@
 #include "data/fonts/font_awesome.h"
 #include "project/project.h"
 #include "scene/scene_manager.h"
+#include "utils/platform_utils.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -12,6 +13,25 @@ ContentBrowserPanel::ContentBrowserPanel() {
 }
 
 ContentBrowserPanel::~ContentBrowserPanel() {
+}
+
+// get unique new scene path
+inline static std::string get_new_scene_path() {
+	static uint32_t iteration = 0;
+
+	std::string path = iteration > 0
+			? std::format("res://new_scene{}.escn", iteration)
+			: "res://new_scene.escn";
+
+	const fs::path fs_path = Project::get_asset_path(path);
+	if (fs::exists(fs_path)) {
+		iteration++;
+		return get_new_scene_path();
+	}
+
+	iteration++;
+
+	return path;
 }
 
 void ContentBrowserPanel::_draw() {
@@ -41,6 +61,22 @@ void ContentBrowserPanel::_draw() {
 
 	ImGui::Dummy(
 			ImVec2(ImGui::GetWindowWidth(), std::max(ImGui::GetContentRegionAvail().y, 100.0f)));
+
+	if (ImGui::BeginPopupContextItem("ContentBrowserContextMenu")) {
+		if (ImGui::BeginMenu("Create")) {
+			if (ImGui::MenuItem("Scene")) {
+				Scene::serialize(create_ref<Scene>(), get_new_scene_path());
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::MenuItem("Open In Explorer")) {
+			open_folder_in_explorer(Project::get_asset_directory());
+		}
+
+		ImGui::EndPopup();
+	}
 
 	// reset renaming index
 	if (ImGui::IsItemClicked() || (renaming_idx != -1 && ImGui::IsKeyPressed(ImGuiKey_Escape))) {

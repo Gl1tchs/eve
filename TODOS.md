@@ -11,6 +11,7 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Seperate thread for rendering and window.
 - [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization

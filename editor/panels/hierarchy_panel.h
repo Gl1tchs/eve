@@ -18,11 +18,11 @@ protected:
 	void _draw() override;
 
 private:
-	void _draw_entity(Entity& entity, bool is_child = false);
+	void _draw_entity(Entity entity, bool is_child = false);
 
-	void _draw_entity_context_menu(Entity& entity);
+	void _draw_entity_context_menu(Entity entity);
 
-	void _draw_entity_drag_drop_src(Entity& entity);
+	void _draw_entity_drag_drop_src(Entity entity);
 
 	void _draw_entity_drag_drop_target(const Entity& new_parent);
 

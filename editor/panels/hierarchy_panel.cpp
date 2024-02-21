@@ -72,7 +72,7 @@ void HierarchyPanel::_draw() {
 	}
 }
 
-void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
+void HierarchyPanel::_draw_entity(Entity entity, bool is_child) {
 	if (!entity) {
 		return;
 	}
@@ -144,7 +144,7 @@ void HierarchyPanel::_draw_entity(Entity& entity, bool is_child) {
 	ImGui::PopID();
 }
 
-void HierarchyPanel::_draw_entity_context_menu(Entity& entity) {
+void HierarchyPanel::_draw_entity_context_menu(Entity entity) {
 	auto scene = SceneManager::get_active();
 	if (!scene || !entity) {
 		return;
@@ -157,26 +157,28 @@ void HierarchyPanel::_draw_entity_context_menu(Entity& entity) {
 			g_modify_info.set_modified();
 		}
 
-		if (ImGui::MenuItem("Add Child")) {
-			scene->create("Entity", entity.get_uid());
+		if (entity) {
+			if (ImGui::MenuItem("Add Child")) {
+				scene->create("Entity", entity.get_uid());
 
-			g_modify_info.set_modified();
-		}
+				g_modify_info.set_modified();
+			}
 
-		if (ImGui::MenuItem("Delete")) {
-			// Handle logic to remove the entity
-			const auto selected_entities = scene->get_selected_entities();
+			if (ImGui::MenuItem("Delete")) {
+				// Handle logic to remove the entity
+				const auto selected_entities = scene->get_selected_entities();
 
-			entities_to_remove.insert(entities_to_remove.end(), selected_entities.begin(), selected_entities.end());
+				entities_to_remove.insert(entities_to_remove.end(), selected_entities.begin(), selected_entities.end());
 
-			g_modify_info.set_modified();
+				g_modify_info.set_modified();
+			}
 		}
 
 		ImGui::EndPopup();
 	}
 }
 
-void HierarchyPanel::_draw_entity_drag_drop_src(Entity& entity) {
+void HierarchyPanel::_draw_entity_drag_drop_src(Entity entity) {
 	if (ImGui::BeginDragDropSource()) {
 		ImGui::SetDragDropPayload("DND_PAYLOAD_ENTITY", &entity.get_uid(),
 				sizeof(UID));
