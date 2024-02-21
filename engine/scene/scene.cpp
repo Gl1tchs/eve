@@ -374,10 +374,8 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	if (entity.has_component<SpriteRenderer>()) {
 		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
-		const auto texture = scene->get_asset_registry().get_asset<Texture2D>(sc.texture);
-
 		out["sprite_renderer_component"] = Json{
-			{ "texture", texture->handle },
+			{ "texture", sc.texture },
 			{ "color", sc.color },
 			{ "tex_tiling", sc.tex_tiling }
 		};
@@ -386,11 +384,9 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	if (entity.has_component<TextRenderer>()) {
 		const TextRenderer& tc = entity.get_component<TextRenderer>();
 
-		const auto font = scene->get_asset_registry().get_asset<Font>(tc.font);
-
 		out["text_renderer_component"] = Json{
 			{ "text", tc.text },
-			{ "font", font->handle },
+			{ "font", tc.font },
 			{ "fg_color", tc.fg_color },
 			{ "bg_color", tc.bg_color },
 			{ "kerning", tc.kerning },
