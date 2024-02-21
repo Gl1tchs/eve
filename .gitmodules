@@ -7,9 +7,6 @@
 [submodule "vendor/entt"]
 	path = vendor/entt
 	url = https://github.com/skypjack/entt.git
-[submodule "msdf-atlas-gen-cmake"]
-	path = vendor/msdf-atlas-gen
-	url = https://github.com/Gl1tchs/msdf-atlas-gen.git
 [submodule "vendor/imgui"]
 	path = vendor/imgui
 	url = https://github.com/adobe/imgui.git
@@ -17,3 +14,6 @@
 [submodule "vendor/box2d"]
 	path = vendor/box2d
 	url = https://github.com/erincatto/box2d.git
+[submodule "vendor/msdf-atlas-gen"]
+	path = vendor/msdf-atlas-gen
+	url = https://github.com/Gl1tchs/msdf-atlas-gen.git

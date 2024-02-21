@@ -1,10 +1,8 @@
 #include "panels/content_browser.h"
 
 #include "asset/asset_registry.h"
-#include "core/json_utils.h"
 #include "data/fonts/font_awesome.h"
 #include "project/project.h"
-#include "renderer/texture.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
@@ -102,7 +100,7 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 				ImGui::SetDragDropPayload(payload_name.c_str(), &handle,
 						sizeof(AssetHandle));
 
-				ImGui::SetTooltip("%s", serialize_asset_type(type));
+				ImGui::SetTooltip("%s", serialize_asset_type(type).c_str());
 
 				ImGui::EndDragDropSource();
 			}

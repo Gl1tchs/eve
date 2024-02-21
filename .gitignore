@@ -3,6 +3,10 @@
 .cache/
 .idea/
 
+# Python files
+env
+__pycache__
+
 # Compiled Object files
 *.slo
 *.lo

@@ -1,6 +1,5 @@
 #include "physics/physics_system.h"
 
-#include "core/application.h"
 #include "scene/components.h"
 #include "scene/entity.h"
 

@@ -6,6 +6,7 @@
 #include "renderer/texture.h"
 #include "scene/components.h"
 #include "scene/entity.h"
+#include "scene/scene_manager.h"
 #include "scene/transform.h"
 #include "scripting/script_engine.h"
 
@@ -845,7 +846,7 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::SHORT: {
 			int16_t data = !use_default ? script_field.get_value<int16_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<int16_t>::min(),
 						std::numeric_limits<int16_t>::max())) {
 				script_field.set_value(data);
 
@@ -856,7 +857,7 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::INT: {
 			int data = !use_default ? script_field.get_value<int>() : 0;
 			if (ImGui::DragInt(name.c_str(), &data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<int>::min(),
 						std::numeric_limits<int>::max())) {
 				script_field.set_value(data);
 
@@ -867,8 +868,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::LONG: {
 			int64_t data = !use_default ? script_field.get_value<int64_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
-						std::numeric_limits<int64_t>::max())) {
+						std::numeric_limits<int32_t>::min(),
+						std::numeric_limits<int32_t>::max())) {
 				script_field.set_value(data);
 
 				g_modify_info.set_modified();
@@ -889,7 +890,7 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::USHORT: {
 			uint16_t data = !use_default ? script_field.get_value<uint16_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<uint16_t>::min(),
 						std::numeric_limits<uint16_t>::max())) {
 				script_field.set_value(data);
 
@@ -900,7 +901,7 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::UINT: {
 			uint32_t data = !use_default ? script_field.get_value<uint32_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<uint32_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
 				script_field.set_value(data);
 
@@ -911,8 +912,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 		case ScriptFieldType::ULONG: {
 			uint64_t data = !use_default ? script_field.get_value<uint64_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
-						std::numeric_limits<uint64_t>::max())) {
+						std::numeric_limits<uint32_t>::min(),
+						std::numeric_limits<uint32_t>::max())) {
 				script_field.set_value(data);
 
 				g_modify_info.set_modified();
@@ -981,6 +982,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			}
 			break;
 		}
+		case ScriptFieldType::NONE:
+			break;
 	}
 }
 
@@ -1030,7 +1033,7 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::SHORT: {
 			int16_t data = script_instance->get_field_value<int16_t>(name);
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<int16_t>::min(),
 						std::numeric_limits<int16_t>::max())) {
 				script_instance->set_field_value(name, data);
 
@@ -1041,8 +1044,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::INT: {
 			int data = script_instance->get_field_value<int>(name);
 			if (ImGui::DragInt(name.c_str(), &data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
-						std::numeric_limits<int>::max())) {
+						std::numeric_limits<int32_t>::min(),
+						std::numeric_limits<int32_t>::max())) {
 				script_instance->set_field_value(name, data);
 
 				g_modify_info.set_modified();
@@ -1052,8 +1055,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::LONG: {
 			int64_t data = script_instance->get_field_value<int64_t>(name);
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
-						std::numeric_limits<int64_t>::max())) {
+						std::numeric_limits<int32_t>::min(),
+						std::numeric_limits<int32_t>::max())) {
 				script_instance->set_field_value(name, data);
 
 				g_modify_info.set_modified();
@@ -1074,7 +1077,7 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::USHORT: {
 			uint16_t data = script_instance->get_field_value<uint16_t>(name);
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<uint16_t>::min(),
 						std::numeric_limits<uint16_t>::max())) {
 				script_instance->set_field_value(name, data);
 
@@ -1085,7 +1088,7 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::UINT: {
 			uint32_t data = script_instance->get_field_value<uint32_t>(name);
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
+						std::numeric_limits<uint32_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
 				script_instance->set_field_value(name, data);
 
@@ -1096,8 +1099,8 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 		case ScriptFieldType::ULONG: {
 			uint64_t data = script_instance->get_field_value<uint64_t>(name);
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
-						std::numeric_limits<int8_t>::min(),
-						std::numeric_limits<uint64_t>::max())) {
+						std::numeric_limits<uint32_t>::min(),
+						std::numeric_limits<uint32_t>::max())) {
 				script_instance->set_field_value(name, data);
 
 				g_modify_info.set_modified();
@@ -1162,5 +1165,7 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			}
 			break;
 		}
+		case ScriptFieldType::NONE:
+			break;
 	}
 }

@@ -5,7 +5,6 @@
 
 #include "scene/entity.h"
 #include "scene/scene.h"
-#include "scene/scene_manager.h"
 
 class HierarchyPanel : public Panel {
 	EVE_IMPL_PANEL("Hierarchy")
@@ -13,7 +12,7 @@ class HierarchyPanel : public Panel {
 public:
 	HierarchyPanel();
 
-	const std::vector<Entity>& get_selected_entities();
+	const std::vector<Entity> get_selected_entities();
 
 protected:
 	void _draw() override;

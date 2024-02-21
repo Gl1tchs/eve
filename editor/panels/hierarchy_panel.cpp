@@ -7,12 +7,13 @@
 
 #include "data/fonts/font_awesome.h"
 #include "scene/entity.h"
+#include "scene/scene_manager.h"
 
 HierarchyPanel::HierarchyPanel() {
 	set_flags(ImGuiWindowFlags_HorizontalScrollbar);
 }
 
-const std::vector<Entity>& HierarchyPanel::get_selected_entities() {
+const std::vector<Entity> HierarchyPanel::get_selected_entities() {
 	auto scene = SceneManager::get_active();
 	if (!scene) {
 		return {};

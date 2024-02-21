@@ -21,5 +21,24 @@ A yet another cross platform game engine which is easy to use and performant.
 
 ## Docs
 
-- [Building](docs/BUILDING.md)
 - [Scripting](docs/SCRIPTING.md)
+
+## Building
+
+In order to build the engine, you need to build the engine core with editor and the script_core ,which is the main c# api, for the scripting separately. But we have a script to handle those for us.
+
+- First clone the github repository:
+```bash
+git clone https://github.com/gl1tchs/eve.git
+git submodule update --init --recursive
+```
+
+- Then build the engine in desired configuration:
+```bash
+python build.py --config=MinSizeRel
+```
+
+You can get more information about the build.py script by:
+```bash
+python build.py --help
+```
