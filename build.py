@@ -48,7 +48,9 @@ def main() -> int:
     if "--all" in args:
         flags = BUILD_FLAGS_ALL
 
-    if flags == 0:
+    has_check_flag : bool = "--check" in args
+
+    if not has_check_flag and flags == 0:
         print("You must specify at least one build target.")
         return
 
@@ -56,7 +58,7 @@ def main() -> int:
         print("Requirements doesn't met aborting.")
         return
 
-    if "--check" in args:
+    if has_check_flag:
         return
 
     config: str | None = None
