@@ -52,7 +52,6 @@ __pycache__
 [Bb]uild/*
 
 bin/*
-!bin/shaders
 !bin/res
 !bin/imgui.ini
 

@@ -13,6 +13,10 @@ def check_cmake() -> bool:
     try:
         subprocess.run(['cmake', '--version'], check=True, stdout=False)
         subprocess.run(['ninja', '--version'], check=True, stdout=False)
+        
+        print("CMake Found")
+        print("Ninja Found")
+
         return True
     except subprocess.CalledProcessError:
         print("CMake and Ninja not found.")
@@ -22,14 +26,28 @@ def check_cmake() -> bool:
 def check_dotnet() -> bool:
     try:
         subprocess.run(['dotnet', '--version'], check=True, stdout=False)
+        
+        print("DotnetSDK Found")
+
         return True
     except subprocess.CalledProcessError:
         print("DotnetSDK command not found.")
         return False
 
+def check_vulkan() -> bool:
+    try:
+        subprocess.run(['glslc', '--version'], check=True, stdout=False)
+        subprocess.run(['vulkaninfoSDK', '--summary'], check=True, stdout=False)
+        
+        print("VulkanSDK Found")
+        
+        return True
+    except subprocess.CalledProcessError:
+        print("VulkanSDK command not found.")
+        return False
 
 def check_all() -> bool:
-    result : bool = check_os() and check_cmake() and check_dotnet()
+    result : bool = check_os() and check_cmake() and check_dotnet() and check_vulkan()
     if result:
         print("Requirements satisfied.")
     else:

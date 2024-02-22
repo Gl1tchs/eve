@@ -1,6 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include "core/file_system.h"
+
 enum class ShaderType { NONE = 0,
 	VERTEX,
 	FRAGMENT,
@@ -14,8 +16,6 @@ class Shader final {
 public:
 	Shader(const char* vs_path, const char* fs_path);
 	~Shader();
-
-	void recompile(const char* vs_path, const char* fs_path);
 
 	void bind() const;
 
@@ -34,15 +34,7 @@ public:
 	uint32_t get_renderer_id() const { return renderer_id; }
 
 private:
-	std::string _load_shader_source(const char* path);
-
 	int _get_uniform_location(const char* name) const;
-
-	static bool _check_compile_errors(uint32_t shader,
-			ShaderType type);
-
-	static uint32_t _compile_shader(const char* source,
-			ShaderType type);
 
 private:
 	uint32_t renderer_id;

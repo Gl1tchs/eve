@@ -4,7 +4,6 @@
 #include "renderer/frame_buffer.h"
 #include "renderer/render_command.h"
 #include "renderer/shader.h"
-#include "renderer/texture.h"
 #include "renderer/vertex_array.h"
 
 PostProcessor::PostProcessor() {
@@ -14,24 +13,24 @@ PostProcessor::PostProcessor() {
 
 	// TODO maybe use single shader?
 	gray_scale_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert",
-			"shaders/post-processing/gray_scale.frag");
+			"shaders/post-processing/screen.vert.spv",
+			"shaders/post-processing/gray-scale.frag.spv");
 
 	chromatic_aberration_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert",
-			"shaders/post-processing/chromatic-aberration.frag");
+			"shaders/post-processing/screen.vert.spv",
+			"shaders/post-processing/chromatic-aberration.frag.spv");
 
 	blur_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert",
-			"shaders/post-processing/blur.frag");
+			"shaders/post-processing/screen.vert.spv",
+			"shaders/post-processing/blur.frag.spv");
 
 	sharpen_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert",
-			"shaders/post-processing/sharpen.frag");
+			"shaders/post-processing/screen.vert.spv",
+			"shaders/post-processing/sharpen.frag.spv");
 
 	vignette_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert",
-			"shaders/post-processing/vignette.frag");
+			"shaders/post-processing/screen.vert.spv",
+			"shaders/post-processing/vignette.frag.spv");
 
 	FrameBufferCreateInfo fb_info;
 	fb_info.width = 1280;

@@ -4,12 +4,14 @@ layout(location = 0) in vec2 v_tex_coord;
 
 layout(location = 0) out vec4 o_color;
 
-uniform sampler2D u_screen_texture;
+layout(binding = 0) uniform sampler2D u_screen_texture;
 
-uniform float u_inner;
-uniform float u_outer;
-uniform float u_strength;
-uniform float u_curvature;
+layout(std140, binding = 0) uniform UniformBlock {
+	float u_inner;
+	float u_outer;
+	float u_strength;
+	float u_curvature;
+};
 
 void main() {
 	o_color = texture(u_screen_texture, v_tex_coord);

@@ -1,49 +1,9 @@
+from .config import *
+
 import os
 import subprocess
 
 from pathlib import Path
-from enum import Enum
-
-BUILD_FLAGS_BUILD_ENGINE: int = 1 << 0
-BUILD_FLAGS_BUILD_SCRIPT_CORE: int = 1 << 1
-BUILD_FLAGS_BUILD_SAMPLE: int = 1 << 2
-
-
-class BuildConfig(Enum):
-    NONE = 0
-    DEBUG = 1
-    RELEASE = 2
-    REL_WITH_DEB_INFO = 3
-    MIN_SIZE_REL = 4
-
-
-def deserialize_build_config(config: str) -> BuildConfig:
-    match config:
-        case "Debug":
-            return BuildConfig.DEBUG
-        case "Release":
-            return BuildConfig.RELEASE
-        case "RelWithDebInfo":
-            return BuildConfig.REL_WITH_DEB_INFO
-        case "MinSizeRel":
-            return BuildConfig.MIN_SIZE_REL
-        case _:
-            return BuildConfig.NONE
-
-
-def serialize_build_config(config: BuildConfig) -> str:
-    match config:
-        case BuildConfig.DEBUG:
-            return "Debug"
-        case BuildConfig.RELEASE:
-            return "Release"
-        case BuildConfig.REL_WITH_DEB_INFO:
-            return "RelWithDebInfo"
-        case BuildConfig.MIN_SIZE_REL:
-            return "MinSizeRel"
-        case _:
-            return "None"
-
 
 file_path = Path(os.path.abspath(__file__)).parent
 
@@ -122,6 +82,60 @@ def build_sample(config: BuildConfig, clean_build: bool):
         exit(1)
 
 
+def compile_shaders(config: BuildConfig, clean_build: bool):
+    if config is BuildConfig.NONE:
+        config = BuildConfig.MIN_SIZE_REL
+
+    config_str = "EVE_CONFIG_"
+    match config:
+        case BuildConfig.DEBUG:
+            config_str = config_str + "DEBUG"
+        case BuildConfig.RELEASE:
+            config_str = config_str + "RELEASE"
+        case BuildConfig.REL_WITH_DEB_INFO:
+            config_str = config_str + "REL_WITH_DEB_INFO"
+        case BuildConfig.MIN_SIZE_REL:
+            config_str = config_str + "MIN_SIZE_REL"
+        case _:
+            config_str = config_str + "MIN_SIZE_REL"
+
+    cwd = file_path.parent
+
+    shader_path = cwd / "shaders"
+
+    shader_include_path = shader_path / "include"
+    shader_source_path = shader_path / "src"
+
+    try:
+        for shader in shader_source_path.glob("**/*"):
+            if not shader.is_file():
+                continue
+
+            # output path without src/
+            out_path: Path = cwd / "bin" / shader.relative_to(cwd)
+            out_path_str = str(out_path).replace(os.sep + "src", "")
+            out_path = Path(out_path_str).with_suffix(out_path.suffix + ".spv")
+
+            if not out_path.parent.exists():
+                os.makedirs(out_path.parent)
+
+            args = [
+                "glslc",
+                shader,
+                "-I", shader_include_path,
+                "-std=450core",
+                f"-D{config_str}",
+                "-o", out_path
+            ]
+
+            subprocess.check_call(args=args, cwd=cwd)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while compiling shaders: {e}")
+        exit(1)
+
+    print("Shaders builded successfully.")
+
+
 def build(config: BuildConfig, flags: int, clean_build: bool):
     if flags & BUILD_FLAGS_BUILD_ENGINE:
         build_engine(config, clean_build)
@@ -131,3 +145,6 @@ def build(config: BuildConfig, flags: int, clean_build: bool):
 
     if flags & BUILD_FLAGS_BUILD_SAMPLE:
         build_sample(config, clean_build)
+
+    if flags & BUILD_FLAGS_COMPILE_SHADERS:
+        compile_shaders(config, clean_build)

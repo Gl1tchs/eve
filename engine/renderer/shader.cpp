@@ -42,92 +42,91 @@ int shader_type_to_opengl(ShaderType type) {
 	}
 }
 
+static bool check_compile_errors(uint32_t shader_id) {
+	int compiled = 0;
+	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &compiled);
+
+	if (compiled == GL_FALSE) {
+		int max_length = 0;
+		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &max_length);
+
+		std::vector<char> info_log(max_length);
+		glGetShaderInfoLog(shader_id, max_length, &max_length, &info_log[0]);
+
+		glDeleteShader(shader_id);
+
+		std::string str(info_log.begin(), info_log.end());
+		EVE_LOG_ENGINE_ERROR("Shader compilation failed: {}", str);
+
+		return false;
+	}
+
+	return true;
+}
+
 Shader::Shader(const char* vs_path, const char* fs_path) :
 		renderer_id(0) {
-	recompile(vs_path, fs_path);
-}
-
-Shader::~Shader() {
-	glDeleteProgram(renderer_id);
-}
-
-void Shader::recompile(const char* vs_path, const char* fs_path) {
 	EVE_PROFILE_FUNCTION();
 
 	glDeleteProgram(renderer_id);
 	renderer_id = glCreateProgram();
 
-	std::string vertex_source = _load_shader_source(vs_path);
-	const uint32_t vertex_shader =
-			_compile_shader(vertex_source.c_str(), ShaderType::VERTEX);
+	ScopedBuffer vertex_source = file_system::read_to_buffer(vs_path);
+	const uint32_t vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderBinary(1, &vertex_shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB,
+			vertex_source.get_data(), vertex_source.get_size());
+	glSpecializeShaderARB(vertex_shader, "main", 0, nullptr, nullptr);
+
+	EVE_ASSERT_ENGINE(check_compile_errors(vertex_shader), "Could not compile VertexShader!");
 	glAttachShader(renderer_id, vertex_shader);
 
-	std::string fragment_source = _load_shader_source(fs_path);
-	const uint32_t fragment_shader =
-			_compile_shader(fragment_source.c_str(), ShaderType::FRAGMENT);
+	ScopedBuffer fragment_source = file_system::read_to_buffer(fs_path);
+	const uint32_t fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderBinary(1, &fragment_shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB,
+			fragment_source.get_data(), fragment_source.get_size());
+	glSpecializeShaderARB(fragment_shader, "main", 0, nullptr, nullptr);
+
+	EVE_ASSERT_ENGINE(check_compile_errors(fragment_shader), "Could not compile FragmentShader!");
 	glAttachShader(renderer_id, fragment_shader);
 
 	glLinkProgram(renderer_id);
+
+	int is_linked = 0;
+	glGetProgramiv(renderer_id, GL_LINK_STATUS, &is_linked);
+
+	if (is_linked == GL_FALSE) {
+		int max_length = 0;
+		glGetProgramiv(renderer_id, GL_INFO_LOG_LENGTH, &max_length);
+
+		std::vector<char> info_log(max_length);
+		glGetProgramInfoLog(renderer_id, max_length, &max_length, &info_log[0]);
+
+		glDeleteProgram(renderer_id);
+
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+
+		std::string str(info_log.begin(), info_log.end());
+		EVE_LOG_ENGINE_ERROR("Shader linkage failed: {}", str);
+		EVE_ASSERT_ENGINE(false);
+	}
+
+	glDetachShader(renderer_id, vertex_shader);
+	glDetachShader(renderer_id, fragment_shader);
 
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 }
 
+Shader::~Shader() {
+	glDeleteProgram(renderer_id);
+}
 void Shader::bind() const {
 	glUseProgram(renderer_id);
 }
 
 void Shader::unbind() const {
 	glUseProgram(0);
-}
-
-std::string Shader::_load_shader_source(const char* path) {
-	if (!std::filesystem::exists(path)) {
-		EVE_LOG_ENGINE_ERROR("Shader file not found at: {}", path);
-		return "";
-	}
-
-	const std::string include_identifier = "#include ";
-	const std::string begin_custo_identifier = "#pragma custom";
-	static bool is_recursive_call = false;
-
-	std::string full_source_code;
-	std::ifstream file(path);
-
-	if (!file.is_open()) {
-		EVE_LOG_ENGINE_ERROR("Could not open the shader at: {}", path);
-		return full_source_code;
-	}
-
-	std::string line_buffer;
-	while (std::getline(file, line_buffer)) {
-		if (line_buffer.find(include_identifier) != std::string::npos) {
-			line_buffer.erase(0, include_identifier.size());
-			line_buffer.erase(0, 1);
-			line_buffer.erase(line_buffer.size() - 1);
-
-			std::filesystem::path p = fs::path(path).parent_path();
-			line_buffer.insert(0, p.string() + "/");
-
-			is_recursive_call = true;
-			full_source_code += _load_shader_source(line_buffer.c_str());
-			continue;
-		}
-
-		full_source_code += line_buffer + '\n';
-	}
-
-	if (!is_recursive_call) {
-		full_source_code += '\0';
-	}
-
-	file.close();
-
-	return full_source_code;
-}
-
-int Shader::_get_uniform_location(const char* name) const {
-	return glGetUniformLocation(renderer_id, name);
 }
 
 void Shader::set_uniform(const char* name, const int value) const {
@@ -166,33 +165,6 @@ void Shader::set_uniform(const char* name, int count, float* value) const {
 	glUniform1fv(_get_uniform_location(name), count, value);
 }
 
-bool Shader::_check_compile_errors(const uint32_t shader,
-		const ShaderType type) {
-	int success;
-	char info_log[512];
-
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(shader, 512, nullptr, info_log);
-		EVE_LOG_ENGINE_ERROR("Unable to link shader of {} shader:\n{}",
-				serialize_shader_type(type), info_log);
-		return false;
-	}
-
-	return true;
-}
-
-uint32_t Shader::_compile_shader(const char* source, ShaderType type) {
-	EVE_ASSERT_ENGINE(type != ShaderType::NONE)
-
-	const uint32_t shader = glCreateShader(shader_type_to_opengl(type));
-	glShaderSource(shader, 1, &source, nullptr);
-	glCompileShader(shader);
-
-	if (!_check_compile_errors(shader, type)) {
-		EVE_LOG_ENGINE_ERROR("Unable to compile shader:\n{}", source);
-		EVE_ASSERT_ENGINE(false);
-	}
-
-	return shader;
+int Shader::_get_uniform_location(const char* name) const {
+	return glGetUniformLocation(renderer_id, name);
 }

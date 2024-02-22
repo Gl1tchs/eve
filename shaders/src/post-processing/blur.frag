@@ -4,9 +4,12 @@ layout(location = 0) in vec2 v_tex_coord;
 
 layout(location = 0) out vec4 o_color;
 
-uniform sampler2D u_screen_texture;
-uniform int u_size;
-uniform float u_seperation;
+layout(binding = 0) uniform sampler2D u_screen_texture;
+
+layout(std140, binding = 0) uniform UniformBlock {
+	int u_size;
+	float u_separation;
+};
 
 void main() {
 	vec2 tex_size = textureSize(u_screen_texture, 0).xy;
@@ -18,7 +21,7 @@ void main() {
 		return;
 	}
 
-	float separation = u_seperation;
+	float separation = u_separation;
 	separation = max(separation, 1);
 
 	o_color.rgb = vec3(0);
