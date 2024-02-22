@@ -6,6 +6,7 @@
 #include <misc/cpp/imgui_stdlib.h>
 
 #include "data/fonts/font_awesome.h"
+#include "scene/components.h"
 #include "scene/entity.h"
 #include "scene/scene_manager.h"
 
@@ -34,11 +35,68 @@ void HierarchyPanel::_draw() {
 			(ImGui::CalcTextSize(ICON_FA_PLUS).x +
 					2 * ImGui::GetStyle().FramePadding.x));
 
-	if (ImGui::Button(ICON_FA_PLUS)) {
-		// create entity and set selected to new created entity
-		scene->select_entity(scene->create("Entity"));
+	if (ImGui::BeginPopup("HierarchyEntityPopup")) {
+		if (ImGui::MenuItem("Empty")) {
+			scene->select_entity(scene->create("Entity"));
 
-		g_modify_info.set_modified();
+			g_modify_info.set_modified();
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::MenuItem("Sprite")) {
+			Entity entity = scene->create("Entity");
+
+			entity.add_component<SpriteRenderer>();
+
+			scene->select_entity(entity);
+
+			g_modify_info.set_modified();
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::MenuItem("Text")) {
+			Entity entity = scene->create("Entity");
+
+			auto& tc = entity.add_component<TextRenderer>();
+			tc.text = "Hello, World!";
+
+			scene->select_entity(entity);
+
+			g_modify_info.set_modified();
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::MenuItem("Camera")) {
+			Entity entity = scene->create("Entity");
+
+			entity.add_component<CameraComponent>();
+
+			scene->select_entity(entity);
+
+			g_modify_info.set_modified();
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::MenuItem("Physics Object")) {
+			Entity entity = scene->create("Entity");
+			entity.add_component<Rigidbody2D>();
+
+			scene->select_entity(entity);
+
+			g_modify_info.set_modified();
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::Button(ICON_FA_PLUS)) {
+		ImGui::OpenPopup("HierarchyEntityPopup");
 	}
 
 	ImGui::Separator();

@@ -2,7 +2,6 @@
 
 ## Game Demo Improvements
 - [ ] Script engine wont work for the projects with names that has space in it.
-- [ ] Ability to just create predefined entities such as sprite, physics body etc.
 - [ ] UI Gizmos
 
 ## Bugs
