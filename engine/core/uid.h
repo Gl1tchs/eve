@@ -20,7 +20,7 @@ struct UID {
 	operator uint64_t() const { return value; }
 };
 
-const UID INVALID_UID = UID(0);
+inline const UID INVALID_UID{ 0 };
 
 namespace std {
 template <typename T>

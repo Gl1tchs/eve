@@ -1,14 +1,14 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-constexpr glm::vec3 VEC3_UP(0.0f, 1.0f, 0.0f);
-constexpr glm::vec3 VEC3_RIGHT(1.0f, 0.0f, 0.0f);
-constexpr glm::vec3 VEC3_FORWARD(0.0f, 0.0f, -1.0f);
+inline constexpr glm::vec3 VEC3_UP(0.0f, 1.0f, 0.0f);
+inline constexpr glm::vec3 VEC3_RIGHT(1.0f, 0.0f, 0.0f);
+inline constexpr glm::vec3 VEC3_FORWARD(0.0f, 0.0f, -1.0f);
 
-constexpr glm::vec3 VEC3_ZERO(0.0f, 0.0f, 0.0f);
-constexpr glm::vec3 VEC3_ONE(1.0f, 1.0f, 1.0f);
+inline constexpr glm::vec3 VEC3_ZERO(0.0f, 0.0f, 0.0f);
+inline constexpr glm::vec3 VEC3_ONE(1.0f, 1.0f, 1.0f);
 
-constexpr glm::vec3 WORLD_UP = VEC3_UP;
+inline constexpr glm::vec3 WORLD_UP = VEC3_UP;
 
 struct Transform final {
 	Transform* parent = nullptr;
@@ -38,6 +38,6 @@ struct Transform final {
 	glm::vec3 get_direction() const;
 };
 
-constexpr Transform DEFAULT_TRANSFORM{};
+inline constexpr Transform DEFAULT_TRANSFORM{};
 
 #endif

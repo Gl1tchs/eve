@@ -96,6 +96,6 @@ private:
 	friend class HierarchyPanel;
 };
 
-constexpr Entity INVALID_ENTITY{};
+inline constexpr Entity INVALID_ENTITY{};
 
 #endif

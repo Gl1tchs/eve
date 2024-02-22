@@ -21,7 +21,6 @@
 - [ ] if selected multiple entities show shared components and change values together.
 - [ ] Hierarchy set parent of multiple entities. 
 - [ ] Hierarchy entity search and sorting
-- [ ] New Scene
 - [ ] Texture viewer / metadata inspector
 
 ## Renderer
@@ -42,6 +41,4 @@
 - [ ] Add is affected by gravity field to rigidbody.
 
 ## Asset
-- [ ] [More refactoriazation](https://developer.valvesoftware.com/wiki/Asset_System)
 - [ ] Change occurencies of entities when an asset renamed or removed
-- [ ] Do not get asset type from extension but from format
