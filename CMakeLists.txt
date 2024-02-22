@@ -10,6 +10,7 @@ include(CMakeOptions)
 
 set(EDITOR_DIR ${CMAKE_SOURCE_DIR}/editor)
 set(ENGINE_DIR ${CMAKE_SOURCE_DIR}/engine)
+set(RUNTIME_DIR ${CMAKE_SOURCE_DIR}/runtime)
 set(VENDOR_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
 # Define the targets
@@ -17,3 +18,4 @@ add_subdirectory(vendor)
 
 add_subdirectory(engine)
 add_subdirectory(editor)
+add_subdirectory(runtime)

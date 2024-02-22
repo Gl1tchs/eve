@@ -13,23 +13,23 @@ PostProcessor::PostProcessor() {
 
 	// TODO maybe use single shader?
 	gray_scale_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert.spv",
+			"shaders/screen.vert.spv",
 			"shaders/post-processing/gray-scale.frag.spv");
 
 	chromatic_aberration_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert.spv",
+			"shaders/screen.vert.spv",
 			"shaders/post-processing/chromatic-aberration.frag.spv");
 
 	blur_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert.spv",
+			"shaders/screen.vert.spv",
 			"shaders/post-processing/blur.frag.spv");
 
 	sharpen_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert.spv",
+			"shaders/screen.vert.spv",
 			"shaders/post-processing/sharpen.frag.spv");
 
 	vignette_shader = create_ref<Shader>(
-			"shaders/post-processing/screen.vert.spv",
+			"shaders/screen.vert.spv",
 			"shaders/post-processing/vignette.frag.spv");
 
 	FrameBufferCreateInfo fb_info;

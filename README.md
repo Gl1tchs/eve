@@ -21,7 +21,7 @@ A yet another cross platform game engine which is easy to use and performant.
 
 ## Docs
 
-- [Scripting](docs/SCRIPTING.md)
+- [Scripting Setup](docs/SCRIPTING_SETUP.md.md)
 
 ## Dependencies
 - Windows 10+

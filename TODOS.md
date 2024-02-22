@@ -22,6 +22,9 @@
 - [ ] Hierarchy entity search and sorting
 - [ ] Texture viewer / metadata inspector
 
+## Runtime
+- [ ] Debug information (for debug builds)
+
 ## Renderer
 - [ ] Saturation / Brightness / Temprature post processing effects.
 - [ ] Physics collider bounds rendering.

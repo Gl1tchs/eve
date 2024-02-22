@@ -16,7 +16,7 @@ typedef std::function<void(void)> MainThreadFunc;
 class Application {
 public:
 	Application(const ApplicationCreateInfo& info);
-	~Application();
+	virtual ~Application();
 
 	void run();
 

@@ -17,7 +17,7 @@
 class EditorApplication : public Application {
 public:
 	EditorApplication(const ApplicationCreateInfo& info);
-	~EditorApplication() = default;
+	virtual ~EditorApplication() = default;
 
 protected:
 	void _on_start() override;

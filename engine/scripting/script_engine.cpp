@@ -173,6 +173,10 @@ void ScriptEngine::reinit() {
 void ScriptEngine::shutdown() {
 	EVE_PROFILE_FUNCTION();
 
+	if (!is_initialized()) {
+		return;
+	}
+
 	_shutdown_mono();
 
 	delete s_data;
