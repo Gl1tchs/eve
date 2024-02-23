@@ -1,0 +1,10 @@
+#ifndef PLATFORM_ESH
+#define PLATFORM_ESH
+
+#ifdef EVE_PLATFORM_OPENGL
+#define EVE_VERTEX_INDEX gl_VertexID
+#else
+#define EVE_VERTEX_INDEX gl_VertexIndex
+#endif
+
+#endif

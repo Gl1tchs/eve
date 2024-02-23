@@ -100,7 +100,7 @@ void init() {
 	delete[] indices;
 
 	s_data->quad_shader = create_ref<Shader>(
-			"shaders/sprite.vert.spv", "shaders/sprite.frag.spv");
+			"shaders/sprite.esv.spv", "shaders/sprite.esf.spv");
 
 	// fill the textures with empty values (which is default white texture)
 	{
@@ -129,7 +129,7 @@ void init() {
 	s_data->text_vertex_array->set_index_buffer(quad_index_buffer);
 
 	s_data->text_shader = create_ref<Shader>(
-			"shaders/text.vert.spv", "shaders/text.frag.spv");
+			"shaders/text.esv.spv", "shaders/text.esf.spv");
 
 	// line data
 	s_data->line_vertex_array = create_ref<VertexArray>();
@@ -145,7 +145,7 @@ void init() {
 	s_data->line_vertex_array->add_vertex_buffer(s_data->line_vertex_buffer);
 
 	s_data->line_shader = create_ref<Shader>(
-			"shaders/line.vert.spv", "shaders/line.frag.spv");
+			"shaders/line.esv.spv", "shaders/line.esf.spv");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;

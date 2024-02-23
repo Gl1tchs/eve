@@ -40,7 +40,7 @@ protected:
 		// screen data
 		screen_vertex_array = create_ref<VertexArray>();
 		screen_shader = create_ref<Shader>(
-				"shaders/screen.vert.spv", "shaders/screen.frag.spv");
+				"shaders/screen.esv.spv", "shaders/screen.esf.spv");
 
 		SceneManager::get_active()->start();
 	}

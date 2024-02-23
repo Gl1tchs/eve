@@ -1,6 +1,6 @@
 #version 450 core
 
-#include "camera_data.glsl"
+#include "camera_data.esh"
 
 layout(location = 0) in vec2 v_tex_coord;
 layout(location = 1) in vec4 v_fg_color;

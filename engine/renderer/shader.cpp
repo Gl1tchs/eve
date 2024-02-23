@@ -64,8 +64,7 @@ static bool check_compile_errors(uint32_t shader_id) {
 	return true;
 }
 
-Shader::Shader(const char* vs_path, const char* fs_path) :
-		renderer_id(0) {
+Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
 	EVE_PROFILE_FUNCTION();
 
 	glDeleteProgram(renderer_id);
@@ -77,7 +76,8 @@ Shader::Shader(const char* vs_path, const char* fs_path) :
 			vertex_source.get_data(), vertex_source.get_size());
 	glSpecializeShaderARB(vertex_shader, "main", 0, nullptr, nullptr);
 
-	EVE_ASSERT_ENGINE(check_compile_errors(vertex_shader), "Could not compile VertexShader!");
+	EVE_ASSERT_ENGINE(check_compile_errors(vertex_shader),
+			"Could not compile VertexShader!");
 	glAttachShader(renderer_id, vertex_shader);
 
 	ScopedBuffer fragment_source = file_system::read_to_buffer(fs_path);
@@ -86,7 +86,8 @@ Shader::Shader(const char* vs_path, const char* fs_path) :
 			fragment_source.get_data(), fragment_source.get_size());
 	glSpecializeShaderARB(fragment_shader, "main", 0, nullptr, nullptr);
 
-	EVE_ASSERT_ENGINE(check_compile_errors(fragment_shader), "Could not compile FragmentShader!");
+	EVE_ASSERT_ENGINE(check_compile_errors(fragment_shader),
+			"Could not compile FragmentShader!");
 	glAttachShader(renderer_id, fragment_shader);
 
 	glLinkProgram(renderer_id);
@@ -98,16 +99,20 @@ Shader::Shader(const char* vs_path, const char* fs_path) :
 		int max_length = 0;
 		glGetProgramiv(renderer_id, GL_INFO_LOG_LENGTH, &max_length);
 
-		std::vector<char> info_log(max_length);
-		glGetProgramInfoLog(renderer_id, max_length, &max_length, &info_log[0]);
+		if (max_length > 0) {
+			std::vector<char> info_log(max_length);
+			glGetProgramInfoLog(
+					renderer_id, max_length, &max_length, &info_log[0]);
+
+			std::string str(info_log.begin(), info_log.end());
+			EVE_LOG_ENGINE_ERROR("Shader linkage failed: {}", str);
+		}
 
 		glDeleteProgram(renderer_id);
 
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
 
-		std::string str(info_log.begin(), info_log.end());
-		EVE_LOG_ENGINE_ERROR("Shader linkage failed: {}", str);
 		EVE_ASSERT_ENGINE(false);
 	}
 
@@ -118,16 +123,10 @@ Shader::Shader(const char* vs_path, const char* fs_path) :
 	glDeleteShader(fragment_shader);
 }
 
-Shader::~Shader() {
-	glDeleteProgram(renderer_id);
-}
-void Shader::bind() const {
-	glUseProgram(renderer_id);
-}
+Shader::~Shader() { glDeleteProgram(renderer_id); }
+void Shader::bind() const { glUseProgram(renderer_id); }
 
-void Shader::unbind() const {
-	glUseProgram(0);
-}
+void Shader::unbind() const { glUseProgram(0); }
 
 void Shader::set_uniform(const char* name, const int value) const {
 	glUniform1i(_get_uniform_location(name), value);
@@ -146,15 +145,18 @@ void Shader::set_uniform(const char* name, const glm::vec3 value) const {
 }
 
 void Shader::set_uniform(const char* name, const glm::vec4 value) const {
-	glUniform4f(_get_uniform_location(name), value.x, value.y, value.z, value.w);
+	glUniform4f(
+			_get_uniform_location(name), value.x, value.y, value.z, value.w);
 }
 
 void Shader::set_uniform(const char* name, const glm::mat3& value) const {
-	glUniformMatrix3fv(_get_uniform_location(name), 1, false, glm::value_ptr(value));
+	glUniformMatrix3fv(
+			_get_uniform_location(name), 1, false, glm::value_ptr(value));
 }
 
 void Shader::set_uniform(const char* name, const glm::mat4& value) const {
-	glUniformMatrix4fv(_get_uniform_location(name), 1, false, glm::value_ptr(value));
+	glUniformMatrix4fv(
+			_get_uniform_location(name), 1, false, glm::value_ptr(value));
 }
 
 void Shader::set_uniform(const char* name, int count, int* value) const {

@@ -1,5 +1,5 @@
-#ifndef POST_PROCESS_BLOCK_GLSL
-#define POST_PROCESS_BLOCK_GLSL
+#ifndef POST_PROCESS_COMMON_ESH
+#define POST_PROCESS_COMMON_ESH
 
 layout(std140, binding = 1) uniform PostProcessBlock {
 	float p1;

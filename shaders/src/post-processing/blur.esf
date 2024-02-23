@@ -1,7 +1,7 @@
 #version 450 core
 
-#include "platform_utils.glsl"
-#include "post_process_block.glsl"
+#include "platform.esh"
+#include "post_process_common.esh"
 
 layout(location = 0) in vec2 v_tex_coord;
 
@@ -29,12 +29,10 @@ void main() {
 
 	float count = 0.0;
 
-	vec2 frag_coord = get_platform_frag_coord(tex_size.y);
-
 	for (int i = -size; i <= size; ++i) {
 		for (int j = -size; j <= size; ++j) {
 			o_color.rgb += texture(u_screen_texture,
-					(frag_coord + (vec2(i, j) * separation)) / tex_size)
+					(gl_FragCoord.xy + (vec2(i, j) * separation)) / tex_size)
 								   .rgb;
 
 			count += 1.0;

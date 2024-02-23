@@ -1,7 +1,7 @@
 #version 450 core
 
-#include "platform_utils.glsl"
-#include "post_process_block.glsl"
+#include "platform.esh"
+#include "post_process_common.esh"
 
 layout(location = 0) in vec2 v_tex_coord;
 
@@ -14,7 +14,7 @@ layout(binding = 0) uniform sampler2D u_screen_texture;
 void main() {
 	vec2 tex_size = textureSize(u_screen_texture, 0).xy;
 
-	vec2 frag_coord = get_platform_frag_coord(tex_size.y);
+	vec2 frag_coord = gl_FragCoord.xy;
 
 	float neighbor = u_post_process_params.p1 * -1.0;
 	float center = u_post_process_params.p1 * 4.0 + 1.0;

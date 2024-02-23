@@ -23,20 +23,20 @@ PostProcessor::PostProcessor() {
 			create_ref<UniformBuffer>(sizeof(PostProcessUniformBlock), 1);
 
 	// TODO maybe use single shader?
-	gray_scale_shader = create_ref<Shader>("shaders/screen.vert.spv",
-			"shaders/post-processing/gray-scale.frag.spv");
+	gray_scale_shader = create_ref<Shader>("shaders/screen.esv.spv",
+			"shaders/post-processing/gray-scale.esf.spv");
 
-	chromatic_aberration_shader = create_ref<Shader>("shaders/screen.vert.spv",
-			"shaders/post-processing/chromatic-aberration.frag.spv");
+	chromatic_aberration_shader = create_ref<Shader>("shaders/screen.esv.spv",
+			"shaders/post-processing/chromatic-aberration.esf.spv");
 
 	blur_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv", "shaders/post-processing/blur.frag.spv");
+			"shaders/screen.esv.spv", "shaders/post-processing/blur.esf.spv");
 
-	sharpen_shader = create_ref<Shader>("shaders/screen.vert.spv",
-			"shaders/post-processing/sharpen.frag.spv");
+	sharpen_shader = create_ref<Shader>("shaders/screen.esv.spv",
+			"shaders/post-processing/sharpen.esf.spv");
 
-	vignette_shader = create_ref<Shader>("shaders/screen.vert.spv",
-			"shaders/post-processing/vignette.frag.spv");
+	vignette_shader = create_ref<Shader>("shaders/screen.esv.spv",
+			"shaders/post-processing/vignette.esf.spv");
 
 	FrameBufferCreateInfo fb_info;
 	fb_info.width = 1280;

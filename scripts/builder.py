@@ -106,6 +106,9 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
     shader_include_path = shader_path / "include"
     shader_source_path = shader_path / "src"
 
+    processing_shader_old = None
+    processing_shader_new = None
+
     try:
         for shader in shader_source_path.glob("**/*"):
             if not shader.is_file():
@@ -119,18 +122,53 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
             if not out_path.parent.exists():
                 os.makedirs(out_path.parent)
 
+            shader_suffix = shader.suffix
+
+            stage: str | None = None
+            match shader_suffix:
+                case ".esf":
+                    stage = "frag"
+                case ".esv":
+                    stage = "vert"
+                case _:
+                    continue
+
+            processing_shader_old = shader
+            processing_shader_new = shader.with_suffix("."+stage)
+
+            # rename to .vert or .frag to make "glslc" happy
+            # why does it even required at the first place????
+            os.rename(processing_shader_old, processing_shader_new)
+
+            # "-finvert-y" could be used for vulkan
+
             args = [
                 "glslc",
-                shader,
+                processing_shader_new,
+                f"-fshader-stage={stage}",
+                "--target-env=opengl",  # ! TODO
+                "-x", "glsl",
                 "-I", shader_include_path,
                 "-std=450core",
                 f"-D{config_str}",
-                "-DEVE_PLATFORM_OPENGL", #! TODO
+                "-DEVE_PLATFORM_OPENGL",  # ! TODO
                 "-o", out_path
             ]
 
+            if config is BuildConfig.RELEASE or config is BuildConfig.MIN_SIZE_REL:
+                # optimize
+                args.append("-O")
+                # treat all warnings as errors
+                args.append("-Werror")
+
             subprocess.check_call(args=args, cwd=cwd)
+
+            # get back to old name
+            os.rename(processing_shader_new, shader)
     except subprocess.CalledProcessError as e:
+        # get back to old name
+        os.rename(processing_shader_new, processing_shader_old)
+
         print(f"Error occurred while compiling shaders: {e}")
         exit(1)
 
