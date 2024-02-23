@@ -271,6 +271,10 @@ void EditorApplication::_set_scene_state(SceneState _state) {
 }
 
 void EditorApplication::_create_scene() {
+	if (!Project::get_active()) {
+		return;
+	}
+
 	editor_scene = create_ref<Scene>();
 	SceneManager::set_active(editor_scene);
 
