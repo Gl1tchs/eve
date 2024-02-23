@@ -7,6 +7,8 @@
 struct Input {
 	static void init();
 
+	static bool is_key_pressed_once(KeyCode key);
+
 	static bool is_key_pressed(KeyCode key);
 
 	static bool is_key_released(KeyCode key);

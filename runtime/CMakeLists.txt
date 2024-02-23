@@ -10,11 +10,6 @@ PUBLIC
     ${ENGINE_DIR}
 	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
 	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
-PRIVATE
-	${VENDOR_DIR}/imgui
 )
 
-target_link_libraries(runtime PRIVATE
-    eve
-	imgui
-)
+target_link_libraries(runtime PRIVATE eve)

@@ -12,8 +12,7 @@
 #include "scene/scene_manager.h"
 #include "scene/transform.h"
 
-SceneRenderer::SceneRenderer() :
-		viewport_size(0, 0) {
+SceneRenderer::SceneRenderer() : viewport_size(0, 0) {
 	FrameBufferCreateInfo fb_info;
 	fb_info.attachments = {
 		FrameBufferTextureFormat::RGBA8,
@@ -35,10 +34,12 @@ void SceneRenderer::render_runtime(float ds) {
 
 	Entity camera = [scene]() -> Entity {
 		const auto view = scene->view<CameraComponent>();
-		const auto camera_it = std::find_if(view.begin(), view.end(), [&](const auto& entity_handle) {
-			const Entity camera_candidate{ entity_handle, scene.get() };
-			return camera_candidate && camera_candidate.has_component<CameraComponent>();
-		});
+		const auto camera_it = std::find_if(
+				view.begin(), view.end(), [&](const auto& entity_handle) {
+					const Entity camera_candidate{ entity_handle, scene.get() };
+					return camera_candidate &&
+							camera_candidate.has_component<CameraComponent>();
+				});
 
 		if (camera_it != view.end()) {
 			return { *camera_it, scene.get() };
@@ -52,9 +53,10 @@ void SceneRenderer::render_runtime(float ds) {
 		const auto& tc = camera.get_transform();
 
 		CameraData data = {
-			cc.camera.get_view_matrix(tc),
-			cc.camera.get_projection_matrix(),
-			cc.camera.zoom_level
+			.view = cc.camera.get_view_matrix(tc),
+			.proj = cc.camera.get_projection_matrix(),
+			.zoom_level = cc.camera.zoom_level,
+			.aspect_ratio = cc.camera.aspect_ratio,
 		};
 
 		_render_scene(data);
@@ -84,9 +86,10 @@ void SceneRenderer::render_editor(float ds, Ref<EditorCamera>& editor_camera) {
 	}
 
 	CameraData data = {
-		editor_camera->get_view_matrix(),
-		editor_camera->get_projection_matrix(),
-		editor_camera->zoom_level
+		.view = editor_camera->get_view_matrix(),
+		.proj = editor_camera->get_projection_matrix(),
+		.zoom_level = editor_camera->zoom_level,
+		.aspect_ratio = editor_camera->aspect_ratio,
 	};
 
 	_render_scene(data);
@@ -119,14 +122,14 @@ void SceneRenderer::on_viewport_resize(glm::uvec2 size) {
 			});
 }
 
-void SceneRenderer::submit(const RenderFuncTickFormat format, const RenderFunc& function) {
+void SceneRenderer::submit(
+		const RenderFuncTickFormat format, const RenderFunc& function) {
 	render_functions[format].push_back(function);
 }
 
 uint32_t SceneRenderer::get_final_texture_id() const {
-	return post_processed
-			? post_processor->get_frame_buffer_renderer_id()
-			: frame_buffer->get_color_attachment_renderer_id(0);
+	return post_processed ? post_processor->get_frame_buffer_renderer_id()
+						  : frame_buffer->get_color_attachment_renderer_id(0);
 }
 
 void SceneRenderer::_render_scene(const CameraData& camera_data) {
@@ -149,7 +152,8 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 		int attachment_data = -1;
 		frame_buffer->clear_attachment(1, &attachment_data);
 
-		for (const auto function : render_functions[RenderFuncTickFormat::BEFORE_RENDER]) {
+		for (const auto function :
+				render_functions[RenderFuncTickFormat::BEFORE_RENDER]) {
 			function(frame_buffer);
 		}
 		render_functions[RenderFuncTickFormat::BEFORE_RENDER].clear();
@@ -157,40 +161,47 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 		renderer::begin_pass(camera_data);
 		{
 			scene->view<Transform, SpriteRenderer>().each(
-					[this, scene](entt::entity entity_id, const Transform& transform,
+					[this, scene](entt::entity entity_id,
+							const Transform& transform,
 							const SpriteRenderer& sprite) {
-						Ref<Texture2D> texture = scene->get_asset_registry().get_asset<Texture2D>(sprite.texture);
+						Ref<Texture2D> texture =
+								scene->get_asset_registry()
+										.get_asset<Texture2D>(sprite.texture);
 
-						renderer::draw_quad(
-								transform,
-								texture,
-								sprite.color,
-								sprite.tex_tiling,
-								(uint32_t)entity_id);
+						renderer::draw_quad(transform, texture, sprite.color,
+								sprite.tex_tiling, (uint32_t)entity_id);
 					});
 
 			scene->view<Transform, TextRenderer>().each(
-					[this, scene](entt::entity entity_id, const Transform& transform,
+					[this, scene](entt::entity entity_id,
+							const Transform& transform,
 							const TextRenderer& text_component) {
-						Ref<Font> font = scene->get_asset_registry().get_asset<Font>(text_component.font);
+						Ref<Font> font =
+								scene->get_asset_registry().get_asset<Font>(
+										text_component.font);
 						if (!font) {
 							font = Font::get_default();
 						}
 
-						renderer::draw_text(text_component.text, font ? font : Font::get_default(),
-								transform, text_component.fg_color, text_component.bg_color,
-								text_component.kerning, text_component.line_spacing,
-								text_component.is_screen_space, (uint32_t)entity_id);
+						renderer::draw_text(text_component.text,
+								font ? font : Font::get_default(), transform,
+								text_component.fg_color,
+								text_component.bg_color, text_component.kerning,
+								text_component.line_spacing,
+								text_component.is_screen_space,
+								(uint32_t)entity_id);
 					});
 
-			for (const auto function : render_functions[RenderFuncTickFormat::ON_RENDER]) {
+			for (const auto function :
+					render_functions[RenderFuncTickFormat::ON_RENDER]) {
 				function(frame_buffer);
 			}
 			render_functions[RenderFuncTickFormat::ON_RENDER].clear();
 		}
 		renderer::end_pass();
 
-		for (const auto function : render_functions[RenderFuncTickFormat::AFTER_RENDER]) {
+		for (const auto function :
+				render_functions[RenderFuncTickFormat::AFTER_RENDER]) {
 			function(frame_buffer);
 		}
 		render_functions[RenderFuncTickFormat::AFTER_RENDER].clear();
@@ -212,7 +223,8 @@ void SceneRenderer::_post_process() {
 
 	// TODO implement local effects
 	for (const auto& entity_id : view | std::views::filter(is_global_volume)) {
-		const PostProcessVolume& volume = scene->get_component<PostProcessVolume>(entity_id);
+		const PostProcessVolume& volume =
+				scene->get_component<PostProcessVolume>(entity_id);
 		post_processed = post_processor->process(frame_buffer, volume);
 	}
 }

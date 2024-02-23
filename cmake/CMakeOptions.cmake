@@ -6,10 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+	set(EVE_BUILD_TYPE "Debug")
 	add_compile_definitions(EVE_DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+	set(EVE_BUILD_TYPE "Releasec")
 	add_compile_definitions(EVE_RELEASE)
 elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+	set(EVE_BUILD_TYPE "Dist")	
 	add_compile_definitions(EVE_DIST)
 endif()
 

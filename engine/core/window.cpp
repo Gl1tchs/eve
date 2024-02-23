@@ -126,13 +126,6 @@ void Window::_assign_event_delegates() {
 				event::notify(key_event);
 				break;
 			}
-			case GLFW_REPEAT: {
-				KeyPressEvent key_event{};
-				key_event.key_code = static_cast<KeyCode>(key);
-				key_event.is_repeat = true;
-				event::notify(key_event);
-				break;
-			}
 			default: {
 				break;
 			}

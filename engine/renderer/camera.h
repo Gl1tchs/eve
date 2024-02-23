@@ -7,6 +7,7 @@ struct CameraData final {
 	glm::mat4 view;
 	glm::mat4 proj;
 	float zoom_level;
+	float aspect_ratio;
 };
 
 struct OrthographicCamera {

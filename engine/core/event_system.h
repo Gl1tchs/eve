@@ -6,7 +6,6 @@
 
 struct KeyPressEvent {
 	KeyCode key_code;
-	bool is_repeat = false;
 };
 
 struct KeyReleaseEvent {
@@ -39,8 +38,7 @@ struct WindowResizeEvent {
 
 struct WindowCloseEvent {};
 
-template <typename T>
-using EventCallbackFunc = std::function<void(const T&)>;
+template <typename T> using EventCallbackFunc = std::function<void(const T&)>;
 
 namespace event {
 
@@ -52,18 +50,11 @@ inline void subscribe(const EventCallbackFunc<T>& callback) {
 	g_callbacks<T>.push_back(callback);
 }
 
-template <typename T>
-inline void unsubscribe() {
-	g_callbacks<T>.clear();
-}
+template <typename T> inline void unsubscribe() { g_callbacks<T>.clear(); }
 
-template <typename T>
-inline void pop() {
-	g_callbacks<T>.pop_back();
-}
+template <typename T> inline void pop() { g_callbacks<T>.pop_back(); }
 
-template <typename T>
-inline void notify(T& event) {
+template <typename T> inline void notify(T& event) {
 	for (auto& callback : g_callbacks<T>) {
 		callback(event);
 	}

@@ -47,6 +47,7 @@ struct RenderData {
 	std::array<Ref<Texture2D>, MAX_TEXTURE_COUNT> texture_slots;
 	uint32_t texture_slot_index = 0;
 
+	CameraData camera_data{};
 	Ref<UniformBuffer> camera_buffer;
 };
 
@@ -65,7 +66,8 @@ void init() {
 
 	s_data->quad_vertices.allocate(QUAD_MAX_VERTEX_COUNT);
 
-	s_data->quad_vertex_buffer = create_ref<VertexBuffer>(s_data->quad_vertices.get_size());
+	s_data->quad_vertex_buffer =
+			create_ref<VertexBuffer>(s_data->quad_vertices.get_size());
 	s_data->quad_vertex_buffer->set_layout({
 			{ ShaderDataType::FLOAT3, "a_position" },
 			{ ShaderDataType::FLOAT2, "a_tex_coord" },
@@ -97,7 +99,8 @@ void init() {
 
 	delete[] indices;
 
-	s_data->quad_shader = create_ref<Shader>("shaders/sprite.vert.spv", "shaders/sprite.frag.spv");
+	s_data->quad_shader = create_ref<Shader>(
+			"shaders/sprite.vert.spv", "shaders/sprite.frag.spv");
 
 	// fill the textures with empty values (which is default white texture)
 	{
@@ -112,7 +115,8 @@ void init() {
 
 	s_data->text_vertices.allocate(QUAD_MAX_VERTEX_COUNT);
 
-	s_data->text_vertex_buffer = create_ref<VertexBuffer>(s_data->text_vertices.get_size());
+	s_data->text_vertex_buffer =
+			create_ref<VertexBuffer>(s_data->text_vertices.get_size());
 	s_data->text_vertex_buffer->set_layout({
 			{ ShaderDataType::FLOAT3, "a_position" },
 			{ ShaderDataType::FLOAT2, "a_tex_coord" },
@@ -124,32 +128,36 @@ void init() {
 	s_data->text_vertex_array->add_vertex_buffer(s_data->text_vertex_buffer);
 	s_data->text_vertex_array->set_index_buffer(quad_index_buffer);
 
-	s_data->text_shader = create_ref<Shader>("shaders/text.vert.spv", "shaders/text.frag.spv");
+	s_data->text_shader = create_ref<Shader>(
+			"shaders/text.vert.spv", "shaders/text.frag.spv");
 
 	// line data
 	s_data->line_vertex_array = create_ref<VertexArray>();
 
 	s_data->line_vertices.allocate(LINE_MAX_VERTEX_COUNT);
 
-	s_data->line_vertex_buffer = create_ref<VertexBuffer>(s_data->line_vertices.get_size());
+	s_data->line_vertex_buffer =
+			create_ref<VertexBuffer>(s_data->line_vertices.get_size());
 	s_data->line_vertex_buffer->set_layout({
 			{ ShaderDataType::FLOAT3, "a_position" },
 			{ ShaderDataType::FLOAT4, "a_color" },
 	});
 	s_data->line_vertex_array->add_vertex_buffer(s_data->line_vertex_buffer);
 
-	s_data->line_shader = create_ref<Shader>("shaders/line.vert.spv", "shaders/line.frag.spv");
+	s_data->line_shader = create_ref<Shader>(
+			"shaders/line.vert.spv", "shaders/line.frag.spv");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;
 	metadata.generate_mipmaps = false;
 
 	uint32_t color = 0xffffffff;
-	s_data->white_texture = create_ref<Texture2D>(metadata, &color, glm::ivec2{ 1, 1 });
+	s_data->white_texture =
+			create_ref<Texture2D>(metadata, &color, glm::ivec2{ 1, 1 });
 
 	// fill texture slots with default white texture
-	std::fill(std::begin(s_data->texture_slots), std::end(s_data->texture_slots),
-			s_data->white_texture);
+	std::fill(std::begin(s_data->texture_slots),
+			std::end(s_data->texture_slots), s_data->white_texture);
 
 	// create camera uniform buffer
 	s_data->camera_buffer = create_ref<UniformBuffer>(sizeof(CameraData), 0);
@@ -161,16 +169,16 @@ void shutdown() {
 }
 
 void begin_pass(const CameraData& camera_data) {
-	s_data->camera_buffer->set_data(&camera_data, sizeof(CameraData));
+	s_data->camera_data = camera_data;
+	s_data->camera_buffer->set_data(&s_data->camera_data, sizeof(CameraData));
 
 	begin_batch();
 }
 
-void end_pass() {
-	flush();
-}
+void end_pass() { flush(); }
 
-void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id) {
+void draw_quad(
+		const Transform& transform, const Color& color, uint32_t entity_id) {
 	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
 }
 
@@ -179,9 +187,8 @@ void draw_quad(const Transform& transform, Ref<Texture2D> texture,
 	draw_quad(transform, texture, COLOR_WHITE, tex_tiling, entity_id);
 }
 
-void draw_quad(const Transform& transform,
-		Ref<Texture2D> texture, const Color& color,
-		const glm::vec2& tex_tiling, uint32_t entity_id) {
+void draw_quad(const Transform& transform, Ref<Texture2D> texture,
+		const Color& color, const glm::vec2& tex_tiling, uint32_t entity_id) {
 	if (quad_needs_batch(s_data->quad_index_count) ||
 			(texture && s_data->texture_slot_index + 1 >= MAX_TEXTURE_COUNT)) {
 		next_batch();
@@ -211,20 +218,19 @@ void draw_quad(const Transform& transform,
 }
 
 void draw_text(const std::string& text, const Transform& transform,
-		const Color& fg_color, const Color& bg_color,
-		float kerning, float line_spacing,
-		bool is_screen_space, uint32_t entity_id) {
-	draw_text(text, nullptr,
-			transform, fg_color,
-			bg_color, kerning,
-			line_spacing, is_screen_space,
-			entity_id);
+		const Color& fg_color, const Color& bg_color, float kerning,
+		float line_spacing, bool is_screen_space, uint32_t entity_id) {
+	draw_text(text, Font::get_default(), transform, fg_color, bg_color, kerning,
+			line_spacing, is_screen_space, entity_id);
 }
 
 void draw_text(const std::string& text, Ref<Font> font, Transform transform,
-		const Color& fg_color, const Color& bg_color,
-		float kerning, float line_spacing,
-		bool is_screen_space, uint32_t entity_id) {
+		const Color& fg_color, const Color& bg_color, float kerning,
+		float line_spacing, bool is_screen_space, uint32_t entity_id) {
+	if (!font) {
+		font = Font::get_default();
+	}
+
 	Ref<Texture2D> font_atlas = font->get_atlas_texture();
 	if (font_atlas != s_data->font_atlas_texture) {
 		next_batch();
@@ -241,8 +247,11 @@ void draw_text(const std::string& text, Ref<Font> font, Transform transform,
 
 	// center the text around the transform if its not in screen space
 	if (!is_screen_space) {
-		float text_width = get_text_size(text, font, kerning).x * transform.get_scale().x;
+		float text_width =
+				get_text_size(text, font, kerning).x * transform.get_scale().x;
 		transform.local_position.x -= text_width / 2.0f;
+	} else {
+		transform.local_position.x *= s_data->camera_data.aspect_ratio;
 	}
 
 	const glm::mat4 transform_matrix = transform.get_transform_matrix();
@@ -318,7 +327,8 @@ void draw_text(const std::string& text, Ref<Font> font, Transform transform,
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 
-		vertex.position = transform_matrix * glm::vec4(quad_min.x, quad_max.y, 0.0f, 1.0f);
+		vertex.position = transform_matrix *
+				glm::vec4(quad_min.x, quad_max.y, 0.0f, 1.0f);
 		vertex.tex_coord = { tex_coord_min.x, tex_coord_max.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
@@ -334,7 +344,8 @@ void draw_text(const std::string& text, Ref<Font> font, Transform transform,
 		vertex.entity_id = entity_id;
 		s_data->text_vertices.add(vertex);
 
-		vertex.position = transform_matrix * glm::vec4(quad_max.x, quad_min.y, 0.0f, 1.0f);
+		vertex.position = transform_matrix *
+				glm::vec4(quad_max.x, quad_min.y, 0.0f, 1.0f);
 		vertex.tex_coord = { tex_coord_max.x, tex_coord_min.y };
 		vertex.fg_color = fg_color;
 		vertex.bg_color = bg_color;
@@ -400,13 +411,9 @@ void draw_box(const Transform& transform, const Color& color) {
 	draw_line(rb, lb, color);
 }
 
-const RendererStats& get_stats() {
-	return s_data->stats;
-}
+const RendererStats& get_stats() { return s_data->stats; }
 
-void reset_stats() {
-	memset(&s_data->stats, 0, sizeof(RendererStats));
-}
+void reset_stats() { memset(&s_data->stats, 0, sizeof(RendererStats)); }
 
 void begin_batch() {
 	s_data->quad_vertices.reset_index();
@@ -424,36 +431,42 @@ void flush() {
 	EVE_PROFILE_FUNCTION();
 
 	if (s_data->line_vertices.get_count() > 0) {
-		s_data->line_vertex_buffer->set_data(s_data->line_vertices.get_data(), s_data->line_vertices.get_size());
+		s_data->line_vertex_buffer->set_data(s_data->line_vertices.get_data(),
+				s_data->line_vertices.get_size());
 
 		s_data->line_shader->bind();
-		RenderCommand::draw_lines(s_data->line_vertex_array, s_data->line_vertices.get_count());
+		RenderCommand::draw_lines(
+				s_data->line_vertex_array, s_data->line_vertices.get_count());
 
 		s_data->stats.draw_calls++;
 	}
 
 	if (s_data->text_index_count > 0) {
-		s_data->text_vertex_buffer->set_data(s_data->text_vertices.get_data(), s_data->text_vertices.get_size());
+		s_data->text_vertex_buffer->set_data(s_data->text_vertices.get_data(),
+				s_data->text_vertices.get_size());
 
 		if (s_data->font_atlas_texture) {
 			s_data->font_atlas_texture->bind();
 		}
 
 		s_data->text_shader->bind();
-		RenderCommand::draw_indexed(s_data->text_vertex_array, s_data->text_index_count);
+		RenderCommand::draw_indexed(
+				s_data->text_vertex_array, s_data->text_index_count);
 
 		s_data->stats.draw_calls++;
 	}
 
 	if (s_data->quad_index_count > 0) {
-		s_data->quad_vertex_buffer->set_data(s_data->quad_vertices.get_data(), s_data->quad_vertices.get_size());
+		s_data->quad_vertex_buffer->set_data(s_data->quad_vertices.get_data(),
+				s_data->quad_vertices.get_size());
 
 		for (uint32_t i = 0; i <= s_data->texture_slot_index; i++) {
 			s_data->texture_slots[i]->bind(i);
 		}
 
 		s_data->quad_shader->bind();
-		RenderCommand::draw_indexed(s_data->quad_vertex_array, s_data->quad_index_count);
+		RenderCommand::draw_indexed(
+				s_data->quad_vertex_array, s_data->quad_index_count);
 
 		s_data->stats.draw_calls++;
 	}
