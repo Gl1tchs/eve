@@ -4,32 +4,38 @@
 #include "renderer/frame_buffer.h"
 #include "renderer/render_command.h"
 #include "renderer/shader.h"
+#include "renderer/uniform_buffer.h"
 #include "renderer/vertex_array.h"
+
+struct PostProcessUniformBlock {
+	float p1 = 0.0f;
+	float p2 = 0.0f;
+	float p3 = 0.0f;
+	float p4 = 0.0f;
+};
 
 PostProcessor::PostProcessor() {
 	EVE_PROFILE_FUNCTION();
 
 	vertex_array = create_ref<VertexArray>();
 
+	uniform_buffer =
+			create_ref<UniformBuffer>(sizeof(PostProcessUniformBlock), 1);
+
 	// TODO maybe use single shader?
-	gray_scale_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv",
+	gray_scale_shader = create_ref<Shader>("shaders/screen.vert.spv",
 			"shaders/post-processing/gray-scale.frag.spv");
 
-	chromatic_aberration_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv",
+	chromatic_aberration_shader = create_ref<Shader>("shaders/screen.vert.spv",
 			"shaders/post-processing/chromatic-aberration.frag.spv");
 
 	blur_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv",
-			"shaders/post-processing/blur.frag.spv");
+			"shaders/screen.vert.spv", "shaders/post-processing/blur.frag.spv");
 
-	sharpen_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv",
+	sharpen_shader = create_ref<Shader>("shaders/screen.vert.spv",
 			"shaders/post-processing/sharpen.frag.spv");
 
-	vignette_shader = create_ref<Shader>(
-			"shaders/screen.vert.spv",
+	vignette_shader = create_ref<Shader>("shaders/screen.vert.spv",
 			"shaders/post-processing/vignette.frag.spv");
 
 	FrameBufferCreateInfo fb_info;
@@ -42,7 +48,8 @@ PostProcessor::PostProcessor() {
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 }
 
-bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer, const PostProcessVolume& _volume) {
+bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer,
+		const PostProcessVolume& _volume) {
 	EVE_PROFILE_FUNCTION();
 
 	volume = _volume;
@@ -107,9 +114,7 @@ bool PostProcessor::process(const Ref<FrameBuffer>& screen_buffer, const PostPro
 	return true;
 }
 
-Ref<FrameBuffer> PostProcessor::get_frame_buffer() {
-	return frame_buffer;
-}
+Ref<FrameBuffer> PostProcessor::get_frame_buffer() { return frame_buffer; }
 
 uint32_t PostProcessor::get_frame_buffer_renderer_id() const {
 	return frame_buffer->get_color_attachment_renderer_id(0);
@@ -122,38 +127,52 @@ void PostProcessor::_process_gray_scale() {
 }
 
 void PostProcessor::_process_chromatic_aberration() {
+	PostProcessUniformBlock block = {
+		.p1 = volume.chromatic_aberration.offset.x,
+		.p2 = volume.chromatic_aberration.offset.y,
+		.p3 = volume.chromatic_aberration.offset.z,
+	};
+
+	uniform_buffer->set_data(&block, sizeof(PostProcessUniformBlock));
+
 	chromatic_aberration_shader->bind();
-
-	chromatic_aberration_shader->set_uniform("u_offset", volume.chromatic_aberration.offset);
-
 	_draw_screen_quad();
 }
 
 void PostProcessor::_process_blur() {
+	PostProcessUniformBlock block = {
+		.p1 = (float)volume.blur.size,
+		.p2 = volume.blur.seperation,
+	};
+
+	uniform_buffer->set_data(&block, sizeof(PostProcessUniformBlock));
+
 	blur_shader->bind();
-
-	blur_shader->set_uniform("u_size", (int)volume.blur.size);
-	blur_shader->set_uniform("u_seperation", volume.blur.seperation);
-
 	_draw_screen_quad();
 }
 
 void PostProcessor::_process_sharpen() {
+	PostProcessUniformBlock block = {
+		.p1 = volume.sharpen.amount,
+	};
+
+	uniform_buffer->set_data(&block, sizeof(PostProcessUniformBlock));
+
 	sharpen_shader->bind();
-
-	sharpen_shader->set_uniform("u_amount", volume.sharpen.amount);
-
 	_draw_screen_quad();
 }
 
 void PostProcessor::_process_vignette() {
+	PostProcessUniformBlock block = {
+		.p1 = volume.vignette.inner,
+		.p2 = volume.vignette.outer,
+		.p3 = volume.vignette.strength,
+		.p4 = volume.vignette.curvature,
+	};
+
+	uniform_buffer->set_data(&block, sizeof(PostProcessUniformBlock));
+
 	vignette_shader->bind();
-
-	vignette_shader->set_uniform("u_inner", volume.vignette.inner);
-	vignette_shader->set_uniform("u_outer", volume.vignette.outer);
-	vignette_shader->set_uniform("u_strength", volume.vignette.strength);
-	vignette_shader->set_uniform("u_curvature", volume.vignette.curvature);
-
 	_draw_screen_quad();
 }
 

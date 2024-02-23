@@ -10,6 +10,7 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Console commands.
 - [ ] Seperate thread for rendering and window.
 - [ ] Cross platform scripting.
 - [ ] Native math.

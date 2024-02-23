@@ -125,6 +125,7 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
                 "-I", shader_include_path,
                 "-std=450core",
                 f"-D{config_str}",
+                "-DEVE_PLATFORM_OPENGL", #! TODO
                 "-o", out_path
             ]
 

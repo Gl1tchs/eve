@@ -2,6 +2,7 @@
 #define POST_PROCESSOR_H
 
 class FrameBuffer;
+class UniformBuffer;
 class Shader;
 class Texture2D;
 class VertexArray;
@@ -45,7 +46,8 @@ struct PostProcessVolume {
 	VignetteSettings vignette{};
 
 	inline bool is_any_effect_provided() const {
-		return gray_scale.enabled || chromatic_aberration.enabled || blur.enabled || sharpen.enabled || vignette.enabled;
+		return gray_scale.enabled || chromatic_aberration.enabled ||
+				blur.enabled || sharpen.enabled || vignette.enabled;
 	}
 };
 
@@ -53,7 +55,8 @@ class PostProcessor {
 public:
 	PostProcessor();
 
-	bool process(const Ref<FrameBuffer>& screen_buffer, const PostProcessVolume& _volume);
+	bool process(const Ref<FrameBuffer>& screen_buffer,
+			const PostProcessVolume& _volume);
 
 	Ref<FrameBuffer> get_frame_buffer();
 
@@ -78,6 +81,7 @@ private:
 	Ref<FrameBuffer> frame_buffer;
 
 	Ref<VertexArray> vertex_array;
+	Ref<UniformBuffer> uniform_buffer;
 
 	Ref<Shader> gray_scale_shader;
 	Ref<Shader> chromatic_aberration_shader;
