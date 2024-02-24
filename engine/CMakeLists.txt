@@ -19,8 +19,8 @@ PUBLIC
     ${VENDOR_DIR}/glm
     ${VENDOR_DIR}/entt/src
     ${VENDOR_DIR}/json/include
-		${VENDOR_DIR}/msdf-atlas-gen/msdfgen
-		${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
+	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
+	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
     ${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
