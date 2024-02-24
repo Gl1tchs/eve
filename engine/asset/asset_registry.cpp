@@ -29,9 +29,11 @@ AssetRegistry::AssetRegistry() {
 				}
 
 				const fs::path path = Project::get_asset_directory() / path_rel;
-				const std::string relative_path = Project::get_relative_asset_path(path.string());
+				const std::string relative_path =
+						Project::get_relative_asset_path(path.string());
 
-				const AssetType type = get_asset_type_from_extension(path.extension().string());
+				const AssetType type = get_asset_type_from_extension(
+						path.extension().string());
 
 				// if filename changed apply it
 				switch (change_type) {
@@ -51,8 +53,9 @@ AssetRegistry::AssetRegistry() {
 							break;
 						}
 
-						// if the removed type is scene and the scene is still running
-						// it would stay existing as long as we dont exit
+						// if the removed type is scene and the scene is still
+						// running it would stay existing as long as we dont
+						// exit
 						unload_asset(path.string());
 
 						const fs::path meta_path = path.string() + ".meta";
@@ -69,8 +72,7 @@ AssetRegistry::AssetRegistry() {
 			});
 }
 
-AssetRegistry::~AssetRegistry() {
-}
+AssetRegistry::~AssetRegistry() {}
 
 Ref<Asset> AssetRegistry::get_asset(const AssetHandle& handle) {
 	EVE_PROFILE_FUNCTION();
@@ -83,7 +85,8 @@ Ref<Asset> AssetRegistry::get_asset(const AssetHandle& handle) {
 	return it->second;
 }
 
-AssetHandle AssetRegistry::load_asset(const std::string& path, AssetType type, AssetHandle handle) {
+AssetHandle AssetRegistry::load_asset(
+		const std::string& path, AssetType type, AssetHandle handle) {
 	EVE_PROFILE_FUNCTION();
 
 	const fs::path path_abs = Project::get_asset_path(path);
@@ -108,7 +111,8 @@ AssetHandle AssetRegistry::load_asset(const std::string& path, AssetType type, A
 	}
 
 	if (!asset) {
-		EVE_LOG_ENGINE_ERROR("Unable to load asset from: {0}.", path_abs.string());
+		EVE_LOG_ENGINE_ERROR(
+				"Unable to load asset from: {0}.", path_abs.string());
 		return INVALID_UID;
 	}
 
@@ -138,9 +142,7 @@ void AssetRegistry::unload_asset(const std::string& path) {
 	unload_asset(handle);
 }
 
-void AssetRegistry::unload_all_assets() {
-	assets.clear();
-}
+void AssetRegistry::unload_all_assets() { assets.clear(); }
 
 bool AssetRegistry::is_asset_loaded(const AssetHandle& handle) {
 	return assets.find(handle) != assets.end();
@@ -155,11 +157,13 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 	}
 
 	// return handle from cache if found
-	if (const auto it = file_uid_cache.find(path_abs); it != file_uid_cache.end()) {
+	if (const auto it = file_uid_cache.find(path_abs);
+			it != file_uid_cache.end()) {
 		return it->second;
 	}
 
-	const AssetType type = get_asset_type_from_extension(path_abs.extension().string());
+	const AssetType type =
+			get_asset_type_from_extension(path_abs.extension().string());
 
 	const fs::path asset_path = path_abs.string() + ".meta";
 
@@ -180,13 +184,17 @@ AssetHandle AssetRegistry::get_handle_from_path(const std::string& path) {
 	return handle;
 }
 
-void AssetRegistry::_on_asset_rename(const fs::path& old_path, const fs::path& new_path) {
+void AssetRegistry::_on_asset_rename(
+		const fs::path& old_path, const fs::path& new_path) {
 	EVE_PROFILE_FUNCTION();
 
-	const std::string old_path_rel = Project::get_relative_asset_path(old_path.string());
-	const std::string new_path_rel = Project::get_relative_asset_path(new_path.string());
+	const std::string old_path_rel =
+			Project::get_relative_asset_path(old_path.string());
+	const std::string new_path_rel =
+			Project::get_relative_asset_path(new_path.string());
 
-	const AssetType type = get_asset_type_from_extension(new_path.extension().string());
+	const AssetType type =
+			get_asset_type_from_extension(new_path.extension().string());
 
 	const fs::path asset_path_old = old_path.string() + ".meta";
 	const fs::path asset_path_new = new_path.string() + ".meta";
@@ -209,20 +217,12 @@ void AssetRegistry::_on_asset_rename(const fs::path& old_path, const fs::path& n
 	json_utils::write_file(asset_path_new, json);
 }
 
-AssetPack& AssetRegistry::get_assets() {
-	return assets;
-}
+AssetPack& AssetRegistry::get_assets() { return assets; }
 
-AssetPack::iterator AssetRegistry::begin() {
-	return assets.begin();
-}
+AssetPack::iterator AssetRegistry::begin() { return assets.begin(); }
 AssetPack::const_iterator AssetRegistry::begin() const {
 	return assets.begin();
 }
 
-AssetPack::iterator AssetRegistry::end() {
-	return assets.end();
-}
-AssetPack::const_iterator AssetRegistry::end() const {
-	return assets.end();
-}
+AssetPack::iterator AssetRegistry::end() { return assets.end(); }
+AssetPack::const_iterator AssetRegistry::end() const { return assets.end(); }

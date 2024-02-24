@@ -25,7 +25,8 @@ public:
 
 	// TODO make an async version
 
-	AssetHandle load_asset(const std::string& path, AssetType type, AssetHandle handle = AssetHandle());
+	AssetHandle load_asset(const std::string& path, AssetType type,
+			AssetHandle handle = AssetHandle());
 
 	void unload_asset(const AssetHandle& handle);
 

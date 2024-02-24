@@ -128,8 +128,8 @@ void init() {
 	s_data->text_vertex_array->add_vertex_buffer(s_data->text_vertex_buffer);
 	s_data->text_vertex_array->set_index_buffer(quad_index_buffer);
 
-	s_data->text_shader = create_ref<Shader>(
-			"shaders/text.esv.spv", "shaders/text.esf.spv");
+	s_data->text_shader =
+			create_ref<Shader>("shaders/text.esv.spv", "shaders/text.esf.spv");
 
 	// line data
 	s_data->line_vertex_array = create_ref<VertexArray>();
@@ -144,8 +144,8 @@ void init() {
 	});
 	s_data->line_vertex_array->add_vertex_buffer(s_data->line_vertex_buffer);
 
-	s_data->line_shader = create_ref<Shader>(
-			"shaders/line.esv.spv", "shaders/line.esf.spv");
+	s_data->line_shader =
+			create_ref<Shader>("shaders/line.esv.spv", "shaders/line.esf.spv");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;

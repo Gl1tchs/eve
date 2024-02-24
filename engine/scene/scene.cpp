@@ -9,10 +9,7 @@
 #include "scene/transform.h"
 #include "scripting/script_engine.h"
 
-Scene::Scene(const std::string& name) :
-		name(name),
-		physics_system(this) {
-}
+Scene::Scene(const std::string& name) : name(name), physics_system(this) {}
 
 void Scene::start() {
 	EVE_PROFILE_FUNCTION();
@@ -77,21 +74,13 @@ void Scene::stop() {
 	physics_system.stop();
 }
 
-void Scene::set_paused(bool _paused) {
-	paused = _paused;
-}
+void Scene::set_paused(bool _paused) { paused = _paused; }
 
-void Scene::step(uint32_t frames) {
-	step_frames = frames;
-}
+void Scene::step(uint32_t frames) { step_frames = frames; }
 
-bool Scene::is_running() {
-	return running;
-}
+bool Scene::is_running() { return running; }
 
-bool Scene::is_paused() {
-	return paused;
-}
+bool Scene::is_paused() { return paused; }
 
 Entity Scene::create(const std::string& name, UID parent_id) {
 	return create(UID(), name, parent_id);
@@ -166,9 +155,10 @@ Entity Scene::find_by_id(UID uid) {
 
 Entity Scene::find_by_name(const std::string& name) {
 	const auto view = registry.view<IdComponent>();
-	const auto entity_it = std::find_if(view.begin(), view.end(), [&](const auto& entity) {
-		return get_component<IdComponent>(entity).tag == name;
-	});
+	const auto entity_it =
+			std::find_if(view.begin(), view.end(), [&](const auto& entity) {
+				return get_component<IdComponent>(entity).tag == name;
+			});
 
 	if (entity_it != view.end()) {
 		return { *entity_it, this };
@@ -178,7 +168,8 @@ Entity Scene::find_by_name(const std::string& name) {
 }
 
 void Scene::toggle_entity_selection(Entity entity) {
-	const auto it = std::find(selected_entities.begin(), selected_entities.end(), entity);
+	const auto it = std::find(
+			selected_entities.begin(), selected_entities.end(), entity);
 
 	if (it != selected_entities.end()) {
 		// found
@@ -201,7 +192,8 @@ void Scene::select_entity(Entity entity) {
 }
 
 void Scene::unselect_entity(Entity entity) {
-	const auto it = std::find(selected_entities.begin(), selected_entities.end(), entity);
+	const auto it = std::find(
+			selected_entities.begin(), selected_entities.end(), entity);
 	if (it == selected_entities.end()) {
 		return;
 	}
@@ -209,33 +201,25 @@ void Scene::unselect_entity(Entity entity) {
 	selected_entities.erase(it);
 }
 
-void Scene::clear_selected_entities() {
-	selected_entities.clear();
-}
+void Scene::clear_selected_entities() { selected_entities.clear(); }
 
 bool Scene::is_entity_selected(Entity entity) const {
-	return std::find(selected_entities.begin(), selected_entities.end(), entity) != selected_entities.end();
+	return std::find(selected_entities.begin(), selected_entities.end(),
+				   entity) != selected_entities.end();
 }
 
-const std::string& Scene::get_name() {
-	return name;
-}
+const std::string& Scene::get_name() { return name; }
 
-const std::string& Scene::get_path() {
-	return path;
-}
+const std::string& Scene::get_path() { return path; }
 
-AssetRegistry& Scene::get_asset_registry() {
-	return asset_registry;
-}
+AssetRegistry& Scene::get_asset_registry() { return asset_registry; }
 
 const std::vector<Entity>& Scene::get_selected_entities() const {
 	return selected_entities;
 }
 
 template <typename... Component>
-inline static void copy_component(
-		entt::registry& dst, entt::registry& src,
+inline static void copy_component(entt::registry& dst, entt::registry& src,
 		const std::unordered_map<UID, entt::entity>& entt_map) {
 	(
 			[&]() {
@@ -244,15 +228,16 @@ inline static void copy_component(
 							entt_map.at(src.get<IdComponent>(src_entity).id);
 
 					const auto& src_component = src.get<Component>(src_entity);
-					dst.emplace_or_replace<Component>(dst_entity, src_component);
+					dst.emplace_or_replace<Component>(
+							dst_entity, src_component);
 				}
 			}(),
 			...);
 }
 
 template <typename... Component>
-inline static void copy_component(
-		ComponentGroup<Component...>, entt::registry& dst, entt::registry& src,
+inline static void copy_component(ComponentGroup<Component...>,
+		entt::registry& dst, entt::registry& src,
 		const std::unordered_map<UID, entt::entity>& entt_map) {
 	copy_component<Component...>(dst, src, entt_map);
 }
@@ -262,15 +247,16 @@ inline static void copy_component_if_exists(Entity dst, Entity src) {
 	(
 			[&]() {
 				if (src.has_component<Component>()) {
-					dst.add_or_replace_component<Component>(src.get_component<Component>());
+					dst.add_or_replace_component<Component>(
+							src.get_component<Component>());
 				}
 			}(),
 			...);
 }
 
 template <typename... Component>
-inline static void copy_component_if_exists(ComponentGroup<Component...>, Entity dst,
-		Entity src) {
+inline static void copy_component_if_exists(
+		ComponentGroup<Component...>, Entity dst, Entity src) {
 	copy_component_if_exists<Component...>(dst, src);
 }
 
@@ -290,8 +276,7 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 		const UID& uid = id_comp.id;
 		const auto& name = id_comp.tag;
 
-		Entity new_entity =
-				dst->create(uid, name);
+		Entity new_entity = dst->create(uid, name);
 
 		// set parent id but do not set children vectors
 		const auto& relation = src->get_component<RelationComponent>(entity_id);
@@ -300,8 +285,7 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 		entt_map[uid] = (entt::entity)new_entity;
 	}
 
-	copy_component(AllComponents{}, dst_registry, src_registry,
-			entt_map);
+	copy_component(AllComponents{}, dst_registry, src_registry, entt_map);
 
 	const auto has_parent = [](const auto& pair) -> bool {
 		const auto& relation = pair.second.get_relation();
@@ -309,7 +293,8 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	};
 
 	// set child/parent relations
-	for (auto& [uid, entity] : dst->entity_map | std::views::filter(has_parent)) {
+	for (auto& [uid, entity] :
+			dst->entity_map | std::views::filter(has_parent)) {
 		// Set parent entity
 		auto& relation = entity.get_relation();
 		auto parent_entity = dst->find_by_id(relation.parent_id);
@@ -325,26 +310,28 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	return dst;
 }
 
-#define WRITE_SCRIPT_FIELD(FieldType, Type)                         \
-	case ScriptFieldType::FieldType:                                \
-		script_field_json["data"] = script_field.get_value<Type>(); \
+#define WRITE_SCRIPT_FIELD(FieldType, Type)                                    \
+	case ScriptFieldType::FieldType:                                           \
+		script_field_json["data"] = script_field.get_value<Type>();            \
 		break
 
-#define READ_SCRIPT_FIELD(FieldType, Type)                 \
-	case ScriptFieldType::FieldType: {                     \
-		Type data = script_field_json["data"].get<Type>(); \
-		field_instance.set_value(data);                    \
-		break;                                             \
+#define READ_SCRIPT_FIELD(FieldType, Type)                                     \
+	case ScriptFieldType::FieldType: {                                         \
+		Type data = script_field_json["data"].get<Type>();                     \
+		field_instance.set_value(data);                                        \
+		break;                                                                 \
 	}
 
-NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType, {
-															{ Rigidbody2D::BodyType::STATIC, "static" },
-															{ Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
-															{ Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
-													})
+NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType,
+		{
+				{ Rigidbody2D::BodyType::STATIC, "static" },
+				{ Rigidbody2D::BodyType::DYNAMIC, "dynamic" },
+				{ Rigidbody2D::BodyType::KINEMATIC, "kinematic" },
+		})
 
 static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
-	bool has_required_components = entity.has_component<IdComponent, RelationComponent, Transform>();
+	bool has_required_components =
+			entity.has_component<IdComponent, RelationComponent, Transform>();
 	EVE_ASSERT_ENGINE(has_required_components);
 
 	Json out;
@@ -363,25 +350,21 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	if (entity.has_component<CameraComponent>()) {
 		const CameraComponent& cc = entity.get_component<CameraComponent>();
 
-		out["camera_component"] = Json{
-			{ "camera",
-					{ { "aspect_ratio", cc.camera.aspect_ratio },
-							{ "zoom_level", cc.camera.zoom_level },
-							{ "near_clip", cc.camera.near_clip },
-							{ "far_clip", cc.camera.far_clip } } },
-			{ "is_primary", cc.is_primary },
-			{ "is_fixed_aspect_ratio", cc.is_fixed_aspect_ratio }
-		};
+		out["camera_component"] =
+				Json{ { "camera",
+							  { { "aspect_ratio", cc.camera.aspect_ratio },
+									  { "zoom_level", cc.camera.zoom_level },
+									  { "near_clip", cc.camera.near_clip },
+									  { "far_clip", cc.camera.far_clip } } },
+					{ "is_primary", cc.is_primary },
+					{ "is_fixed_aspect_ratio", cc.is_fixed_aspect_ratio } };
 	}
 
 	if (entity.has_component<SpriteRenderer>()) {
 		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
-		out["sprite_renderer_component"] = Json{
-			{ "texture", sc.texture },
-			{ "color", sc.color },
-			{ "tex_tiling", sc.tex_tiling }
-		};
+		out["sprite_renderer_component"] = Json{ { "texture", sc.texture },
+			{ "color", sc.color }, { "tex_tiling", sc.tex_tiling } };
 	}
 
 	if (entity.has_component<TextRenderer>()) {
@@ -436,32 +419,35 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	}
 
 	if (entity.has_component<PostProcessVolume>()) {
-		const PostProcessVolume& volume = entity.get_component<PostProcessVolume>();
+		const PostProcessVolume& volume =
+				entity.get_component<PostProcessVolume>();
 
-		out["post_process_volume"] = Json{
-			{ "is_global", volume.is_global },
+		out["post_process_volume"] = Json{ { "is_global", volume.is_global },
 			{ "gray_scale", Json{ { "enabled", volume.gray_scale.enabled } } },
-			{ "chromatic_aberration", Json{
-											  { "enabled", volume.chromatic_aberration.enabled },
-											  { "offset", volume.chromatic_aberration.offset },
-									  } },
-			{ "blur", Json{
-							  { "enabled", volume.blur.enabled },
-							  { "size", volume.blur.size },
-							  { "seperation", volume.blur.seperation },
-					  } },
-			{ "sharpen", Json{
-								 { "enabled", volume.sharpen.enabled },
-								 { "amount", volume.sharpen.amount },
-						 } },
-			{ "vignette", Json{
-								  { "enabled", volume.vignette.enabled },
-								  { "inner", volume.vignette.inner },
-								  { "outer", volume.vignette.outer },
-								  { "strength", volume.vignette.strength },
-								  { "curvature", volume.vignette.curvature },
-						  } }
-		};
+			{ "chromatic_aberration",
+					Json{
+							{ "enabled", volume.chromatic_aberration.enabled },
+							{ "offset", volume.chromatic_aberration.offset },
+					} },
+			{ "blur",
+					Json{
+							{ "enabled", volume.blur.enabled },
+							{ "size", volume.blur.size },
+							{ "seperation", volume.blur.seperation },
+					} },
+			{ "sharpen",
+					Json{
+							{ "enabled", volume.sharpen.enabled },
+							{ "amount", volume.sharpen.amount },
+					} },
+			{ "vignette",
+					Json{
+							{ "enabled", volume.vignette.enabled },
+							{ "inner", volume.vignette.inner },
+							{ "outer", volume.vignette.outer },
+							{ "strength", volume.vignette.strength },
+							{ "curvature", volume.vignette.curvature },
+					} } };
 	}
 
 	if (entity.has_component<ScriptComponent>()) {
@@ -470,11 +456,13 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 		Json script_component_json = { { "class_name", sc.class_name },
 			{ "script_fields", Json::array() } };
 
-		Ref<ScriptClass> entity_class = ScriptEngine::get_entity_class(sc.class_name);
+		Ref<ScriptClass> entity_class =
+				ScriptEngine::get_entity_class(sc.class_name);
 		const auto& fields = entity_class->get_fields();
 		if (!fields.empty()) {
 			for (const auto& [name, field] : fields) {
-				auto& entity_fields = ScriptEngine::get_script_field_map(entity);
+				auto& entity_fields =
+						ScriptEngine::get_script_field_map(entity);
 
 				if (entity_fields.find(name) != entity_fields.end()) {
 					Json script_field_json = {
@@ -507,7 +495,8 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 							break;
 					}
 
-					script_component_json["script_fields"].push_back(script_field_json);
+					script_component_json["script_fields"].push_back(
+							script_field_json);
 				}
 			}
 		}
@@ -552,7 +541,8 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 	path = Project::get_asset_path(path).string();
 
 	if (!scene->entity_map.empty()) {
-		EVE_LOG_ENGINE_WARNING("Given scene to deserialize is not empty.\nClearing the data...");
+		EVE_LOG_ENGINE_WARNING("Given scene to deserialize is not "
+							   "empty.\nClearing the data...");
 		scene->entity_map.clear();
 		scene->registry.clear();
 	}
@@ -575,15 +565,15 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 	Json assets_json = data["assets"];
 	for (const auto& asset_json : assets_json) {
-		asset_registry.load_asset(
-				asset_json["path"].get<std::string>(),
+		asset_registry.load_asset(asset_json["path"].get<std::string>(),
 				asset_json["type"].get<AssetType>(),
 				asset_json["handle"].get<UID>());
 	}
 
 	Json entities_json = data["entities"];
 
-	// Create entities before adding components in order to build parent/child relations.
+	// Create entities before adding components in order to build parent/child
+	// relations.
 	std::vector<Entity> entities;
 	for (const auto& entity_json : entities_json) {
 		UID uid = entity_json["id"].get<UID>();
@@ -608,8 +598,10 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 				!transform_json.is_null()) {
 			auto& tc = deserialing_entity.get_component<Transform>();
 
-			tc.local_position = transform_json["local_position"].get<glm::vec3>();
-			tc.local_rotation = transform_json["local_rotation"].get<glm::vec3>();
+			tc.local_position =
+					transform_json["local_position"].get<glm::vec3>();
+			tc.local_rotation =
+					transform_json["local_rotation"].get<glm::vec3>();
 			tc.local_scale = transform_json["local_scale"].get<glm::vec3>();
 		}
 
@@ -630,12 +622,14 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 						camera_json["far_clip"].get<float>();
 			}
 
-			camera_component.is_primary = camera_comp_json["is_primary"].get<bool>();
+			camera_component.is_primary =
+					camera_comp_json["is_primary"].get<bool>();
 			camera_component.is_fixed_aspect_ratio =
 					camera_comp_json["is_fixed_aspect_ratio"].get<bool>();
 		}
 
-		if (const auto& sprite_comp_json = entity_json["sprite_renderer_component"];
+		if (const auto& sprite_comp_json =
+						entity_json["sprite_renderer_component"];
 				!sprite_comp_json.is_null()) {
 			auto& sprite_component =
 					deserialing_entity.add_component<SpriteRenderer>();
@@ -646,8 +640,10 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
 		}
 
-		if (const auto& text_comp_json = entity_json["text_renderer_component"]; !text_comp_json.is_null()) {
-			auto& text_component = deserialing_entity.add_component<TextRenderer>();
+		if (const auto& text_comp_json = entity_json["text_renderer_component"];
+				!text_comp_json.is_null()) {
+			auto& text_component =
+					deserialing_entity.add_component<TextRenderer>();
 
 			text_component.text = text_comp_json["text"].get<std::string>();
 
@@ -655,11 +651,14 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			text_component.fg_color = text_comp_json["fg_color"].get<Color>();
 			text_component.bg_color = text_comp_json["bg_color"].get<Color>();
 			text_component.kerning = text_comp_json["kerning"].get<float>();
-			text_component.line_spacing = text_comp_json["line_spacing"].get<float>();
-			text_component.is_screen_space = text_comp_json["is_screen_space"].get<bool>();
+			text_component.line_spacing =
+					text_comp_json["line_spacing"].get<float>();
+			text_component.is_screen_space =
+					text_comp_json["is_screen_space"].get<bool>();
 		}
 
-		if (const auto& rb2d_json = entity_json["rigidbody2d_component"]; !rb2d_json.is_null()) {
+		if (const auto& rb2d_json = entity_json["rigidbody2d_component"];
+				!rb2d_json.is_null()) {
 			auto& rb2d = deserialing_entity.add_component<Rigidbody2D>();
 
 			rb2d.type = rb2d_json["type"].get<Rigidbody2D::BodyType>();
@@ -668,69 +667,98 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 		if (const auto& box_collider_json = entity_json["box_collider"];
 				!box_collider_json.is_null()) {
-			auto& box_collider = deserialing_entity.add_component<BoxCollider2D>();
+			auto& box_collider =
+					deserialing_entity.add_component<BoxCollider2D>();
 
 			box_collider.offset = box_collider_json["offset"].get<glm::vec2>();
 			box_collider.size = box_collider_json["size"].get<glm::vec2>();
 
-			box_collider.is_trigger = box_collider_json["is_trigger"].get<bool>();
+			box_collider.is_trigger =
+					box_collider_json["is_trigger"].get<bool>();
 
 			box_collider.density = box_collider_json["density"].get<float>();
 			box_collider.friction = box_collider_json["friction"].get<float>();
-			box_collider.restitution = box_collider_json["restitution"].get<float>();
-			box_collider.restitution_threshold = box_collider_json["restitution_threshold"].get<float>();
+			box_collider.restitution =
+					box_collider_json["restitution"].get<float>();
+			box_collider.restitution_threshold =
+					box_collider_json["restitution_threshold"].get<float>();
 		}
 
 		if (const auto& circle_collider_json = entity_json["circle_collider"];
 				!circle_collider_json.is_null()) {
-			auto& circle_collider = deserialing_entity.add_component<CircleCollider2D>();
+			auto& circle_collider =
+					deserialing_entity.add_component<CircleCollider2D>();
 
-			circle_collider.offset = circle_collider_json["offset"].get<glm::vec2>();
-			circle_collider.radius = circle_collider_json["radius"].get<float>();
+			circle_collider.offset =
+					circle_collider_json["offset"].get<glm::vec2>();
+			circle_collider.radius =
+					circle_collider_json["radius"].get<float>();
 
-			circle_collider.is_trigger = circle_collider_json["is_trigger"].get<bool>();
+			circle_collider.is_trigger =
+					circle_collider_json["is_trigger"].get<bool>();
 
-			circle_collider.density = circle_collider_json["density"].get<float>();
-			circle_collider.friction = circle_collider_json["friction"].get<float>();
-			circle_collider.restitution = circle_collider_json["restitution"].get<float>();
-			circle_collider.restitution_threshold = circle_collider_json["restitution_threshold"].get<float>();
+			circle_collider.density =
+					circle_collider_json["density"].get<float>();
+			circle_collider.friction =
+					circle_collider_json["friction"].get<float>();
+			circle_collider.restitution =
+					circle_collider_json["restitution"].get<float>();
+			circle_collider.restitution_threshold =
+					circle_collider_json["restitution_threshold"].get<float>();
 		}
 
-		if (const auto& post_process_json = entity_json["post_process_volume"]; !post_process_json.is_null()) {
-			auto& post_process_volume = deserialing_entity.add_component<PostProcessVolume>();
+		if (const auto& post_process_json = entity_json["post_process_volume"];
+				!post_process_json.is_null()) {
+			auto& post_process_volume =
+					deserialing_entity.add_component<PostProcessVolume>();
 
-			post_process_volume.is_global = post_process_json["is_global"].get<bool>();
+			post_process_volume.is_global =
+					post_process_json["is_global"].get<bool>();
 			{
 				const auto& gray_scale_json = post_process_json["gray_scale"];
-				post_process_volume.gray_scale.enabled = gray_scale_json["enabled"].get<bool>();
+				post_process_volume.gray_scale.enabled =
+						gray_scale_json["enabled"].get<bool>();
 			}
 			{
-				const auto& chromatic_aberration_json = post_process_json["chromatic_aberration"];
+				const auto& chromatic_aberration_json =
+						post_process_json["chromatic_aberration"];
 
-				post_process_volume.chromatic_aberration.enabled = chromatic_aberration_json["enabled"].get<bool>();
-				post_process_volume.chromatic_aberration.offset = chromatic_aberration_json["offset"].get<glm::vec3>();
+				post_process_volume.chromatic_aberration.enabled =
+						chromatic_aberration_json["enabled"].get<bool>();
+				post_process_volume.chromatic_aberration.offset =
+						chromatic_aberration_json["offset"].get<glm::vec3>();
 			}
 			{
 				const auto& blur_json = post_process_json["blur"];
 
-				post_process_volume.blur.enabled = blur_json["enabled"].get<bool>();
-				post_process_volume.blur.size = blur_json["size"].get<uint32_t>();
-				post_process_volume.blur.seperation = blur_json["seperation"].get<float>();
+				post_process_volume.blur.enabled =
+						blur_json["enabled"].get<bool>();
+				post_process_volume.blur.size =
+						blur_json["size"].get<uint32_t>();
+				post_process_volume.blur.seperation =
+						blur_json["seperation"].get<float>();
 			}
 			{
 				const auto& sharpen_json = post_process_json["sharpen"];
 
-				post_process_volume.sharpen.enabled = sharpen_json["enabled"].get<bool>();
-				post_process_volume.sharpen.amount = sharpen_json["amount"].get<float>();
+				post_process_volume.sharpen.enabled =
+						sharpen_json["enabled"].get<bool>();
+				post_process_volume.sharpen.amount =
+						sharpen_json["amount"].get<float>();
 			}
 			{
 				const auto& vignette_json = post_process_json["vignette"];
 
-				post_process_volume.vignette.enabled = vignette_json["enabled"].get<bool>();
-				post_process_volume.vignette.inner = vignette_json["inner"].get<float>();
-				post_process_volume.vignette.outer = vignette_json["outer"].get<float>();
-				post_process_volume.vignette.strength = vignette_json["strength"].get<float>();
-				post_process_volume.vignette.curvature = vignette_json["curvature"].get<float>();
+				post_process_volume.vignette.enabled =
+						vignette_json["enabled"].get<bool>();
+				post_process_volume.vignette.inner =
+						vignette_json["inner"].get<float>();
+				post_process_volume.vignette.outer =
+						vignette_json["outer"].get<float>();
+				post_process_volume.vignette.strength =
+						vignette_json["strength"].get<float>();
+				post_process_volume.vignette.curvature =
+						vignette_json["curvature"].get<float>();
 			}
 		}
 
@@ -738,7 +766,8 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 				!script_component_json.is_null()) {
 			auto& sc = deserialing_entity.add_component<ScriptComponent>();
 
-			sc.class_name = script_component_json["class_name"].get<std::string>();
+			sc.class_name =
+					script_component_json["class_name"].get<std::string>();
 
 			auto script_fields_json = script_component_json["script_fields"];
 			if (!script_fields_json.is_null()) {
@@ -746,16 +775,19 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 						ScriptEngine::get_entity_class(sc.class_name);
 				if (entity_class) {
 					const auto& fields = entity_class->get_fields();
-					auto& entity_fields =
-							ScriptEngine::get_script_field_map(deserialing_entity);
+					auto& entity_fields = ScriptEngine::get_script_field_map(
+							deserialing_entity);
 
 					for (const auto& script_field_json : script_fields_json) {
-						std::string name = script_field_json["name"].get<std::string>();
+						std::string name =
+								script_field_json["name"].get<std::string>();
 						std::string type_string =
 								script_field_json["type"].get<std::string>();
-						ScriptFieldType type = deserialize_script_field_type(type_string);
+						ScriptFieldType type =
+								deserialize_script_field_type(type_string);
 
-						ScriptFieldInstance& field_instance = entity_fields[name];
+						ScriptFieldInstance& field_instance =
+								entity_fields[name];
 
 						if (fields.find(name) == fields.end()) {
 							continue;

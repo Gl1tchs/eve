@@ -3,8 +3,7 @@
 #include "core/input.h"
 #include <algorithm>
 
-EditorCamera::EditorCamera() :
-		OrthographicCamera(), last_mouse_pos(0, 0) {
+EditorCamera::EditorCamera() : OrthographicCamera(), last_mouse_pos(0, 0) {
 	zoom_level = 5.0f;
 
 	reset_transform();
