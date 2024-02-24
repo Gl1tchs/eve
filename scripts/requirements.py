@@ -3,7 +3,7 @@ import subprocess
 
 
 def check_os() -> bool:
-    supported_os = ['Windows']
+    supported_os: list[str] = ['Windows']
     result: bool = platform.system() in supported_os
     if not result:
         print(f"{platform.system()} is not available at the moment.")

@@ -5,6 +5,8 @@
 - [ ] UI Gizmos
 
 ## Bugs
+- [ ] data bundling (fonts, shaders etc.)
+- [ ] other computers give msvc140.dll not found error.
 - [ ] BoxCollider2D for Texts not working properly due to its transform. 
 - [ ] Mono is not logging the errors
 - [ ] Physics velocity setting from script breaks gravity.

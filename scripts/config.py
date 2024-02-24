@@ -1,4 +1,7 @@
+import os
+
 from enum import Enum
+from pathlib import Path
 
 BUILD_FLAGS_BUILD_ENGINE: int = 1 << 0
 BUILD_FLAGS_BUILD_SCRIPT_CORE: int = 1 << 1
@@ -13,6 +16,9 @@ class BuildConfig(Enum):
     RELEASE = 2
     REL_WITH_DEB_INFO = 3
     MIN_SIZE_REL = 4
+
+
+PROJECT_SOURCE_DIR = Path(os.path.abspath(__file__)).parent
 
 
 def deserialize_build_config(config: str) -> BuildConfig:

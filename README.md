@@ -1,4 +1,4 @@
-# eve
+# EVE
 
 ![Editor](.github/editor_ss.png)
 
@@ -20,6 +20,14 @@ A yet another cross platform game engine which is easy to use and performant.
 - (Coming Soon) Networking
 - (Coming Soon) Plugins
 - (Coming Soon) 3D Renderer
+
+## Modules
+
+- [editor/](editor/README.md)
+- [engine/](engine/README.md)
+- [runtime/](runtime/README.md)
+- [script_core/](script_core/README.md)
+- [shaders/](shaders/README.md)
 
 ## Docs
 
