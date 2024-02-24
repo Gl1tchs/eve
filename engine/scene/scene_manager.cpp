@@ -12,7 +12,7 @@ bool SceneManager::load_scene(const std::string& path) {
 
 			if (!Scene::deserialize(
 						s_active_scene, path)) {
-				EVE_LOG_ENGINE_ERROR("Unable to load scene from path: {}", path);
+				EVE_LOG_ERROR("Unable to load scene from path: {}", path);
 				return;
 			}
 
@@ -25,7 +25,7 @@ bool SceneManager::load_scene(const std::string& path) {
 	Ref<Scene> scene = create_ref<Scene>();
 	if (!Scene::deserialize(
 				scene, path)) {
-		EVE_LOG_ENGINE_ERROR("Unable to load scene from path: {}", path);
+		EVE_LOG_ERROR("Unable to load scene from path: {}", path);
 		return false;
 	}
 

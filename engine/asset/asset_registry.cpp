@@ -111,7 +111,7 @@ AssetHandle AssetRegistry::load_asset(
 	}
 
 	if (!asset) {
-		EVE_LOG_ENGINE_ERROR(
+		EVE_LOG_ERROR(
 				"Unable to load asset from: {0}.", path_abs.string());
 		return INVALID_UID;
 	}

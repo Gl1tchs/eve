@@ -49,7 +49,7 @@ inline static b2BodyType rigidbody2d_type_to_box2d_body(Rigidbody2D::BodyType bo
 		case Rigidbody2D::BodyType::KINEMATIC:
 			return b2_kinematicBody;
 		default: {
-			EVE_ASSERT_ENGINE(false, "Unknown body type");
+			EVE_ASSERT(false, "Unknown body type");
 			return b2_staticBody;
 		}
 	}
@@ -64,7 +64,7 @@ inline static Rigidbody2D::BodyType rigidbody2d_type_from_box2d_body(b2BodyType 
 		case b2_kinematicBody:
 			return Rigidbody2D::BodyType::KINEMATIC;
 		default: {
-			EVE_ASSERT_ENGINE(false, "Unknown body type");
+			EVE_ASSERT(false, "Unknown body type");
 			return Rigidbody2D::BodyType::STATIC;
 		}
 	}
@@ -209,7 +209,7 @@ void PhysicsSystem::stop() {
 
 void PhysicsSystem::update(float dt) {
 	if (!scene) {
-		EVE_LOG_ENGINE_ERROR("Could not update Physics2D, no scene context found!");
+		EVE_LOG_ERROR("Could not update Physics2D, no scene context found!");
 		return;
 	}
 

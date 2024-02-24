@@ -72,9 +72,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 	data->font_geometry = msdf_atlas::FontGeometry(&data->glyphs);
 	int glyphs_loaded = data->font_geometry.loadCharset(font, font_scale, charset);
 
-#if EVE_DEBUG
-	EVE_LOG_ENGINE_INFO("Loaded {} glyphs from font (out of {})", glyphs_loaded, charset.size());
-#endif
+	EVE_LOG_VERBOSE_TRACE("Loaded {} glyphs from font (out of {})", glyphs_loaded, charset.size());
 
 	// FIXME
 	//	If camera zooms out this is the reason it seems bad
@@ -87,7 +85,7 @@ inline static Ref<Texture2D> create_texture_atlas(msdfgen::FontHandle* font,
 	atlas_packer.setScale(em_size);
 
 	const int remaining = atlas_packer.pack(data->glyphs.data(), (int)data->glyphs.size());
-	EVE_ASSERT_ENGINE(remaining == 0);
+	EVE_ASSERT(remaining == 0);
 
 	int width, height;
 	atlas_packer.getDimensions(width, height);
@@ -129,7 +127,7 @@ Font::Font(const fs::path& path) {
 		const std::string path_str = path.string();
 		msdfgen::FontHandle* font = msdfgen::loadFont(ft, path_str.c_str());
 		if (!font) {
-			EVE_LOG_ENGINE_ERROR("Failed to load font: {}", path_str.c_str());
+			EVE_LOG_ERROR("Failed to load font: {}", path_str.c_str());
 			return nullptr;
 		}
 
@@ -152,7 +150,7 @@ Font::Font(const uint8_t* bytes, uint32_t length) {
 
 		msdfgen::FontHandle* font = msdfgen::loadFontData(ft, bytes, length);
 		if (!font) {
-			EVE_LOG_ENGINE_ERROR("Failed to load memory font!");
+			EVE_LOG_ERROR("Failed to load memory font!");
 			return nullptr;
 		}
 

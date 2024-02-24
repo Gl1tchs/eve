@@ -59,11 +59,11 @@ Ref<Texture2D> load_texture(const fs::path& path) {
 	// Read JSON data from file
 	Json json{};
 	if (!json_utils::read_file(metadata_path, json)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load texture file from: {}", path.string());
+		EVE_LOG_ERROR("Failed to load texture file from: {}", path.string());
 		return nullptr;
 	}
 
-	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "texture");
+	EVE_ASSERT(json["type"].get<std::string>() == "texture");
 
 	const std::string asset_path = json["path"].get<std::string>();
 
@@ -114,11 +114,11 @@ Ref<Font> load_font(const fs::path& path) {
 
 	Json json{};
 	if (!json_utils::read_file(metadata_path.string(), json)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load font file from: {}", path.string());
+		EVE_LOG_ERROR("Failed to load font file from: {}", path.string());
 		return nullptr;
 	}
 
-	EVE_ASSERT_ENGINE(json["type"].get<std::string>() == "font");
+	EVE_ASSERT(json["type"].get<std::string>() == "font");
 
 	const std::string asset_path = json["path"].get<std::string>();
 

@@ -78,17 +78,17 @@ struct BufferArray {
 
 	inline void add(const T& value) {
 		// prevent memory leaks
-		EVE_ASSERT_ENGINE(buffer && count < max_elements);
+		EVE_ASSERT(buffer && count < max_elements);
 		buffer.as<T>()[count++] = value;
 	}
 
 	inline T& at(const uint32_t idx) {
-		EVE_ASSERT_ENGINE(buffer && idx < max_elements);
+		EVE_ASSERT(buffer && idx < max_elements);
 		return buffer.as<T>()[idx];
 	}
 
 	inline void clear() {
-		EVE_ASSERT_ENGINE(buffer);
+		EVE_ASSERT(buffer);
 		int64_t max_elements_copy = max_elements;
 		release();
 		allocate(max_elements_copy);

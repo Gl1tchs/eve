@@ -38,13 +38,13 @@ inline static MonoObject* get_script_instance(UID entity_id) {
 
 inline static Scene* get_scene_context() {
 	Scene* scene = ScriptEngine::get_scene_context();
-	EVE_ASSERT_ENGINE(scene);
+	EVE_ASSERT(scene);
 	return scene;
 }
 
 inline static Entity get_entity(UID entity_id) {
 	Entity entity = get_scene_context()->find_by_id(entity_id);
-	EVE_ASSERT_ENGINE(entity);
+	EVE_ASSERT(entity);
 	return entity;
 }
 
@@ -71,23 +71,23 @@ inline static void window_set_cursor_mode(WindowCursorMode mode) {
 #pragma region Debug
 
 inline static void debug_Log(MonoString* string) {
-	EVE_LOG_CLIENT_TRACE("{}", mono_string_to_string(string));
+	EVE_LOG_VERBOSE_TRACE("{}", mono_string_to_string(string));
 }
 
 inline static void debug_log_info(MonoString* string) {
-	EVE_LOG_CLIENT_INFO("{}", mono_string_to_string(string));
+	EVE_LOG_VERBOSE_INFO("{}", mono_string_to_string(string));
 }
 
 inline static void debug_log_warning(MonoString* string) {
-	EVE_LOG_CLIENT_WARNING("{}", mono_string_to_string(string));
+	EVE_LOG_VERBOSE_WARNING("{}", mono_string_to_string(string));
 }
 
 inline static void debug_log_error(MonoString* string) {
-	EVE_LOG_CLIENT_ERROR("{}", mono_string_to_string(string));
+	EVE_LOG_VERBOSE_ERROR("{}", mono_string_to_string(string));
 }
 
 inline static void debug_log_fatal(MonoString* string) {
-	EVE_LOG_CLIENT_FATAL("{}", mono_string_to_string(string));
+	EVE_LOG_VERBOSE_FATAL("{}", mono_string_to_string(string));
 }
 
 #pragma endregion
@@ -122,7 +122,7 @@ inline static bool entity_has_component(UID entity_id,
 	Entity entity = get_entity(entity_id);
 
 	MonoType* managed_type = mono_reflection_type_get_type(component_type);
-	EVE_ASSERT_ENGINE(entity_has_component_funcs.find(managed_type) !=
+	EVE_ASSERT(entity_has_component_funcs.find(managed_type) !=
 			entity_has_component_funcs.end());
 
 	return entity_has_component_funcs.at(managed_type)(entity);
@@ -133,7 +133,7 @@ inline static void entity_add_component(UID entity_id,
 	Entity entity = get_entity(entity_id);
 
 	MonoType* managed_type = mono_reflection_type_get_type(component_type);
-	EVE_ASSERT_ENGINE(entity_add_component_funcs.find(managed_type) !=
+	EVE_ASSERT(entity_add_component_funcs.find(managed_type) !=
 			entity_add_component_funcs.end());
 
 	entity_add_component_funcs.at(managed_type)(entity);
@@ -895,7 +895,7 @@ inline static void register_component() {
 				MonoType* const managed_type = mono_reflection_type_from_name(
 						managed_type_name.data(), ScriptEngine::get_core_assembly_image());
 				if (!managed_type) {
-					EVE_LOG_ENGINE_ERROR("Could not find component type {}",
+					EVE_LOG_ERROR("Could not find component type {}",
 							managed_type_name);
 					return;
 				}
@@ -906,7 +906,7 @@ inline static void register_component() {
 
 				entity_add_component_funcs[managed_type] = [](Entity entity) {
 					entity.add_component<Component>();
-					EVE_ASSERT_ENGINE(entity.has_component<Component>());
+					EVE_ASSERT(entity.has_component<Component>());
 				};
 			}(),
 			...);

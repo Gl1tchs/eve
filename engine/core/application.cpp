@@ -14,7 +14,7 @@ Application::Application(const ApplicationCreateInfo& info) :
 		imgui_layer(nullptr) {
 	EVE_PROFILE_FUNCTION();
 
-	EVE_ASSERT_ENGINE(!s_instance, "Only on instance can exists at a time!");
+	EVE_ASSERT(!s_instance, "Only on instance can exists at a time!");
 	s_instance = this;
 
 	WindowCreateInfo window_info{};

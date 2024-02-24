@@ -52,7 +52,7 @@ public:
 
 	template <typename T, typename... Args>
 	auto& add_component(entt::entity handle, Args&&... args) {
-		EVE_ASSERT_ENGINE(!has_component<T>(handle), "Entity already has that component!");
+		EVE_ASSERT(!has_component<T>(handle), "Entity already has that component!");
 		return registry.emplace<T>(handle,
 				std::forward<Args>(args)...);
 	}
@@ -66,13 +66,13 @@ public:
 
 	template <typename T>
 	T& get_component(entt::entity handle) {
-		EVE_ASSERT_ENGINE(has_component<T>(handle), "Entity does not have component!");
+		EVE_ASSERT(has_component<T>(handle), "Entity does not have component!");
 		return registry.get<T>(handle);
 	}
 
 	template <typename T>
 	const T& get_component(entt::entity handle) const {
-		EVE_ASSERT_ENGINE(has_component<T>(handle), "Entity does not have component!");
+		EVE_ASSERT(has_component<T>(handle), "Entity does not have component!");
 		return registry.get<T>(handle);
 	}
 
@@ -83,7 +83,7 @@ public:
 
 	template <typename T>
 	void remove_component(entt::entity handle) {
-		EVE_ASSERT_ENGINE(has_component<T>(handle), "Entity does not have component!");
+		EVE_ASSERT(has_component<T>(handle), "Entity does not have component!");
 		registry.remove<T>(handle);
 	}
 

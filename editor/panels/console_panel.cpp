@@ -5,8 +5,8 @@
 #include <imgui.h>
 
 void push_button_activity_color() {
-	ImGui::PushStyleColor(ImGuiCol_Button,
-			ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
+	ImGui::PushStyleColor(
+			ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
 }
 
 ConsolePanel::ConsolePanel() {
@@ -14,9 +14,7 @@ ConsolePanel::ConsolePanel() {
 	Logger::push_buffer(buffer);
 }
 
-void ConsolePanel::clear() {
-	buffer->clear();
-}
+void ConsolePanel::clear() { buffer->clear(); }
 
 bool ConsolePanel::_is_level_in_filter(LogLevel level) {
 	switch (level) {
@@ -39,39 +37,8 @@ bool ConsolePanel::_is_level_in_filter(LogLevelFilter filter) {
 	return (level_filters & filter) != 0;
 }
 
-bool ConsolePanel::_is_sender_in_filter(LogSender sender) {
-	switch (sender) {
-		case LogSender::ENGINE:
-			return _is_sender_in_filter(LOG_SENDER_FILTER_ENGINE);
-		case LogSender::CLIENT:
-			return _is_sender_in_filter(LOG_SENDER_FILTER_CLIENT);
-		default:
-			return false;
-	}
-}
-
-bool ConsolePanel::_is_sender_in_filter(LogSenderFilter filter) {
-	return (sender_filters & filter) != 0;
-}
-
-void ConsolePanel::_draw_sender_filter_selectable(const std::string& name,
-		LogSenderFilter filter) {
-	bool use_color = _is_sender_in_filter(filter);
-	if (use_color) {
-		push_button_activity_color();
-	}
-
-	if (ImGui::SmallButton(name.c_str())) {
-		sender_filters ^= filter;
-	}
-
-	if (use_color) {
-		ImGui::PopStyleColor();
-	}
-}
-
-void ConsolePanel::_draw_filter_selectable(const std::string& name,
-		LogLevelFilter filter) {
+void ConsolePanel::_draw_filter_selectable(
+		const std::string& name, LogLevelFilter filter) {
 	bool use_color = _is_level_in_filter(filter);
 	if (use_color) {
 		push_button_activity_color();
@@ -91,8 +58,8 @@ void ConsolePanel::_draw() {
 		return;
 	}
 
-	const float footer_height_to_reserve =
-			ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
+	const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y +
+			ImGui::GetFrameHeightWithSpacing();
 
 	if (ImGui::SmallButton("Clear")) {
 		clear();
@@ -115,14 +82,6 @@ void ConsolePanel::_draw() {
 	ImGui::TextUnformatted("|");
 	ImGui::SameLine();
 
-	_draw_sender_filter_selectable("Engine", LOG_SENDER_FILTER_ENGINE);
-	ImGui::SameLine();
-	_draw_sender_filter_selectable("Client", LOG_SENDER_FILTER_CLIENT);
-
-	ImGui::SameLine();
-	ImGui::TextUnformatted("|");
-	ImGui::SameLine();
-
 	_draw_filter_selectable("Trace", LOG_LEVEL_FILTER_TRACE);
 	ImGui::SameLine();
 	_draw_filter_selectable("Info", LOG_LEVEL_FILTER_INFO);
@@ -135,8 +94,8 @@ void ConsolePanel::_draw() {
 
 	ImGui::Separator();
 
-	if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve),
-				ImGuiChildFlags_None,
+	if (ImGui::BeginChild("ScrollingRegion",
+				ImVec2(0, -footer_height_to_reserve), ImGuiChildFlags_None,
 				ImGuiWindowFlags_HorizontalScrollbar)) {
 		if (ImGui::BeginPopupContextWindow()) {
 			if (ImGui::Selectable("Clear")) {
@@ -149,7 +108,7 @@ void ConsolePanel::_draw() {
 
 		int i = 0;
 		for (const LogMessage& message : *buffer) {
-			if (!_is_level_in_filter(message.level) || !_is_sender_in_filter(message.sender)) {
+			if (!_is_level_in_filter(message.level)) {
 				continue;
 			}
 
@@ -185,10 +144,8 @@ void ConsolePanel::_draw() {
 				ImGui::PushStyleColor(ImGuiCol_Text, color);
 			}
 
-			std::string log =
-					std::format("[{}] [{}] [{}] {}", message.time_stamp,
-							deserialize_log_sender(message.sender),
-							deserialize_log_level(message.level), message.string);
+			std::string log = std::format("[{}] [{}] {}", message.time_stamp,
+					deserialize_log_level(message.level), message.string);
 
 			if (ImGui::Selectable(log.c_str(), selected_log_idx == i)) {
 				selected_log_idx = (selected_log_idx == i) ? -1 : i;
@@ -211,7 +168,8 @@ void ConsolePanel::_draw() {
 		}
 
 		if (scroll_to_bottom ||
-				(auto_scroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())) {
+				(auto_scroll &&
+						ImGui::GetScrollY() >= ImGui::GetScrollMaxY())) {
 			ImGui::SetScrollHereY(1.0f);
 		}
 

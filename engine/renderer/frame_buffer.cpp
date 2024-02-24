@@ -103,7 +103,7 @@ void FrameBuffer::unbind() const {
 void FrameBuffer::resize(int w, int h) {
 	if (w == 0 || h == 0 || w > max_framebuffer_size ||
 			h > max_framebuffer_size) {
-		EVE_LOG_ENGINE_WARNING("Attempted to rezize framebuffer to {0}, {1}", w, w);
+		EVE_LOG_WARNING("Attempted to rezize framebuffer to {0}, {1}", w, w);
 		return;
 	}
 
@@ -114,7 +114,7 @@ void FrameBuffer::resize(int w, int h) {
 }
 
 void FrameBuffer::read_pixel(uint32_t index, uint32_t x, uint32_t y, FrameBufferTextureFormat format, void* pixel) {
-	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
+	EVE_ASSERT(index < color_attachment_ids.size());
 
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + index);
 
@@ -133,7 +133,7 @@ void FrameBuffer::read_pixel(uint32_t index, uint32_t x, uint32_t y, FrameBuffer
 }
 
 void FrameBuffer::clear_attachment(uint32_t index, void* value) {
-	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
+	EVE_ASSERT(index < color_attachment_ids.size());
 	const auto& attachment = color_attachments[index];
 
 	switch (attachment) {
@@ -151,7 +151,7 @@ void FrameBuffer::clear_attachment(uint32_t index, void* value) {
 }
 
 uint32_t FrameBuffer::get_color_attachment_renderer_id(uint32_t index) const {
-	EVE_ASSERT_ENGINE(index < color_attachment_ids.size());
+	EVE_ASSERT(index < color_attachment_ids.size());
 	return color_attachment_ids[index];
 }
 
@@ -218,7 +218,7 @@ void FrameBuffer::_invalidate() {
 	}
 
 	if (color_attachment_ids.size() > 1) {
-		EVE_ASSERT_ENGINE(color_attachment_ids.size() <= 4);
+		EVE_ASSERT(color_attachment_ids.size() <= 4);
 		const uint32_t buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
 			GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(color_attachment_ids.size(), buffers);
@@ -227,7 +227,7 @@ void FrameBuffer::_invalidate() {
 		glDrawBuffer(GL_NONE);
 	}
 
-	EVE_ASSERT_ENGINE(
+	EVE_ASSERT(
 			glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
 			"Framebuffer is incomplete!");
 

@@ -161,11 +161,15 @@ void init() {
 
 	// create camera uniform buffer
 	s_data->camera_buffer = create_ref<UniformBuffer>(sizeof(CameraData), 0);
+
+	EVE_LOG_VERBOSE_TRACE("Renderer initialized!");
 }
 
 void shutdown() {
 	// destroy render data
 	delete s_data;
+
+	EVE_LOG_VERBOSE_TRACE("Renderer destroyed.");
 }
 
 void begin_pass(const CameraData& camera_data) {

@@ -20,7 +20,7 @@ public:
 			Application(info), project_path(project_path) {
 		scene_renderer = create_ref<SceneRenderer>();
 
-		EVE_ASSERT_ENGINE(Project::load(project_path),
+		EVE_ASSERT(Project::load(project_path),
 				"Unable to find specified project file.");
 	}
 
@@ -31,7 +31,7 @@ protected:
 		ScriptEngine::init();
 
 		// load the first scene
-		EVE_ASSERT_ENGINE(
+		EVE_ASSERT(
 				SceneManager::load_scene(Project::get_starting_scene_path()));
 
 		// TODO get this from export settings
@@ -54,7 +54,7 @@ protected:
 
 		Ref<Scene> scene = SceneManager::get_active();
 		//? TODO maybe not do this
-		EVE_ASSERT_ENGINE(scene, "Unable to find any scene aborting!");
+		EVE_ASSERT(scene, "Unable to find any scene aborting!");
 
 		scene->update(dt);
 

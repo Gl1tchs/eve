@@ -256,7 +256,7 @@ void EditorApplication::_save_active_scene_as() {
 			"Save Scene", "scene.escn", 1, filter_patterns, "Eve Scene Files");
 
 	if (!path) {
-		EVE_LOG_ENGINE_ERROR("Unable to save scene to path.");
+		EVE_LOG_ERROR("Unable to save scene to path.");
 		return;
 	}
 
@@ -273,7 +273,7 @@ void EditorApplication::_open_project() {
 			"Open Project", "", 1, filter_patterns, "Eve Project Files", 0);
 
 	if (!path) {
-		EVE_LOG_ENGINE_ERROR("Unable to open project from path.");
+		EVE_LOG_ERROR("Unable to open project from path.");
 		return;
 	}
 
@@ -281,7 +281,7 @@ void EditorApplication::_open_project() {
 		ScriptEngine::init();
 
 		// load the first scene
-		EVE_ASSERT_ENGINE(
+		EVE_ASSERT(
 				SceneManager::load_scene(Project::get_starting_scene_path()));
 
 		editor_scene = SceneManager::get_active();

@@ -19,7 +19,7 @@ void ProjectConfig::serialize(const ProjectConfig& config, const fs::path& path)
 bool ProjectConfig::deserialize(ProjectConfig& config, const fs::path& path) {
 	Json json;
 	if (!json_utils::read_file(path, json)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load project file from: {}", path.string().c_str());
+		EVE_LOG_ERROR("Failed to load project file from: {}", path.string().c_str());
 		return false;
 	}
 
@@ -39,25 +39,25 @@ Project::~Project() {
 }
 
 const std::string& Project::get_name() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return s_active_project->config.name;
 }
 
 const fs::path& Project::get_project_path() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return s_active_project->path;
 }
 
 fs::path Project::get_project_directory() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return s_active_project->path.parent_path();
 }
 
 fs::path Project::get_asset_directory() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return get_project_directory() / s_active_project->config.asset_directory;
 }
@@ -65,7 +65,7 @@ fs::path Project::get_asset_directory() {
 fs::path Project::get_cache_directory(AssetType type) {
 	EVE_PROFILE_FUNCTION();
 
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	std::string asset_dir = serialize_asset_type(type);
 	std::transform(asset_dir.begin(), asset_dir.end(), asset_dir.begin(),
@@ -81,13 +81,13 @@ fs::path Project::get_cache_directory(AssetType type) {
 }
 
 std::string Project::get_starting_scene_path() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return s_active_project->config.starting_scene;
 }
 
 fs::path Project::get_script_dll_path() {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	return s_active_project->get_project_directory() / s_active_project->config.script_dll;
 }
@@ -95,7 +95,7 @@ fs::path Project::get_script_dll_path() {
 fs::path Project::get_asset_path(const std::string& path) {
 	EVE_PROFILE_FUNCTION();
 
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	const std::string_view proj_substr = "prj://";
 	const std::string_view res_substr = "res://";
@@ -118,7 +118,7 @@ fs::path Project::get_asset_path(const std::string& path) {
 std::string Project::get_relative_asset_path(const fs::path& path) {
 	EVE_PROFILE_FUNCTION();
 
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	const auto project_dir = get_project_directory();
 	const auto asset_dir = get_asset_directory();
@@ -156,7 +156,7 @@ Ref<Project> Project::create(const fs::path& path) {
 Ref<Project> Project::load(const fs::path& path) {
 	ProjectConfig config{};
 	if (!ProjectConfig::deserialize(config, path)) {
-		EVE_LOG_ENGINE_ERROR("Unable to load project from: {}", path.string().c_str());
+		EVE_LOG_ERROR("Unable to load project from: {}", path.string().c_str());
 		return nullptr;
 	}
 
@@ -166,7 +166,7 @@ Ref<Project> Project::load(const fs::path& path) {
 }
 
 void Project::save_active(const fs::path& path) {
-	EVE_ASSERT_ENGINE(s_active_project);
+	EVE_ASSERT(s_active_project);
 
 	const ProjectConfig& config = s_active_project->config;
 	ProjectConfig::serialize(config, path);

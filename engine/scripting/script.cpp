@@ -38,7 +38,7 @@ MonoObject* ScriptClass::invoke_method(MonoObject* instance, MonoMethod* method,
 
 		char* message_utf8 = mono_string_to_utf8(exception_message);
 
-		EVE_LOG_ENGINE_ERROR("[SCRIPT ENGINE] [EXCEPTION]:\n{}", message_utf8);
+		EVE_LOG_ERROR("[SCRIPT ENGINE] [EXCEPTION]:\n{}", message_utf8);
 
 		mono_free(message_utf8);
 	}
@@ -164,7 +164,7 @@ bool ScriptInstance::_set_field_value_internal(const std::string& name,
 
 		Entity entity = SceneManager::get_active()->find_by_id(uuid);
 		if (!entity) {
-			EVE_LOG_ENGINE_WARNING("Unable to set entity instance of {}.",
+			EVE_LOG_WARNING("Unable to set entity instance of {}.",
 					(uint64_t)uuid);
 			return false;
 		}
@@ -174,7 +174,7 @@ bool ScriptInstance::_set_field_value_internal(const std::string& name,
 			data = (void*)managed_instance;
 		} else {
 #if EVE_DEBUG
-			EVE_LOG_ENGINE_WARNING(
+			EVE_LOG_WARNING(
 					"Entity {}, does not have an managed script instance. Using default "
 					"instead.",
 					entity.get_name());
@@ -279,7 +279,7 @@ const char* serialize_script_field_type(ScriptFieldType field_type) {
 		case ScriptFieldType::ENTITY:
 			return "Entity";
 	}
-	EVE_ASSERT_ENGINE(false, "Unknown ScriptFieldType");
+	EVE_ASSERT(false, "Unknown ScriptFieldType");
 	return "None";
 }
 
@@ -321,6 +321,6 @@ ScriptFieldType deserialize_script_field_type(std::string_view field_type) {
 	if (field_type == "Entity")
 		return ScriptFieldType::ENTITY;
 
-	EVE_ASSERT_ENGINE(false, "Unknown ScriptFieldType");
+	EVE_ASSERT(false, "Unknown ScriptFieldType");
 	return ScriptFieldType::NONE;
 }

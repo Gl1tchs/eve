@@ -6,15 +6,14 @@
 #include "core/mouse_code.h"
 #include "debug/assert.h"
 
-#include "window.h"
 #include <GLFW/glfw3.h>
 
 static void glfw_error_callback(int error, const char* description) {
-	EVE_LOG_ENGINE_ERROR("GLFW error {}: {}.", error, description);
+	EVE_LOG_VERBOSE_ERROR("GLFW error {}: {}.", error, description);
 }
 
 Window::Window(WindowCreateInfo info) {
-	EVE_ASSERT_ENGINE(glfwInit());
+	EVE_ASSERT(glfwInit());
 
 #if EVE_DEBUG
 	glfwSetErrorCallback(glfw_error_callback);
@@ -25,7 +24,7 @@ Window::Window(WindowCreateInfo info) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(info.w, info.h, info.title, nullptr, nullptr);
-	EVE_ASSERT_ENGINE(window);
+	EVE_ASSERT(window);
 
 	glfwMakeContextCurrent(window);
 

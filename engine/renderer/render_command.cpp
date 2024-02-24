@@ -12,16 +12,23 @@ static void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 void RenderCommand::init() {
 	// TODO if you add different window classes update this
 	int32_t status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	EVE_ASSERT_ENGINE(status, "Failed to initialize Glad!");
+	EVE_ASSERT(status, "Failed to initialize Glad!");
 
 #ifdef EVE_DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(opengl_message_callback, nullptr);
 #endif
 
-	EVE_ASSERT_ENGINE(
+	EVE_ASSERT(
 			GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5),
 			"Requires at least OpenGL version of 4.5!");
+
+	EVE_LOG_VERBOSE_TRACE("GL Info:");
+	EVE_LOG_VERBOSE_TRACE("GL Version: {}", (const char*)glGetString(GL_VERSION));
+	EVE_LOG_VERBOSE_TRACE("GL Vendor: {}", (const char*)glGetString(GL_VENDOR));
+	EVE_LOG_VERBOSE_TRACE("GL Renderer: {}", (const char*)glGetString(GL_RENDERER));
+	EVE_LOG_VERBOSE_TRACE("GL Shading Version: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_BLEND);
@@ -210,10 +217,10 @@ void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
 			break;
 	}
 
-	EVE_LOG_ENGINE_TRACE("OpenGL Debug Message:");
-	EVE_LOG_ENGINE_TRACE("Source: {}", source_string);
-	EVE_LOG_ENGINE_TRACE("Type: {}", type_string);
-	EVE_LOG_ENGINE_TRACE("ID: {}", id);
-	EVE_LOG_ENGINE_TRACE("Severity: {}", severity_string);
-	EVE_LOG_ENGINE_TRACE("Message: {}", message);
+	EVE_LOG_VERBOSE_TRACE("OpenGL Debug Message:");
+	EVE_LOG_VERBOSE_TRACE("Source: {}", source_string);
+	EVE_LOG_VERBOSE_TRACE("Type: {}", type_string);
+	EVE_LOG_VERBOSE_TRACE("ID: {}", id);
+	EVE_LOG_VERBOSE_TRACE("Severity: {}", severity_string);
+	EVE_LOG_VERBOSE_TRACE("Message: {}", message);
 }

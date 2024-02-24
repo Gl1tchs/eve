@@ -48,7 +48,7 @@ inline static MonoAssembly* load_mono_assembly(const fs::path& assembly_path,
 
 	if (status != MONO_IMAGE_OK) {
 		const char* error_message = mono_image_strerror(status);
-		EVE_LOG_ENGINE_ERROR("{}", error_message);
+		EVE_LOG_VERBOSE_ERROR("{}", error_message);
 		return nullptr;
 	}
 
@@ -61,7 +61,7 @@ inline static MonoAssembly* load_mono_assembly(const fs::path& assembly_path,
 			mono_debug_open_image_from_memory(
 					image, pdb_file_data.as<const mono_byte>(), pdb_file_data.get_size());
 
-			EVE_LOG_ENGINE_INFO("Loaded PDB {}", pdb_path.string());
+			EVE_LOG_VERBOSE_TRACE("Loaded PDB: {}", pdb_path.string());
 		}
 	}
 
@@ -118,7 +118,7 @@ inline static ScriptFieldType mono_type_to_script_field_type(MonoType* mono_type
 
 	auto it = script_field_type_map.find(type_name);
 	if (it == script_field_type_map.end()) {
-		EVE_LOG_ENGINE_ERROR("Unknown type: {}", type_name);
+		EVE_LOG_VERBOSE_ERROR("Unknown type: {}", type_name);
 		return ScriptFieldType::NONE;
 	}
 
@@ -141,14 +141,14 @@ void ScriptEngine::init(bool is_runtime) {
 
 	bool status = load_assembly("script_core.dll");
 	if (!status) {
-		EVE_LOG_ENGINE_ERROR("[ScriptEngine] Could not load script_core assembly.");
+		EVE_LOG_ERROR("[ScriptEngine] Could not load script_core assembly.");
 		return;
 	}
 
 	auto script_module_path = Project::get_script_dll_path();
 	status = load_app_assembly(script_module_path);
 	if (!status) {
-		EVE_LOG_ENGINE_ERROR("Could not load app assembly.");
+		EVE_LOG_ERROR("Could not load app assembly.");
 		return;
 	}
 
@@ -158,6 +158,8 @@ void ScriptEngine::init(bool is_runtime) {
 
 	// Retrieve and instantiate class
 	s_data->entity_class = ScriptClass("EveEngine", "Entity", true);
+
+	EVE_LOG_VERBOSE_TRACE("ScriptEngine initialized!");
 }
 
 void ScriptEngine::reinit() {
@@ -181,6 +183,8 @@ void ScriptEngine::shutdown() {
 
 	delete s_data;
 	s_data = nullptr;
+
+	EVE_LOG_VERBOSE_TRACE("ScriptEngine destroyed.");
 }
 
 bool ScriptEngine::is_initialized() {
@@ -307,7 +311,7 @@ void ScriptEngine::invoke_on_update_entity(Entity entity, float dt) {
 	if (auto instance = get_entity_script_instance(entity_uuid); instance) {
 		instance->invoke_on_update(dt);
 	} else {
-		EVE_LOG_ENGINE_ERROR("Could not find ScriptInstance for entity {}",
+		EVE_LOG_ERROR("Could not find ScriptInstance for entity {}",
 				(uint64_t)entity_uuid);
 	}
 }
@@ -319,7 +323,7 @@ void ScriptEngine::invoke_on_destroy_entity(Entity entity) {
 	if (auto instance = get_entity_script_instance(entity_uuid); instance) {
 		instance->invoke_on_destroy();
 	} else {
-		EVE_LOG_ENGINE_ERROR("Could not find ScriptInstance for entity {}",
+		EVE_LOG_ERROR("Could not find ScriptInstance for entity {}",
 				(uint64_t)entity_uuid);
 	}
 }
@@ -365,7 +369,7 @@ ScriptEngine::get_entity_classes() {
 }
 
 ScriptFieldMap& ScriptEngine::get_script_field_map(Entity entity) {
-	EVE_ASSERT_ENGINE(entity);
+	EVE_ASSERT(entity);
 
 	UID entity_id = entity.get_uid();
 	return s_data->entity_script_fields[entity_id];
@@ -409,7 +413,7 @@ void ScriptEngine::_init_mono() {
 	}
 
 	s_data->root_domain = mono_jit_init("EveJITRuntime");
-	EVE_ASSERT_ENGINE(s_data->root_domain);
+	EVE_ASSERT(s_data->root_domain);
 
 	if (s_data->enable_debugging) {
 		mono_debug_domain_create(s_data->root_domain);
@@ -489,9 +493,7 @@ void ScriptEngine::_load_assembly_classes() {
 
 		const int field_count = mono_class_num_fields(mono_class);
 
-#ifdef EVE_DEBUG
-		EVE_LOG_ENGINE_WARNING("{} has {} fields:", class_name, field_count);
-#endif
+		EVE_LOG_VERBOSE_TRACE("{} has {} fields:", class_name, field_count);
 
 		void* iterator = nullptr;
 		while (MonoClassField* const field =
@@ -512,10 +514,8 @@ void ScriptEngine::_load_assembly_classes() {
 					}
 				}
 
-#ifdef EVE_DEBUG
-				EVE_LOG_ENGINE_WARNING("  {} ({})", field_name,
+				EVE_LOG_VERBOSE_TRACE("  {} ({})", field_name,
 						serialize_script_field_type(field_type));
-#endif
 
 				script_class->fields[field_name] = { field_type, field_name, field };
 			}

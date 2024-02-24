@@ -19,20 +19,9 @@ std::string deserialize_log_level(LogLevel level) {
 	}
 }
 
-std::string deserialize_log_sender(LogSender sender) {
-	switch (sender) {
-		case LogSender::ENGINE:
-			return "ENGINE";
-		case LogSender::CLIENT:
-			return "CLIENT";
-		default:
-			return "";
-	}
-}
-
 inline static std::string get_timestamp() {
-	auto now =
-			std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	auto now = std::chrono::system_clock::to_time_t(
+			std::chrono::system_clock::now());
 
 	std::tm tm_now{};
 	std::stringstream ss;
@@ -60,21 +49,18 @@ std::mutex Logger::s_logger_mutex;
 
 std::vector<Ref<LogBuffer>> Logger::s_log_buffers = {};
 
-LogBuffer::LogBuffer(uint32_t max_messages) :
-		max_messages(max_messages) {}
+LogBuffer::LogBuffer(uint32_t max_messages) : max_messages(max_messages) {}
 
-void LogBuffer::log(LogSender sender, LogLevel level,
-		const std::string& time_stamp, const std::string& message) {
+void LogBuffer::log(LogLevel level, const std::string& time_stamp,
+		const std::string& message) {
 	if (messages.size() + 1 >= max_messages) {
 		messages.pop_front();
 	}
 
-	messages.push_back({ sender, level, time_stamp, message });
+	messages.push_back({ level, time_stamp, message });
 }
 
-void LogBuffer::clear() {
-	messages.clear();
-}
+void LogBuffer::clear() { messages.clear(); }
 
 void Logger::init(const std::string& file_name) {
 	std::lock_guard<std::mutex> lock(s_logger_mutex);
@@ -86,20 +72,21 @@ void Logger::init(const std::string& file_name) {
 	}
 }
 
-void Logger::log(LogSender sender, LogLevel level, const std::string& fmt) {
+void Logger::log(LogLevel level, const std::string& fmt, bool verbose) {
 	std::lock_guard<std::mutex> lock(s_logger_mutex);
 
 	const std::string time_stamp = get_timestamp();
 
-	const std::string message =
-			std::format("[{}] [{}] [{}]: \"{}\"", time_stamp,
-					deserialize_log_sender(sender), deserialize_log_level(level), fmt);
+	const std::string message = std::format(
+			"[{}] [{}]: \"{}\"", time_stamp, deserialize_log_level(level), fmt);
 
 	const std::string colored_messages = _get_colored_message(message, level);
 
 	// Output to buffers
-	for (auto& buffer : s_log_buffers) {
-		buffer->log(sender, level, time_stamp, fmt);
+	if (!verbose) {
+		for (auto& buffer : s_log_buffers) {
+			buffer->log(level, time_stamp, fmt);
+		}
 	}
 
 	// Output to stdout
@@ -116,8 +103,8 @@ void Logger::push_buffer(Ref<LogBuffer>& buffer) {
 	s_log_buffers.push_back(buffer);
 }
 
-std::string Logger::_get_colored_message(const std::string& message,
-		LogLevel level) {
+std::string Logger::_get_colored_message(
+		const std::string& message, LogLevel level) {
 	const auto color_it = s_verbosity_colors.find(level);
 	if (color_it != s_verbosity_colors.end()) {
 		return color_it->second + message;

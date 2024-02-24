@@ -56,7 +56,7 @@ static bool check_compile_errors(uint32_t shader_id) {
 		glDeleteShader(shader_id);
 
 		std::string str(info_log.begin(), info_log.end());
-		EVE_LOG_ENGINE_ERROR("Shader compilation failed: {}", str);
+		EVE_LOG_ERROR("Shader compilation failed: {}", str);
 
 		return false;
 	}
@@ -76,7 +76,7 @@ Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
 			vertex_source.get_data(), vertex_source.get_size());
 	glSpecializeShaderARB(vertex_shader, "main", 0, nullptr, nullptr);
 
-	EVE_ASSERT_ENGINE(check_compile_errors(vertex_shader),
+	EVE_ASSERT(check_compile_errors(vertex_shader),
 			"Could not compile VertexShader!");
 	glAttachShader(renderer_id, vertex_shader);
 
@@ -86,7 +86,7 @@ Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
 			fragment_source.get_data(), fragment_source.get_size());
 	glSpecializeShaderARB(fragment_shader, "main", 0, nullptr, nullptr);
 
-	EVE_ASSERT_ENGINE(check_compile_errors(fragment_shader),
+	EVE_ASSERT(check_compile_errors(fragment_shader),
 			"Could not compile FragmentShader!");
 	glAttachShader(renderer_id, fragment_shader);
 
@@ -105,7 +105,7 @@ Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
 					renderer_id, max_length, &max_length, &info_log[0]);
 
 			std::string str(info_log.begin(), info_log.end());
-			EVE_LOG_ENGINE_ERROR("Shader linkage failed: {}", str);
+			EVE_LOG_ERROR("Shader linkage failed: {}", str);
 		}
 
 		glDeleteProgram(renderer_id);
@@ -113,7 +113,7 @@ Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
 
-		EVE_ASSERT_ENGINE(false);
+		EVE_ASSERT(false);
 	}
 
 	glDetachShader(renderer_id, vertex_shader);

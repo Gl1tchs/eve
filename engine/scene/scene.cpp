@@ -263,6 +263,8 @@ inline static void copy_component_if_exists(
 Ref<Scene> Scene::copy(Ref<Scene> src) {
 	EVE_PROFILE_FUNCTION();
 
+	EVE_LOG_VERBOSE_TRACE("Copying scene {}.", src->name);
+
 	Ref<Scene> dst = create_ref<Scene>(src->name);
 
 	auto& src_registry = src->registry;
@@ -307,6 +309,8 @@ Ref<Scene> Scene::copy(Ref<Scene> src) {
 	//? TODO maybe moving is better?
 	dst->asset_registry = src->asset_registry;
 
+	EVE_LOG_VERBOSE_TRACE("Scene {} successfully copied.", src->name);
+
 	return dst;
 }
 
@@ -332,7 +336,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(Rigidbody2D::BodyType,
 static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	bool has_required_components =
 			entity.has_component<IdComponent, RelationComponent, Transform>();
-	EVE_ASSERT_ENGINE(has_required_components);
+	EVE_ASSERT(has_required_components);
 
 	Json out;
 
@@ -508,6 +512,8 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 }
 
 void Scene::serialize(Ref<Scene> scene, std::string path) {
+	EVE_LOG_VERBOSE_TRACE("Serializing scene \"{}\" to path \"{}\".", scene->name, path);
+
 	path = Project::get_asset_path(path).string();
 
 	Json scene_json;
@@ -535,13 +541,17 @@ void Scene::serialize(Ref<Scene> scene, std::string path) {
 	}
 
 	json_utils::write_file(path, scene_json);
+
+	EVE_LOG_VERBOSE_TRACE("Scene \"{}\" successfully serialized to path \"{}\".", scene->name, path);
 }
 
 bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
+	EVE_LOG_VERBOSE_TRACE("Deserializing scene \"{}\" to path \"{}\".", scene->name, path);
+
 	path = Project::get_asset_path(path).string();
 
 	if (!scene->entity_map.empty()) {
-		EVE_LOG_ENGINE_WARNING("Given scene to deserialize is not "
+		EVE_LOG_WARNING("Given scene to deserialize is not "
 							   "empty.\nClearing the data...");
 		scene->entity_map.clear();
 		scene->registry.clear();
@@ -549,7 +559,7 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 
 	Json data;
 	if (!json_utils::read_file(path, data)) {
-		EVE_LOG_ENGINE_ERROR("Failed to load scene file at '{}'", path);
+		EVE_LOG_ERROR("Failed to load scene file at '{}'", path);
 		return false;
 	}
 
@@ -821,6 +831,8 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			}
 		}
 	}
+
+	EVE_LOG_VERBOSE_TRACE("Scene \"{}\" successfully deserialized to path \"{}\".", scene->name, path);
 
 	return true;
 }

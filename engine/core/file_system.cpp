@@ -26,7 +26,7 @@ Buffer file_system::read_to_buffer(const fs::path& filepath) {
 std::string file_system::read_to_string(const fs::path& filepath) {
 	std::ifstream t(filepath);
 	if (!t.is_open()) {
-		EVE_LOG_ENGINE_ERROR("Unable to load file from: {}", filepath.string());
+		EVE_LOG_ERROR("Unable to load file from: {}", filepath.string());
 		return "";
 	}
 
