@@ -400,7 +400,7 @@ void ScriptEngine::_init_mono() {
 	if (s_data->enable_debugging) {
 		const char* argv[2] = {
 			"--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,"
-			"suspend=n,loglevel=3,logfile=MonoDebugger.log",
+			"suspend=n,loglevel=3,logfile=mono_debugger.log",
 			"--soft-breakpoints"
 		};
 

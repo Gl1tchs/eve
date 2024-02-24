@@ -1,7 +1,6 @@
 #ifndef SCENE_RENDERER_H
 #define SCENE_RENDERER_H
 
-#include "core/window.h"
 #include "scene/editor_camera.h"
 
 class Entity;

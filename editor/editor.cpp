@@ -25,8 +25,7 @@ EditorApplication::EditorApplication(const ApplicationCreateInfo& info) :
 	_setup_toolbar();
 }
 
-void EditorApplication::_on_start() {
-}
+void EditorApplication::_on_start() {}
 
 inline static bool s_default_title = true;
 
@@ -47,14 +46,49 @@ void EditorApplication::_on_update(float dt) {
 
 			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
 				// bind entity selection beheaviour
-				scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER, BIND_FUNC(_handle_entity_selection));
+				scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER,
+						BIND_FUNC(_handle_entity_selection));
 
 				// TODO this should not be affected by post processing
-				scene_renderer->submit(RenderFuncTickFormat::ON_RENDER, [this, &scene](const Ref<FrameBuffer>& fb) {
-					for (auto entity : scene->get_selected_entities()) {
-						_render_entity_bounds(entity);
-					}
-				});
+				scene_renderer->submit(RenderFuncTickFormat::ON_RENDER,
+						[this, &scene](const Ref<FrameBuffer>& fb) {
+							for (auto entity : scene->get_selected_entities()) {
+								_render_entity_bounds(entity);
+							}
+						});
+
+				scene_renderer->submit(RenderFuncTickFormat::ON_RENDER,
+						[scene](const Ref<FrameBuffer>& fb) -> void {
+							const auto has_camera_filter = [](Entity entity) {
+								return entity.has_component<CameraComponent>();
+							};
+
+							for (Entity entity :
+									scene->get_selected_entities() |
+											std::views::filter(
+													has_camera_filter)) {
+								const auto& cc =
+										entity.get_component<CameraComponent>();
+
+								const auto& position =
+										entity.get_transform().get_position();
+								const auto& zoom_level = cc.camera.zoom_level;
+								const auto& aspect_ratio =
+										cc.camera.aspect_ratio;
+
+								const glm::vec2 min = {
+									position.x - (zoom_level * aspect_ratio),
+									position.y - zoom_level,
+								};
+
+								const glm::vec2 max = {
+									position.x + (zoom_level * aspect_ratio),
+									position.y + zoom_level,
+								};
+
+								renderer::draw_box(min, max, COLOR_GREEN);
+							}
+						});
 
 				scene_renderer->render_editor(dt, editor_camera);
 			}
@@ -106,37 +140,30 @@ void EditorApplication::_on_imgui_update(float dt) {
 	DockSpace::end();
 }
 
-void EditorApplication::_on_destroy() {
-}
+void EditorApplication::_on_destroy() {}
 
 void EditorApplication::_setup_menubar() {
-	Menu file_menu{
-		"File",
+	Menu file_menu{ "File",
 		{
 				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
 				{ "New Scene", "", BIND_FUNC(_create_scene) },
 				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
 				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) },
 				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(quit) },
-		}
-	};
+		} };
 	menubar.push_menu(file_menu);
 
-	Menu view_menu{
-		"View",
+	Menu view_menu{ "View",
 		{
-				{ "Viewport",
-						[this]() { viewport.set_active(true); } },
+				{ "Viewport", [this]() { viewport.set_active(true); } },
 				{ "Toolbar", [this]() { toolbar.set_active(true); } },
-				{ "Hierarchy",
-						[this]() { hierarchy.set_active(true); } },
-				{ "Inspector",
-						[this]() { inspector.set_active(true); } },
-				{ "Content Browser", [this]() { content_browser.set_active(true); } },
+				{ "Hierarchy", [this]() { hierarchy.set_active(true); } },
+				{ "Inspector", [this]() { inspector.set_active(true); } },
+				{ "Content Browser",
+						[this]() { content_browser.set_active(true); } },
 				{ "Console", [this]() { console.set_active(true); } },
 				{ "Stats", [this]() { stats.set_active(true); } },
-		}
-	};
+		} };
 
 	menubar.push_menu(view_menu);
 }
@@ -156,16 +183,19 @@ void EditorApplication::_on_viewport_resize() {
 	scene_renderer->on_viewport_resize({ viewport_size.x, viewport_size.y });
 
 	if (viewport_size.x > 0 && viewport_size.y > 0) {
-		editor_camera->aspect_ratio = (float)viewport_size.x / (float)viewport_size.y;
+		editor_camera->aspect_ratio =
+				(float)viewport_size.x / (float)viewport_size.y;
 	}
 }
 
-void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) {
+void EditorApplication::_handle_entity_selection(
+		Ref<FrameBuffer> frame_buffer) {
 	auto [mx, my] = ImGui::GetMousePos();
 	mx -= viewport.get_min_bounds().x;
 	my -= viewport.get_min_bounds().y;
 
-	const glm::vec2 viewport_size = viewport.get_max_bounds() - viewport.get_min_bounds();
+	const glm::vec2 viewport_size =
+			viewport.get_max_bounds() - viewport.get_min_bounds();
 
 	// Ensure the correct y-coordinate inversion
 	my = viewport_size.y - my;
@@ -174,9 +204,11 @@ void EditorApplication::_handle_entity_selection(Ref<FrameBuffer> frame_buffer) 
 	const int mouse_y = static_cast<int>(my);
 
 	// Check if the mouse is within the viewport bounds
-	if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x && mouse_y < viewport_size.y) {
+	if (mouse_x >= 0 && mouse_y >= 0 && mouse_x < viewport_size.x &&
+			mouse_y < viewport_size.y) {
 		int pixel_data;
-		frame_buffer->read_pixel(1, mouse_x, mouse_y, FrameBufferTextureFormat::RED_INT, &pixel_data);
+		frame_buffer->read_pixel(1, mouse_x, mouse_y,
+				FrameBufferTextureFormat::RED_INT, &pixel_data);
 
 		auto scene = SceneManager::get_active();
 
@@ -220,8 +252,8 @@ void EditorApplication::_save_active_scene_as() {
 	}
 
 	const char* filter_patterns[1] = { "*.escn" };
-	const char* path = tinyfd_saveFileDialog("Save Scene", "scene.escn", 1,
-			filter_patterns, "Eve Scene Files");
+	const char* path = tinyfd_saveFileDialog(
+			"Save Scene", "scene.escn", 1, filter_patterns, "Eve Scene Files");
 
 	if (!path) {
 		EVE_LOG_ENGINE_ERROR("Unable to save scene to path.");
@@ -249,7 +281,8 @@ void EditorApplication::_open_project() {
 		ScriptEngine::init();
 
 		// load the first scene
-		EVE_ASSERT_ENGINE(SceneManager::load_scene(Project::get_starting_scene_path()));
+		EVE_ASSERT_ENGINE(
+				SceneManager::load_scene(Project::get_starting_scene_path()));
 
 		editor_scene = SceneManager::get_active();
 		editor_scene->clear_selected_entities();
@@ -310,9 +343,7 @@ void EditorApplication::_on_scene_resume() {
 	SceneManager::get_active()->set_paused(false);
 }
 
-void EditorApplication::_on_scene_step() {
-	SceneManager::get_active()->step();
-}
+void EditorApplication::_on_scene_step() { SceneManager::get_active()->step(); }
 
 void EditorApplication::_handle_shortcuts() {
 	if (Input::is_key_pressed(KeyCode::LEFT_CONTROL)) {
@@ -350,7 +381,8 @@ void EditorApplication::_render_entity_bounds(Entity entity) {
 	}
 
 	if (entity.has_component<TextRenderer>()) {
-		const TextRenderer& text_renderer = entity.get_component<TextRenderer>();
+		const TextRenderer& text_renderer =
+				entity.get_component<TextRenderer>();
 		if (text_renderer.is_screen_space) {
 			return;
 		}
@@ -358,11 +390,15 @@ void EditorApplication::_render_entity_bounds(Entity entity) {
 		Transform text_transform = transform;
 		glm::vec2 scale = text_transform.get_scale();
 
-		Ref<Font> font = editor_scene->get_asset_registry().get_asset<Font>(text_renderer.font);
+		Ref<Font> font = editor_scene->get_asset_registry().get_asset<Font>(
+				text_renderer.font);
 
-		glm::vec2 text_size = get_text_size(text_renderer.text, font, text_renderer.kerning) * scale;
+		glm::vec2 text_size =
+				get_text_size(text_renderer.text, font, text_renderer.kerning) *
+				scale;
 
-		text_transform.local_position.y += (scale.y / 2.0f) - (text_size.y / 2.0f);
+		text_transform.local_position.y +=
+				(scale.y / 2.0f) - (text_size.y / 2.0f);
 
 		text_transform.local_scale.x = text_size.x;
 		text_transform.local_scale.y += text_size.y;

@@ -13,14 +13,16 @@
 #include "scene/transform.h"
 
 SceneRenderer::SceneRenderer() : viewport_size(0, 0) {
-	FrameBufferCreateInfo fb_info;
-	fb_info.attachments = {
-		FrameBufferTextureFormat::RGBA8,
-		FrameBufferTextureFormat::RED_INT,
-		FrameBufferTextureFormat::DEPTH24_STENCIL8,
+	FrameBufferCreateInfo fb_info =  {
+		.width = 1280,
+		.height = 768,
+		.attachments = {
+			FrameBufferTextureFormat::RGBA8,
+			FrameBufferTextureFormat::RED_INT,
+			FrameBufferTextureFormat::DEPTH24_STENCIL8,
+		},
 	};
-	fb_info.width = 1280;
-	fb_info.height = 768;
+
 	frame_buffer = create_ref<FrameBuffer>(fb_info);
 
 	post_processor = create_ref<PostProcessor>();

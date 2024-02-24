@@ -32,7 +32,6 @@
 ## Renderer
 - [ ] Saturation / Brightness / Temprature post processing effects.
 - [ ] Physics collider bounds rendering.
-- [ ] Camera bounds rendering.
 - [ ] Gizmo texture rendering.
 - [ ] Texture atlasses.
 - [ ] Animations

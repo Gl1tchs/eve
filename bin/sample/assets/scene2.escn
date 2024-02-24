@@ -3,76 +3,6 @@
   "name": "scene2",
   "entities": [
     {
-      "id": 12760419235707648700,
-      "tag": "sprite -10-10",
-      "parent_id": 6488817373776678603,
-      "transform_component": {
-        "local_position": [
-          -10.0,
-          -10.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      },
-      "sprite_renderer_component": {
-        "texture": 14309419123582907854,
-        "color": [
-          0.0476190485060215,
-          0.0476190485060215,
-          0.0476190485060215,
-          1.0
-        ],
-        "tex_tiling": [
-          1.0,
-          1.0
-        ]
-      }
-    },
-    {
-      "id": 6045226896381459981,
-      "tag": "sprite -10-9",
-      "parent_id": 6488817373776678603,
-      "transform_component": {
-        "local_position": [
-          -10.0,
-          -9.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      },
-      "sprite_renderer_component": {
-        "texture": 14309419123582907854,
-        "color": [
-          0.0476190485060215,
-          0.0714285746216774,
-          0.095238097012043,
-          1.0
-        ],
-        "tex_tiling": [
-          1.0,
-          1.0
-        ]
-      }
-    },
-    {
       "id": 11230804210643436708,
       "tag": "sprite -10-8",
       "parent_id": 6488817373776678603,
@@ -7738,13 +7668,13 @@
       }
     },
     {
-      "id": 9653124057785562065,
-      "tag": "sprite 01",
+      "id": 12760419235707648700,
+      "tag": "sprite -10-10",
       "parent_id": 6488817373776678603,
       "transform_component": {
         "local_position": [
-          0.0,
-          1.0,
+          -10.0,
+          -10.0,
           0.0
         ],
         "local_rotation": [
@@ -7761,9 +7691,9 @@
       "sprite_renderer_component": {
         "texture": 14309419123582907854,
         "color": [
-          0.523809552192688,
-          0.547619104385376,
-          0.5714285969734192,
+          0.0476190485060215,
+          0.0476190485060215,
+          0.0476190485060215,
           1.0
         ],
         "tex_tiling": [
@@ -7773,13 +7703,13 @@
       }
     },
     {
-      "id": 1348014611329549226,
-      "tag": "sprite 02",
+      "id": 6045226896381459981,
+      "tag": "sprite -10-9",
       "parent_id": 6488817373776678603,
       "transform_component": {
         "local_position": [
-          0.0,
-          2.0,
+          -10.0,
+          -9.0,
           0.0
         ],
         "local_rotation": [
@@ -7796,9 +7726,9 @@
       "sprite_renderer_component": {
         "texture": 14309419123582907854,
         "color": [
-          0.523809552192688,
-          0.5714285969734192,
-          0.6190476417541504,
+          0.0476190485060215,
+          0.0714285746216774,
+          0.095238097012043,
           1.0
         ],
         "tex_tiling": [
@@ -15470,36 +15400,6 @@
           1.0,
           1.0
         ]
-      },
-      "post_process_volume": {
-        "is_global": true,
-        "gray_scale": {
-          "enabled": true
-        },
-        "chromatic_aberration": {
-          "enabled": false,
-          "offset": [
-            0.008999999612569809,
-            0.006000000052154064,
-            -0.006000000052154064
-          ]
-        },
-        "blur": {
-          "enabled": false,
-          "size": 2,
-          "seperation": 2.0
-        },
-        "sharpen": {
-          "enabled": false,
-          "amount": 0.800000011920929
-        },
-        "vignette": {
-          "enabled": true,
-          "inner": 0.5,
-          "outer": 1.2000000476837158,
-          "strength": 0.800000011920929,
-          "curvature": 0.5
-        }
       }
     },
     {
