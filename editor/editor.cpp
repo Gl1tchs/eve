@@ -225,7 +225,7 @@ void EditorApplication::_handle_entity_selection(
 				}
 
 				scene->toggle_entity_selection(hovered_entity);
-			} else {
+			} else if (viewport.is_focused()) {
 				scene->clear_selected_entities();
 			}
 		}
