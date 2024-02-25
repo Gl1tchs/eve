@@ -53,7 +53,7 @@ git clone --recursive https://github.com/gl1tchs/eve.git
 
 - Then build the engine in desired configuration:
 ```bash
-python build.py -config=MinSizeRel --all
+python build.py --config=MinSizeRel --all
 ```
 
 You can get more information about the build.py script by:
