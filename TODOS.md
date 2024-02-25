@@ -12,8 +12,8 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Change bundling to accept more general use
 - [ ] Sound system.
-- [ ] Pack shaders into a tarball or zip (assets while exporting as well).
 - [ ] Console commands.
 - [ ] Seperate thread for rendering and window.
 - [ ] Cross platform scripting.

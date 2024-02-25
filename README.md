@@ -34,7 +34,7 @@ A yet another cross platform game engine which is easy to use and performant.
 - [Scripting Setup](docs/SCRIPTING_SETUP.md.md)
 
 ## Dependencies
-- Windows 10+
+- Windows 10+ or Linux operating system.
 - [Python 3.11+](https://www.python.org/downloads/) for build script (not required but recommended).
 - [Clang](https://github.com/llvm/llvm-project/releases/tag/llvmorg-17.0.1/) as C++ compiler.
 - [CMake](https://cmake.org/download/) as build system.
