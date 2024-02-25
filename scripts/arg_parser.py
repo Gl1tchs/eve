@@ -15,7 +15,7 @@ def print_help_message() -> None:
 eve engine build script
 
 USAGE:
--config=[Debug | Release | RelWithDebInfo | MinSizeRel]
+--config=[Debug | Release | RelWithDebInfo | MinSizeRel]
                     
                     sets configuration type (RelWithDebInfo is the default)
 
@@ -73,6 +73,10 @@ def parse_config() -> BuildConfig | None:
 
 
 def parse_args() -> None:
+    if "--help" in ARGS or "-h" in ARGS:
+        print_help_message()
+        return
+
     has_check_flag: bool = "--check" in ARGS
 
     config: BuildConfig | None = parse_config()
@@ -81,7 +85,6 @@ def parse_args() -> None:
 
     if "--configure" in ARGS:
         configure_cmake(config)
-        return
 
     flags: int = parse_flags()
 

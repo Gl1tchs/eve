@@ -4,9 +4,7 @@
 #include <glad/glad.h>
 
 static void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
-		uint32_t id, uint32_t severity,
-		int32_t length,
-		const char* message,
+		uint32_t id, uint32_t severity, int32_t length, const char* message,
 		const void* user_param);
 
 void RenderCommand::init() {
@@ -19,16 +17,18 @@ void RenderCommand::init() {
 	glDebugMessageCallback(opengl_message_callback, nullptr);
 #endif
 
-	EVE_ASSERT(
-			GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5),
+	EVE_ASSERT(GLVersion.major > 4 ||
+					(GLVersion.major == 4 && GLVersion.minor >= 5),
 			"Requires at least OpenGL version of 4.5!");
 
 	EVE_LOG_VERBOSE_TRACE("GL Info:");
-	EVE_LOG_VERBOSE_TRACE("GL Version: {}", (const char*)glGetString(GL_VERSION));
+	EVE_LOG_VERBOSE_TRACE(
+			"GL Version: {}", (const char*)glGetString(GL_VERSION));
 	EVE_LOG_VERBOSE_TRACE("GL Vendor: {}", (const char*)glGetString(GL_VENDOR));
-	EVE_LOG_VERBOSE_TRACE("GL Renderer: {}", (const char*)glGetString(GL_RENDERER));
-	EVE_LOG_VERBOSE_TRACE("GL Shading Version: {}", (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
-
+	EVE_LOG_VERBOSE_TRACE(
+			"GL Renderer: {}", (const char*)glGetString(GL_RENDERER));
+	EVE_LOG_VERBOSE_TRACE("GL Shading Version: {}",
+			(const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_BLEND);
@@ -36,7 +36,8 @@ void RenderCommand::init() {
 	glDepthFunc(GL_LESS);
 }
 
-void RenderCommand::set_viewport(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
+void RenderCommand::set_viewport(
+		uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
 	glViewport(x, y, w, h);
 }
 
@@ -66,19 +67,23 @@ void RenderCommand::set_depth_testing(bool enable) {
 	}
 }
 
-void RenderCommand::draw_arrays(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
+void RenderCommand::draw_arrays(
+		const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 }
 
-void RenderCommand::draw_indexed(const Ref<VertexArray>& vertex_array, uint32_t index_count) {
+void RenderCommand::draw_indexed(
+		const Ref<VertexArray>& vertex_array, uint32_t index_count) {
 	vertex_array->bind();
-	uint32_t count =
-			index_count ? index_count : vertex_array->get_index_buffer()->get_count();
+	uint32_t count = index_count
+			? index_count
+			: vertex_array->get_index_buffer()->get_count();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 
-void RenderCommand::draw_lines(const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
+void RenderCommand::draw_lines(
+		const Ref<VertexArray>& vertex_array, uint32_t vertex_count) {
 	vertex_array->bind();
 	glDrawArrays(GL_LINES, 0, vertex_count);
 }
@@ -89,9 +94,7 @@ void RenderCommand::draw_arrays_instanced(const Ref<VertexArray>& vertex_array,
 	glDrawArraysInstanced(GL_TRIANGLES, 0, vertex_count, instance_count);
 }
 
-void RenderCommand::set_line_width(float width) {
-	glLineWidth(width);
-}
+void RenderCommand::set_line_width(float width) { glLineWidth(width); }
 
 void RenderCommand::set_polygon_mode(PolygonMode mode) {
 	switch (mode) {
@@ -136,8 +139,13 @@ void RenderCommand::bind_texture(uint32_t renderer_id) {
 }
 
 void GLAPIENTRY opengl_message_callback(uint32_t source, uint32_t type,
-		uint32_t id, uint32_t severity, int32_t,
-		const char* message, const void*) {
+		uint32_t id, uint32_t severity, int32_t, const char* message,
+		const void*) {
+	if (severity == GL_DEBUG_SEVERITY_LOW ||
+			severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+		return;
+	}
+
 	// Convert GLenum parameters to strings
 	const char* source_string;
 	switch (source) {

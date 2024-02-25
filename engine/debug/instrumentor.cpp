@@ -62,7 +62,7 @@ void Instrumentor::_write_footer() {
 
 InstrumentationTimer::InstrumentationTimer(const std::string& name) :
 		name(name), stopped(false) {
-	start_point = std::chrono::steady_clock::now();
+	start_point = std::chrono::high_resolution_clock::now();
 }
 
 InstrumentationTimer::~InstrumentationTimer() {

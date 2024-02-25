@@ -16,7 +16,8 @@ class Instrumentor {
 public:
 	Instrumentor();
 
-	void begin_session(const std::string& name, const std::string& file_path = "profile-result.json");
+	void begin_session(const std::string& name,
+			const std::string& file_path = "profile-result.json");
 
 	void end_session();
 
@@ -61,11 +62,33 @@ private:
 
 #if EVE_ENABLE_PROFILING
 
-#define EVE_PROFILE_BEGIN_SESSION(name, file_path) Instrumentor::get_instance().begin_session(name, file_path)
+#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) ||    \
+		(defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+#define EVE_FUNC_SIG __PRETTY_FUNCTION__
+#elif defined(__DMC__) && (__DMC__ >= 0x810)
+#define EVE_FUNC_SIG __PRETTY_FUNCTION__
+#elif (defined(__FUNCSIG__) || (_MSC_VER))
+#define EVE_FUNC_SIG __FUNCSIG__
+#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) ||              \
+		(defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+#define EVE_FUNC_SIG __FUNCTION__
+#elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
+#define EVE_FUNC_SIG __FUNC__
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+#define EVE_FUNC_SIG __func__
+#elif defined(__cplusplus) && (__cplusplus >= 201103)
+#define EVE_FUNC_SIG __func__
+#else
+#define EVE_FUNC_SIG "EVE_FUNC_SIG unknown!"
+#endif
+
+#define EVE_PROFILE_BEGIN_SESSION(name, file_path)                             \
+	Instrumentor::get_instance().begin_session(name, file_path)
 #define EVE_PROFILE_END_SESSION() Instrumentor::get_instance().end_session()
 
-#define EVE_PROFILE_SCOPE(name) InstrumentationTimer EVE_CONCAT(timer_, __LINE__)(name)
-#define EVE_PROFILE_FUNCTION() EVE_PROFILE_SCOPE(__FUNCSIG__)
+#define EVE_PROFILE_SCOPE(name)                                                \
+	InstrumentationTimer EVE_CONCAT(timer_, __LINE__)(name)
+#define EVE_PROFILE_FUNCTION() EVE_PROFILE_SCOPE(EVE_FUNC_SIG)
 
 #else
 

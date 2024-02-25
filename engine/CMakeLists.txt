@@ -50,7 +50,15 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	target_compile_options(eve PRIVATE -Wno-microsoft-cast)
 endif()
 
+if(WIN32)
+	set(MONO_DLL ${VENDOR_DIR}/mono/bin/mono-2.0-sgen.dll)
+endif()
+
+if(UNIX AND NOT APPLE)
+	set(MONO_DLL ${VENDOR_DIR}/mono/bin/libmonosgen-2.0.so)
+endif()
+
 add_custom_command(TARGET eve PRE_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${VENDOR_DIR}/mono/bin/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-  COMMENT "Copying Mono DLL to the build destination."
+	COMMAND ${CMAKE_COMMAND} -E copy ${MONO_DLL} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+  	COMMENT "Copying Mono DLL to the build destination."
 )

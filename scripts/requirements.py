@@ -3,7 +3,7 @@ import subprocess
 
 
 def check_os() -> bool:
-    supported_os: list[str] = ['Windows']
+    supported_os: list[str] = ['Windows', 'Linux']
     result: bool = platform.system() in supported_os
     if not result:
         print(f"{platform.system()} is not available at the moment.")
@@ -37,8 +37,12 @@ def check_dotnet() -> bool:
 def check_vulkan() -> bool:
     try:
         subprocess.run(['glslc', '--version'], check=True, stdout=False)
-        subprocess.run(['vulkaninfoSDK', '--summary'], check=True, stdout=False)
         
+        if platform.system() == "Windows":
+            subprocess.run(['vulkaninfoSDK', '--summary'], check=True, stdout=False)
+        else:
+            subprocess.run(['vulkaninfo', '--summary'], check=True, stdout=False)
+
         print("VulkanSDK Found")
         
         return True
