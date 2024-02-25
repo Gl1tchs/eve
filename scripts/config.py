@@ -7,7 +7,10 @@ BUILD_FLAGS_BUILD_ENGINE: int = 1 << 0
 BUILD_FLAGS_BUILD_SCRIPT_CORE: int = 1 << 1
 BUILD_FLAGS_BUILD_SAMPLE: int = 1 << 2
 BUILD_FLAGS_COMPILE_SHADERS: int = 1 << 3
-BUILD_FLAGS_ALL: int = BUILD_FLAGS_BUILD_ENGINE | BUILD_FLAGS_BUILD_SCRIPT_CORE | BUILD_FLAGS_BUILD_SAMPLE | BUILD_FLAGS_COMPILE_SHADERS
+BUILD_FLAGS_ALL: int = BUILD_FLAGS_BUILD_ENGINE \
+    | BUILD_FLAGS_BUILD_SCRIPT_CORE \
+    | BUILD_FLAGS_BUILD_SAMPLE \
+    | BUILD_FLAGS_COMPILE_SHADERS
 
 
 class BuildConfig(Enum):
@@ -22,7 +25,8 @@ PROJECT_SOURCE_DIR = Path(os.path.abspath(__file__)).parent
 
 
 def is_release_config(config: BuildConfig) -> bool:
-    return config == BuildConfig.DEBUG or config == BuildConfig.REL_WITH_DEB_INFO
+    return (config is BuildConfig.DEBUG or
+            config is BuildConfig.REL_WITH_DEB_INFO)
 
 
 def deserialize_build_config(config: str) -> BuildConfig:

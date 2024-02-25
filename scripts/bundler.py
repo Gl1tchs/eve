@@ -2,10 +2,9 @@ import os
 
 from pathlib import Path
 
-# bundle's a data into C++ header file
 
-
-def bundle_shaders(file_path: Path, shader_dir: Path, shader_files: list[Path]):
+def bundle_shaders(file_path: Path, shader_dir: Path,
+                   shader_files: list[Path]):
     file_name = file_path.stem.split(".")[0]
     include_guard_name = str(file_name).upper() + "_H"
 
@@ -26,9 +25,12 @@ def bundle_shaders(file_path: Path, shader_dir: Path, shader_files: list[Path]):
 
         total_size = 0
         for idx, shader_file in enumerate(shader_files):
+            file_name_trimmed = str(shader_file.relative_to(shader_dir)) \
+                .replace(os.sep, "/") \
+                .replace(".spv", "")
+
             size = shader_file.stat().st_size
-            file.write(
-                f'\t{{"{str(shader_file.relative_to(shader_dir)).replace(os.sep, "/").replace(".spv", "")}", {total_size}, {size}}}, \n')
+            file.write(f"\t\"{file_name_trimmed}\", {total_size}, {size}, \n")
             total_size = total_size + size
         file.write("};\n\n")
 

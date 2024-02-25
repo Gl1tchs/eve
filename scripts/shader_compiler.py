@@ -2,7 +2,8 @@ import os
 import subprocess
 
 from pathlib import Path
-from .config import *
+
+from .config import PROJECT_SOURCE_DIR, BuildConfig, is_release_config
 from .bundler import bundle_shaders
 
 
@@ -63,7 +64,8 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
                 "-o", out_path
             ]
 
-            if config is BuildConfig.RELEASE or config is BuildConfig.MIN_SIZE_REL:
+            if (config is BuildConfig.RELEASE
+                    or config is BuildConfig.MIN_SIZE_REL):
                 # optimize
                 args.append("-O")
                 # treat all warnings as errors

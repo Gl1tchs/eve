@@ -1,10 +1,17 @@
 import sys
 import re
 
-from .config import *
-from .cmake_builder import *
-from .dotnet_builder import *
-from .shader_compiler import *
+from .config import BUILD_FLAGS_BUILD_ENGINE, \
+    BUILD_FLAGS_COMPILE_SHADERS, \
+    BUILD_FLAGS_BUILD_SCRIPT_CORE, \
+    BUILD_FLAGS_BUILD_SAMPLE, \
+    BUILD_FLAGS_ALL, \
+    BuildConfig, \
+    deserialize_build_config
+
+from .cmake_builder import configure_cmake, build_engine
+from .dotnet_builder import build_sample, build_script_core
+from .shader_compiler import compile_shaders
 from .requirements import check_all
 
 ARGS = sys.argv[1:]
@@ -16,7 +23,7 @@ eve engine build script
 
 USAGE:
 --config=[Debug | Release | RelWithDebInfo | MinSizeRel]
-                    
+
                     sets configuration type (RelWithDebInfo is the default)
 
 --configure         configures CMake
@@ -25,9 +32,9 @@ USAGE:
 --all               builds everything (default)
 --engine            builds engine
 --script-core       builds script core
---shaders           compiles shaders 
+--shaders           compiles shaders
 --sample            builds sample project
-                    
+
 --help | -h         shows this message
 """)
 
@@ -103,8 +110,8 @@ def parse_args() -> None:
 
     if flags & BUILD_FLAGS_COMPILE_SHADERS:
         compile_shaders(config, clean_build)
-    
-    if flags & BUILD_FLAGS_BUILD_ENGINE:        
+
+    if flags & BUILD_FLAGS_BUILD_ENGINE:
         build_engine(config, clean_build)
 
     if flags & BUILD_FLAGS_BUILD_SCRIPT_CORE:

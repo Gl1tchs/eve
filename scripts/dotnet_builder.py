@@ -1,13 +1,24 @@
 import subprocess
 
-from scripts.config import *
+from pathlib import Path
+
+from .config import PROJECT_SOURCE_DIR, BuildConfig
+
+
+def get_cs_config(config: BuildConfig) -> str:
+    if config is BuildConfig.RELEASE or config is BuildConfig.MIN_SIZE_REL:
+        return "Release"
+    return "Debug"
 
 
 def build_script_core(config: BuildConfig, clean_build: bool) -> None:
-    cs_config: str = "Release" if config is BuildConfig.RELEASE or config is BuildConfig.MIN_SIZE_REL else "Debug"
-
     args: list[str] = [
-        "dotnet", "build", "script_core.csproj", f"--configuration={cs_config}"]
+        "dotnet",
+        "build",
+        "script_core.csproj",
+        f"--configuration={get_cs_config(config)}"
+    ]
+
     cwd: Path = PROJECT_SOURCE_DIR.parent / "script_core"
 
     try:
@@ -19,10 +30,13 @@ def build_script_core(config: BuildConfig, clean_build: bool) -> None:
 
 
 def build_sample(config: BuildConfig, clean_build: bool) -> None:
-    cs_config: str = "Release" if config is BuildConfig.RELEASE or config is BuildConfig.MIN_SIZE_REL else "Debug"
-
     args: list[str] = [
-        "dotnet", "build", "sample.csproj", f"--configuration={cs_config}"]
+        "dotnet",
+        "build",
+        "sample.csproj",
+        f"--configuration={get_cs_config(config)}"
+    ]
+
     cwd: Path = PROJECT_SOURCE_DIR.parent / "bin" / "sample" / "src"
 
     try:

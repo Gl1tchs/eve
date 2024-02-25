@@ -2,15 +2,11 @@ file(GLOB_RECURSE SOURCE_FILES "${EDITOR_DIR}/*.h" "${EDITOR_DIR}/*.cpp")
 
 add_executable(editor ${SOURCE_FILES})
 
-target_precompile_headers(editor PUBLIC pch.h)
+target_precompile_headers(editor PRIVATE pch.h)
 
-target_include_directories(editor
-PUBLIC
+target_include_directories(editor PRIVATE
 	${EDITOR_DIR}
-    ${ENGINE_DIR}
-	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
-	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
-PRIVATE
+	${eve_IncludeDirs}
 	${VENDOR_DIR}/imgui
 	${VENDOR_DIR}/tinyfiledialogs
 )
