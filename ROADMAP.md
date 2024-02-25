@@ -63,6 +63,8 @@
 		- [ ] Compile assets
 		- [ ] Create executable
 - [ ] Runtime
+	- [ ] Display/engine settings serialization
+	- [ ] Custom icons
 - [ ] Platforms
 	- [ ] Windows
 	- [ ] Linux
