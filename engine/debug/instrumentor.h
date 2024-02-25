@@ -50,6 +50,9 @@ private:
 	bool stopped;
 };
 
+#define EVE_CONCAT_IMPL(x, y) x##y
+#define EVE_CONCAT(x, y) EVE_CONCAT_IMPL(x, y)
+
 #if EVE_DEBUG
 #define EVE_ENABLE_PROFILING 1
 #else
@@ -61,7 +64,7 @@ private:
 #define EVE_PROFILE_BEGIN_SESSION(name, file_path) Instrumentor::get_instance().begin_session(name, file_path)
 #define EVE_PROFILE_END_SESSION() Instrumentor::get_instance().end_session()
 
-#define EVE_PROFILE_SCOPE(name) InstrumentationTimer timer_##__LINE__(name)
+#define EVE_PROFILE_SCOPE(name) InstrumentationTimer EVE_CONCAT(timer_, __LINE__)(name)
 #define EVE_PROFILE_FUNCTION() EVE_PROFILE_SCOPE(__FUNCSIG__)
 
 #else
