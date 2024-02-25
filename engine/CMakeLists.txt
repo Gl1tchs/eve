@@ -22,7 +22,8 @@ PUBLIC
 	${VENDOR_DIR}/msdf-atlas-gen/msdfgen
 	${VENDOR_DIR}/msdf-atlas-gen/msdf-atlas-gen
 PRIVATE
-    ${VENDOR_DIR}/glad/include
+	${CMAKE_BINARY_DIR}/include
+	${VENDOR_DIR}/glad/include
     ${VENDOR_DIR}/glfw/include
     ${VENDOR_DIR}/imgui
     ${VENDOR_DIR}/stb

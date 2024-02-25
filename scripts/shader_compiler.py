@@ -3,6 +3,7 @@ import subprocess
 
 from pathlib import Path
 from .config import *
+from .bundler import bundle_shaders
 
 
 def compile_shaders(config: BuildConfig, clean_build: bool):
@@ -29,46 +30,30 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
     shader_include_path: Path = shader_path / "include"
     shader_source_path: Path = shader_path / "src"
 
-    processing_shader_old: Path | None = None
-    processing_shader_new: Path | None = None
+    shaders: list[Path] = []
 
     try:
         for shader in shader_source_path.glob("**/*"):
             if not shader.is_file():
                 continue
 
+            print(f"Compiling shader: \"{shader}\"")
+
             # output path without src/
             out_path: Path = cwd / "bin" / shader.relative_to(cwd)
             out_path_str: str = str(out_path).replace(os.sep + "src", "")
             out_path = Path(out_path_str).with_suffix(out_path.suffix + ".spv")
 
+            shaders.append(out_path)
+
             if not out_path.parent.exists():
                 os.makedirs(out_path.parent)
-
-            shader_suffix: str = shader.suffix
-
-            stage: str | None = None
-            match shader_suffix:
-                case ".esf":
-                    stage = "frag"
-                case ".esv":
-                    stage = "vert"
-                case _:
-                    continue
-
-            processing_shader_old = shader
-            processing_shader_new = shader.with_suffix("."+stage)
-
-            # rename to .vert or .frag to make "glslc" happy
-            # why does it even required at the first place????
-            os.rename(processing_shader_old, processing_shader_new)
 
             # "-finvert-y" could be used for vulkan
 
             args: list[str] = [
                 "glslc",
-                processing_shader_new,
-                f"-fshader-stage={stage}",
+                shader,
                 "--target-env=opengl",  # ! TODO
                 "-x", "glsl",
                 "-I", shader_include_path,
@@ -85,14 +70,16 @@ def compile_shaders(config: BuildConfig, clean_build: bool):
                 args.append("-Werror")
 
             subprocess.check_call(args=args, cwd=cwd)
-
-            # get back to old name
-            os.rename(processing_shader_new, shader)
     except subprocess.CalledProcessError as e:
-        # get back to old name
-        os.rename(processing_shader_new, processing_shader_old)
-
         print(f"Error occurred while compiling shaders: {e}")
         exit(1)
+
+    # pack shaders into a header
+    if is_release_config(config):
+        shader_pack_dir = cwd / "build" / "include"
+        if not shader_pack_dir.exists():
+            os.makedirs(shader_pack_dir)
+        bundle_shaders(shader_pack_dir / "shader_pack.gen.h",
+                       cwd / "bin" / "shaders", shaders)
 
     print("Shaders builded successfully.")

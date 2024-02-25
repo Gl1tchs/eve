@@ -2,7 +2,7 @@
 
 #include "project/project.h"
 #include "renderer/render_command.h"
-#include "renderer/shader.h"
+#include "renderer/shader_library.h"
 #include "renderer/vertex_array.h"
 #include "scene/scene_manager.h"
 #include "scene/scene_renderer.h"
@@ -39,8 +39,7 @@ protected:
 
 		// screen data
 		screen_vertex_array = create_ref<VertexArray>();
-		screen_shader = create_ref<Shader>(
-				"shaders/screen.esv.spv", "shaders/screen.esf.spv");
+		screen_shader = ShaderLibrary::get_shader("screen.vert", "screen.frag");
 
 		SceneManager::get_active()->start();
 	}

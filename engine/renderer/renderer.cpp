@@ -7,6 +7,7 @@
 #include "renderer/primitives/text.h"
 #include "renderer/render_command.h"
 #include "renderer/shader.h"
+#include "renderer/shader_library.h"
 #include "renderer/texture.h"
 #include "renderer/uniform_buffer.h"
 #include "renderer/vertex_array.h"
@@ -99,8 +100,8 @@ void init() {
 
 	delete[] indices;
 
-	s_data->quad_shader = create_ref<Shader>(
-			"shaders/sprite.esv.spv", "shaders/sprite.esf.spv");
+	s_data->quad_shader = ShaderLibrary::get_shader(
+			"sprite.vert", "sprite.frag");
 
 	// fill the textures with empty values (which is default white texture)
 	{
@@ -129,7 +130,7 @@ void init() {
 	s_data->text_vertex_array->set_index_buffer(quad_index_buffer);
 
 	s_data->text_shader =
-			create_ref<Shader>("shaders/text.esv.spv", "shaders/text.esf.spv");
+			ShaderLibrary::get_shader("text.vert", "text.frag");
 
 	// line data
 	s_data->line_vertex_array = create_ref<VertexArray>();
@@ -145,7 +146,7 @@ void init() {
 	s_data->line_vertex_array->add_vertex_buffer(s_data->line_vertex_buffer);
 
 	s_data->line_shader =
-			create_ref<Shader>("shaders/line.esv.spv", "shaders/line.esf.spv");
+			ShaderLibrary::get_shader("line.vert", "line.frag");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;

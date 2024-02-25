@@ -101,7 +101,10 @@ def parse_args() -> None:
 
     clean_build: bool = "--clean" in ARGS
 
-    if flags & BUILD_FLAGS_BUILD_ENGINE:
+    if flags & BUILD_FLAGS_COMPILE_SHADERS:
+        compile_shaders(config, clean_build)
+    
+    if flags & BUILD_FLAGS_BUILD_ENGINE:        
         build_engine(config, clean_build)
 
     if flags & BUILD_FLAGS_BUILD_SCRIPT_CORE:
@@ -109,6 +112,3 @@ def parse_args() -> None:
 
     if flags & BUILD_FLAGS_BUILD_SAMPLE:
         build_sample(config, clean_build)
-
-    if flags & BUILD_FLAGS_COMPILE_SHADERS:
-        compile_shaders(config, clean_build)

@@ -21,6 +21,10 @@ class BuildConfig(Enum):
 PROJECT_SOURCE_DIR = Path(os.path.abspath(__file__)).parent
 
 
+def is_release_config(config: BuildConfig) -> bool:
+    return config == BuildConfig.DEBUG or config == BuildConfig.REL_WITH_DEB_INFO
+
+
 def deserialize_build_config(config: str) -> BuildConfig:
     match config:
         case "Debug":

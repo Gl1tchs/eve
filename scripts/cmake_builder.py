@@ -33,8 +33,7 @@ def build_engine(config: BuildConfig, clean_build: bool) -> None:
     if clean_build and Path.exists(cache_path):
         os.remove(cache_path)
 
-    if not Path.exists(cache_path):
-        configure_cmake(config)
+    configure_cmake(config)
 
     args: list[str] = ["cmake", "--build", "."]
 

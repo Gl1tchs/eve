@@ -64,26 +64,25 @@ static bool check_compile_errors(uint32_t shader_id) {
 	return true;
 }
 
-Shader::Shader(const char* vs_path, const char* fs_path) : renderer_id(0) {
+Shader::Shader(const void* vertex_data, const size_t vertex_size,
+			const void* fragment_data, const size_t fragment_size) : renderer_id(0) {
 	EVE_PROFILE_FUNCTION();
 
 	glDeleteProgram(renderer_id);
 	renderer_id = glCreateProgram();
 
-	ScopedBuffer vertex_source = file_system::read_to_buffer(vs_path);
 	const uint32_t vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderBinary(1, &vertex_shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB,
-			vertex_source.get_data(), vertex_source.get_size());
+			vertex_data, vertex_size);
 	glSpecializeShaderARB(vertex_shader, "main", 0, nullptr, nullptr);
 
 	EVE_ASSERT(check_compile_errors(vertex_shader),
 			"Could not compile VertexShader!");
 	glAttachShader(renderer_id, vertex_shader);
 
-	ScopedBuffer fragment_source = file_system::read_to_buffer(fs_path);
 	const uint32_t fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderBinary(1, &fragment_shader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB,
-			fragment_source.get_data(), fragment_source.get_size());
+			fragment_data, fragment_size);
 	glSpecializeShaderARB(fragment_shader, "main", 0, nullptr, nullptr);
 
 	EVE_ASSERT(check_compile_errors(fragment_shader),

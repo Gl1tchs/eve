@@ -164,7 +164,6 @@ void EditorApplication::_setup_menubar() {
 				{ "Console", [this]() { console.set_active(true); } },
 				{ "Stats", [this]() { stats.set_active(true); } },
 		} };
-
 	menubar.push_menu(view_menu);
 }
 

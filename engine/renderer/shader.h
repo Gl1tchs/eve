@@ -1,8 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "core/file_system.h"
-
 enum class ShaderType { NONE = 0,
 	VERTEX,
 	FRAGMENT,
@@ -14,7 +12,8 @@ ShaderType deserialize_shader_type(const std::string& value);
 
 class Shader final {
 public:
-	Shader(const char* vs_path, const char* fs_path);
+	Shader(const void* vertex_data, const size_t vertex_size,
+			const void* fragment_data, const size_t fragment_size);
 	~Shader();
 
 	void bind() const;
