@@ -1,5 +1,5 @@
-#ifndef PLATFORM_ESH
-#define PLATFORM_ESH
+#ifndef PLATFORM_GLSL
+#define PLATFORM_GLSL
 
 #ifdef EVE_PLATFORM_OPENGL
 #define EVE_VERTEX_INDEX gl_VertexID

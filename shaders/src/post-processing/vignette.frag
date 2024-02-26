@@ -1,6 +1,6 @@
 #version 450 core
 
-#include "post_process_common.esh"
+#include "post_process_common.glsl"
 
 layout(location = 0) in vec2 v_tex_coord;
 
