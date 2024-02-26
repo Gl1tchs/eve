@@ -100,8 +100,8 @@ void init() {
 
 	delete[] indices;
 
-	s_data->quad_shader = ShaderLibrary::get_shader(
-			"sprite.vert", "sprite.frag");
+	s_data->quad_shader =
+			ShaderLibrary::get_shader("sprite.vert", "sprite.frag");
 
 	// fill the textures with empty values (which is default white texture)
 	{
@@ -129,8 +129,7 @@ void init() {
 	s_data->text_vertex_array->add_vertex_buffer(s_data->text_vertex_buffer);
 	s_data->text_vertex_array->set_index_buffer(quad_index_buffer);
 
-	s_data->text_shader =
-			ShaderLibrary::get_shader("text.vert", "text.frag");
+	s_data->text_shader = ShaderLibrary::get_shader("text.vert", "text.frag");
 
 	// line data
 	s_data->line_vertex_array = create_ref<VertexArray>();
@@ -145,8 +144,7 @@ void init() {
 	});
 	s_data->line_vertex_array->add_vertex_buffer(s_data->line_vertex_buffer);
 
-	s_data->line_shader =
-			ShaderLibrary::get_shader("line.vert", "line.frag");
+	s_data->line_shader = ShaderLibrary::get_shader("line.vert", "line.frag");
 
 	// Create default 1x1 white texture
 	TextureMetadata metadata;
@@ -182,18 +180,17 @@ void begin_pass(const CameraData& camera_data) {
 
 void end_pass() { flush(); }
 
-void draw_quad(
-		const Transform& transform, const Color& color, uint32_t entity_id) {
-	draw_quad(transform, nullptr, color, { 1, 1 }, entity_id);
-}
-
-void draw_quad(const Transform& transform, Ref<Texture2D> texture,
-		const glm::vec2& tex_tiling, uint32_t entity_id) {
-	draw_quad(transform, texture, COLOR_WHITE, tex_tiling, entity_id);
-}
-
 void draw_quad(const Transform& transform, Ref<Texture2D> texture,
 		const Color& color, const glm::vec2& tex_tiling, uint32_t entity_id) {
+	glm::vec2 coords[QUAD_VERTEX_COUNT];
+	memcpy(&coords, &QUAD_TEX_COORDS, sizeof(QUAD_TEX_COORDS));
+
+	draw_quad(transform, texture, coords, color, tex_tiling, entity_id);
+}
+
+void draw_quad(const Transform& transform, Ref<Texture2D> texture,
+		const glm::vec2 text_coords[QUAD_VERTEX_COUNT], const Color& color,
+		const glm::vec2& tex_tiling, uint32_t entity_id) {
 	if (quad_needs_batch(s_data->quad_index_count) ||
 			(texture && s_data->texture_slot_index + 1 >= MAX_TEXTURE_COUNT)) {
 		next_batch();
@@ -206,7 +203,7 @@ void draw_quad(const Transform& transform, Ref<Texture2D> texture,
 	for (uint32_t i = 0; i < QUAD_VERTEX_COUNT; i++) {
 		QuadVertex vertex;
 		vertex.position = transform_matrix * QUAD_VERTEX_POSITIONS[i];
-		vertex.tex_coord = QUAD_TEX_COORDS[i];
+		vertex.tex_coord = text_coords[i];
 		vertex.color = color;
 		vertex.tex_index = tex_index;
 		vertex.tex_tiling = tex_tiling;

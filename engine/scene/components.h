@@ -1,11 +1,10 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include "asset/asset.h"
 #include "core/color.h"
 #include "renderer/camera.h"
-#include "renderer/font.h"
 #include "renderer/post_processor.h"
-#include "renderer/texture.h"
 #include "scene/transform.h"
 
 struct CameraComponent {
@@ -18,6 +17,10 @@ struct SpriteRenderer {
 	AssetHandle texture;
 	Color color = COLOR_WHITE;
 	glm::vec2 tex_tiling = { 1, 1 };
+	// texture atlas specific
+	bool is_atlas = false;
+	glm::vec2 block_size = {0.0f, 0.0f};
+	uint32_t index = 0;
 };
 
 struct TextRenderer {
@@ -31,9 +34,7 @@ struct TextRenderer {
 };
 
 struct Rigidbody2D {
-	enum class BodyType { STATIC = 0,
-		DYNAMIC,
-		KINEMATIC };
+	enum class BodyType { STATIC = 0, DYNAMIC, KINEMATIC };
 
 	enum ForceMode {
 		FORCE,
@@ -109,14 +110,10 @@ struct ScriptComponent {
 	std::string class_name;
 };
 
-template <typename... Component>
-struct ComponentGroup {};
+template <typename... Component> struct ComponentGroup {};
 
-using AllComponents =
-		ComponentGroup<Transform, CameraComponent,
-				SpriteRenderer, TextRenderer,
-				Rigidbody2D, BoxCollider2D,
-				CircleCollider2D, PostProcessVolume,
-				ScriptComponent>;
+using AllComponents = ComponentGroup<Transform, CameraComponent, SpriteRenderer,
+		TextRenderer, Rigidbody2D, BoxCollider2D, CircleCollider2D,
+		PostProcessVolume, ScriptComponent>;
 
 #endif

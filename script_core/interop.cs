@@ -53,6 +53,7 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal extern static string entity_destroy(ulong entityId);
+
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal extern static ulong entity_get_parent(ulong entityId);
 
@@ -180,6 +181,24 @@ namespace EveEngine
 
 		[MethodImplAttribute(MethodImplOptions.InternalCall)]
 		internal extern static void sprite_renderer_component_set_tex_tiling(ulong entityId, ref Vector2 texTiling);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static bool sprite_renderer_component_get_is_atlas(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_is_atlas(ulong entityId, bool isAtlas);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_get_block_size(ulong entityId, out Vector2 blockSize);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_block_size(ulong entityId, ref Vector2 blockSize);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static uint sprite_renderer_component_get_index(ulong entityId);
+
+		[MethodImplAttribute(MethodImplOptions.InternalCall)]
+		internal extern static void sprite_renderer_component_set_index(ulong entityId, uint index);
 
 		#endregion
 		#region TextRendererComponent

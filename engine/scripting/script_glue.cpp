@@ -427,6 +427,46 @@ inline static void sprite_renderer_component_set_tex_tiling(
 	entity.get_component<SpriteRenderer>().tex_tiling = *tex_tiling;
 }
 
+inline static bool sprite_renderer_component_get_is_atlas(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<SpriteRenderer>().is_atlas;
+}
+
+inline static void sprite_renderer_component_set_is_atlas(
+		UID entity_id, bool is_atlas) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRenderer>().is_atlas = is_atlas;
+}
+
+inline static void sprite_renderer_component_get_block_size(
+		UID entity_id, glm::vec2* out_size) {
+	Entity entity = get_entity(entity_id);
+
+	*out_size = entity.get_component<SpriteRenderer>().block_size;
+}
+
+inline static void sprite_renderer_component_set_block_size(
+		UID entity_id, const glm::vec2* block_size) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRenderer>().block_size = *block_size;
+}
+
+inline static uint32_t sprite_renderer_component_get_index(UID entity_id) {
+	Entity entity = get_entity(entity_id);
+
+	return entity.get_component<SpriteRenderer>().index;
+}
+
+inline static void sprite_renderer_component_set_index(
+		UID entity_id, uint32_t index) {
+	Entity entity = get_entity(entity_id);
+
+	entity.get_component<SpriteRenderer>().index = index;
+}
+
 #pragma endregion
 #pragma region TextRendererComponent
 
@@ -1052,6 +1092,12 @@ void register_functions() {
 	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_color);
 	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_tex_tiling);
 	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_tex_tiling);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_is_atlas);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_is_atlas);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_block_size);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_block_size);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_get_index);
+	EVE_ADD_INTERNAL_CALL(sprite_renderer_component_set_index);
 
 	// Begin TextRenderer
 	EVE_ADD_INTERNAL_CALL(text_renderer_component_get_text);

@@ -4,7 +4,9 @@
 #include "scripting/script_engine.h"
 
 #include <mono/jit/jit.h>
+#include <mono/metadata/appdomain.h>
 #include <mono/metadata/assembly.h>
+#include <mono/metadata/exception.h>
 #include <mono/metadata/mono-debug.h>
 #include <mono/metadata/object.h>
 #include <mono/metadata/threads.h>
@@ -12,10 +14,10 @@
 ScriptClass::ScriptClass(const std::string& class_namespace,
 		const std::string& class_name, bool is_core) :
 		class_namespace(class_namespace), class_name(class_name) {
-	mono_class =
-			mono_class_from_name(is_core ? ScriptEngine::get_core_assembly_image()
-										 : ScriptEngine::get_app_assembly_image(),
-					class_namespace.c_str(), class_name.c_str());
+	mono_class = mono_class_from_name(is_core
+					? ScriptEngine::get_core_assembly_image()
+					: ScriptEngine::get_app_assembly_image(),
+			class_namespace.c_str(), class_name.c_str());
 }
 
 MonoObject* ScriptClass::instantiate() {
@@ -23,39 +25,45 @@ MonoObject* ScriptClass::instantiate() {
 }
 
 MonoMethod* ScriptClass::get_method(const std::string& name, int param_count) {
-	return mono_class_get_method_from_name(mono_class, name.c_str(),
-			param_count);
+	return mono_class_get_method_from_name(
+			mono_class, name.c_str(), param_count);
 }
 
-MonoObject* ScriptClass::invoke_method(MonoObject* instance, MonoMethod* method,
-		void** params) {
+MonoObject* ScriptClass::invoke_method(
+		MonoObject* instance, MonoMethod* method, void** params) {
 	MonoObject* exception = nullptr;
-	MonoObject* result = mono_runtime_invoke(method, instance, params, &exception);
+	MonoObject* result =
+			mono_runtime_invoke(method, instance, params, &exception);
 
 	// Check if an exception occurred
 	if (exception != nullptr) {
-		MonoString* exception_message = mono_object_to_string(exception, nullptr);
+		MonoProperty* prop = mono_class_get_property_from_name(
+				mono_get_exception_class(), "Message");
+		MonoMethod* getter = mono_property_get_get_method(prop);
+		MonoString* msg = (MonoString*)mono_runtime_invoke(
+				getter, exception, nullptr, nullptr);
 
-		char* message_utf8 = mono_string_to_utf8(exception_message);
+		char* message_utf8 = mono_string_to_utf8(msg);
 
-		EVE_LOG_ERROR("[SCRIPT ENGINE] [EXCEPTION]:\n{}", message_utf8);
+		EVE_LOG_ERROR("[EXCEPTION] [SCRIPT]: {}", message_utf8);
 
 		mono_free(message_utf8);
+
+		return nullptr;
 	}
 
 	return result;
 }
 
-const std::unordered_map<std::string, ScriptField>& ScriptClass::get_fields() const {
+const std::unordered_map<std::string, ScriptField>&
+ScriptClass::get_fields() const {
 	return fields;
 }
 
-MonoClass* ScriptClass::get_mono_class() {
-	return mono_class;
-}
+MonoClass* ScriptClass::get_mono_class() { return mono_class; }
 
-ScriptInstance::ScriptInstance(Ref<ScriptClass> script_class,
-		MonoObject* managed_object) :
+ScriptInstance::ScriptInstance(
+		Ref<ScriptClass> script_class, MonoObject* managed_object) :
 		script_class(script_class) {
 	instance = managed_object;
 
@@ -101,16 +109,12 @@ void ScriptInstance::invoke_on_destroy() {
 	}
 }
 
-Ref<ScriptClass> ScriptInstance::get_script_class() {
-	return script_class;
-}
+Ref<ScriptClass> ScriptInstance::get_script_class() { return script_class; }
 
-MonoObject* ScriptInstance::get_managed_object() {
-	return instance;
-}
+MonoObject* ScriptInstance::get_managed_object() { return instance; }
 
-bool ScriptInstance::_get_field_value_internal(const std::string& name,
-		void* buffer) {
+bool ScriptInstance::_get_field_value_internal(
+		const std::string& name, void* buffer) {
 	const auto& fields = script_class->get_fields();
 	auto it = fields.find(name);
 	if (it == fields.end()) {
@@ -136,8 +140,8 @@ bool ScriptInstance::_get_field_value_internal(const std::string& name,
 			return false;
 		}
 
-		MonoObject* id_value =
-				mono_property_get_value(id_property, entity_object, nullptr, nullptr);
+		MonoObject* id_value = mono_property_get_value(
+				id_property, entity_object, nullptr, nullptr);
 
 		memcpy(buffer, mono_object_unbox(id_value), sizeof(UID));
 
@@ -147,8 +151,8 @@ bool ScriptInstance::_get_field_value_internal(const std::string& name,
 	return true;
 }
 
-bool ScriptInstance::_set_field_value_internal(const std::string& name,
-		const void* value) {
+bool ScriptInstance::_set_field_value_internal(
+		const std::string& name, const void* value) {
 	const auto& fields = script_class->get_fields();
 	auto it = fields.find(name);
 	if (it == fields.end()) {
@@ -164,8 +168,8 @@ bool ScriptInstance::_set_field_value_internal(const std::string& name,
 
 		Entity entity = SceneManager::get_active()->find_by_id(uuid);
 		if (!entity) {
-			EVE_LOG_WARNING("Unable to set entity instance of {}.",
-					(uint64_t)uuid);
+			EVE_LOG_WARNING(
+					"Unable to set entity instance of {}.", (uint64_t)uuid);
 			return false;
 		}
 
@@ -174,14 +178,15 @@ bool ScriptInstance::_set_field_value_internal(const std::string& name,
 			data = (void*)managed_instance;
 		} else {
 #if EVE_DEBUG
-			EVE_LOG_WARNING(
-					"Entity {}, does not have an managed script instance. Using default "
-					"instead.",
+			EVE_LOG_WARNING("Entity {}, does not have an managed script "
+							"instance. Using default "
+							"instead.",
 					entity.get_name());
 #endif
 
 			ScriptInstance entity_instance(
-					create_ref<ScriptClass>(ScriptEngine::get_entity_class()), entity);
+					create_ref<ScriptClass>(ScriptEngine::get_entity_class()),
+					entity);
 
 			data = (void*)entity_instance.instance;
 		}

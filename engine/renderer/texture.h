@@ -17,12 +17,16 @@ enum class TextureFilteringMode {
 	LINEAR,
 };
 
+bool is_texture_filtering_mode_valid(const char* mode);
+
 enum class TextureWrappingMode {
 	REPEAT,
 	MIRRORED_REPEAT,
 	CLAMP_TO_EDGE,
 	CLAMP_TO_BORDER,
 };
+
+bool is_texture_wrapping_mode_valid(const char* mode);
 
 struct TextureMetadata final {
 	// will be setted by texture importer
@@ -39,8 +43,10 @@ public:
 	EVE_IMPL_ASSET(AssetType::TEXTURE)
 
 	Texture2D(const fs::path& path, bool flip_on_load = true);
-	Texture2D(const fs::path& path, const TextureMetadata& metadata, bool flip_on_load = true, bool override_texture_format = false);
-	Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size);
+	Texture2D(const fs::path& path, const TextureMetadata& metadata,
+			bool flip_on_load = true, bool override_texture_format = false);
+	Texture2D(const TextureMetadata& metadata, const void* pixels,
+			const glm::ivec2& size);
 
 	virtual ~Texture2D();
 
@@ -58,7 +64,8 @@ public:
 	bool operator==(const Texture2D& other) const;
 
 private:
-	void _gen_texture(const TextureMetadata& _metadata, const void* pixels = nullptr);
+	void _gen_texture(
+			const TextureMetadata& _metadata, const void* pixels = nullptr);
 
 private:
 	uint32_t renderer_id;

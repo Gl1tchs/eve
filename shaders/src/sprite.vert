@@ -16,11 +16,11 @@ layout(location = 3) out vec2 v_tex_tiling;
 layout(location = 4) out flat int v_entity_id;
 
 void main() {
-    v_color = a_color;
-    v_tex_coords = a_tex_coord;
-    v_tex_index = a_tex_index;
-    v_tex_tiling = a_tex_tiling;
-    v_entity_id = a_entity_id;
+	v_color = a_color;
+	v_tex_coords = a_tex_coord;
+	v_tex_index = a_tex_index;
+	v_tex_tiling = a_tex_tiling;
+	v_entity_id = a_entity_id;
 
-    gl_Position = u_camera.proj * u_camera.view * vec4(a_position, 1.0);
+	gl_Position = u_camera.proj * u_camera.view * vec4(a_position, 1.0);
 }

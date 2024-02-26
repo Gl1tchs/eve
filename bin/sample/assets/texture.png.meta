@@ -5,8 +5,8 @@
   "metadata": {
     "min_filter": "linear",
     "mag_filter": "linear",
-    "wrap_s": "clamp_to_edge",
-    "wrap_t": "clamp_to_edge",
+    "wrap_s": "repeat",
+    "wrap_t": "repeat",
     "generate_mipmaps": true
   }
 }

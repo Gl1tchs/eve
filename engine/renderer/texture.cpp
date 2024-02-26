@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-int texture_format_to_gl(TextureFormat format) {
+inline static int texture_format_to_gl(TextureFormat format) {
 	switch (format) {
 		case TextureFormat::RED:
 			return GL_RED;
@@ -50,7 +50,8 @@ inline static int texture_wrapping_mode_to_gl(TextureWrappingMode mode) {
 	}
 }
 
-inline static TextureFormat get_texture_format_from_channels(const int channels) {
+inline static TextureFormat get_texture_format_from_channels(
+		const int channels) {
 	switch (channels) {
 		case 1:
 			return TextureFormat::RED;
@@ -68,14 +69,36 @@ inline static TextureFormat get_texture_format_from_channels(const int channels)
 	return TextureFormat::RED;
 }
 
-Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
-		renderer_id(0) {
+bool is_texture_filtering_mode_valid(const char* mode) {
+	if (std::strcmp(mode, "nearest") == 0) {
+		return true;
+	} else if (std::strcmp(mode, "linear") == 0) {
+		return true;
+	}
+	return false;
+}
+
+bool is_texture_wrapping_mode_valid(const char* mode) {
+	if (strcmp(mode, "repeat")) {
+		return true;
+	} else if (strcmp(mode, "mirrored_repeat")) {
+		return true;
+	} else if (strcmp(mode, "clamp_to_edge")) {
+		return true;
+	} else if (strcmp(mode, "clamp_to_border")) {
+		return true;
+	}
+	return false;
+}
+
+Texture2D::Texture2D(const fs::path& path, bool flip_on_load) : renderer_id(0) {
 	EVE_PROFILE_FUNCTION();
 
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
 	int channels;
-	stbi_uc* data = stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
+	stbi_uc* data =
+			stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
 
 	if (!data) {
 		stbi_image_free(data);
@@ -97,14 +120,16 @@ Texture2D::Texture2D(const fs::path& path, bool flip_on_load) :
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, bool flip_on_load, bool override_texture_format) :
+Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata,
+		bool flip_on_load, bool override_texture_format) :
 		renderer_id(0) {
 	EVE_PROFILE_FUNCTION();
 
 	stbi_set_flip_vertically_on_load(flip_on_load);
 
 	int channels;
-	stbi_uc* data = stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
+	stbi_uc* data =
+			stbi_load(path.string().c_str(), &size.x, &size.y, &channels, 0);
 
 	if (!data) {
 		stbi_image_free(data);
@@ -130,39 +155,31 @@ Texture2D::Texture2D(const fs::path& path, const TextureMetadata& _metadata, boo
 	stbi_image_free(data);
 }
 
-Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels, const glm::ivec2& size) :
+Texture2D::Texture2D(const TextureMetadata& metadata, const void* pixels,
+		const glm::ivec2& size) :
 		renderer_id(0), metadata(metadata), size(size) {
 	EVE_PROFILE_FUNCTION();
 
 	_gen_texture(metadata, pixels);
 }
 
-Texture2D::~Texture2D() {
-	glDeleteTextures(1, &renderer_id);
-}
+Texture2D::~Texture2D() { glDeleteTextures(1, &renderer_id); }
 
-const TextureMetadata& Texture2D::get_metadata() const {
-	return metadata;
-}
+const TextureMetadata& Texture2D::get_metadata() const { return metadata; }
 
-uint32_t Texture2D::get_renderer_id() const {
-	return renderer_id;
-}
+uint32_t Texture2D::get_renderer_id() const { return renderer_id; }
 
 void Texture2D::set_data(void* data, uint32_t _size) {
 	const int format = texture_format_to_gl(metadata.format);
 
 	uint32_t bpp = format == GL_RGBA ? 4 : 3;
-	EVE_ASSERT(_size == size.x * size.y * bpp,
-			"Data must be entire texture!");
+	EVE_ASSERT(_size == size.x * size.y * bpp, "Data must be entire texture!");
 
-	glTextureSubImage2D(renderer_id, 0, 0, 0, size.x,
-			size.y, format, GL_UNSIGNED_BYTE, data);
+	glTextureSubImage2D(renderer_id, 0, 0, 0, size.x, size.y, format,
+			GL_UNSIGNED_BYTE, data);
 }
 
-const glm::ivec2& Texture2D::get_size() const {
-	return size;
-}
+const glm::ivec2& Texture2D::get_size() const { return size; }
 
 void Texture2D::set_metadata(const TextureMetadata& _metadata) {
 	metadata = _metadata;
@@ -192,15 +209,14 @@ bool Texture2D::operator==(const Texture2D& other) const {
 	return renderer_id == other.get_renderer_id();
 }
 
-void Texture2D::_gen_texture(const TextureMetadata& _metadata,
-		const void* pixels) {
+void Texture2D::_gen_texture(
+		const TextureMetadata& _metadata, const void* pixels) {
 	glGenTextures(1, &renderer_id);
 	glBindTexture(GL_TEXTURE_2D, renderer_id);
 
 	set_metadata(_metadata);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, texture_format_to_gl(metadata.format),
-			size.x, size.y, 0,
-			texture_format_to_gl(metadata.format), GL_UNSIGNED_BYTE,
-			pixels);
+			size.x, size.y, 0, texture_format_to_gl(metadata.format),
+			GL_UNSIGNED_BYTE, pixels);
 }

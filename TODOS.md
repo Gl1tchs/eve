@@ -5,10 +5,8 @@
 - [ ] UI Gizmos
 
 ## Bugs
-- [ ] data bundling (fonts, shaders etc.)
 - [ ] other computers give msvc140.dll not found error.
 - [ ] BoxCollider2D for Texts not working properly due to its transform. 
-- [ ] Mono is not logging the errors
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
@@ -16,25 +14,24 @@
 - [ ] Sound system.
 - [ ] Console commands.
 - [ ] Seperate thread for rendering and window.
-- [ ] Cross platform scripting.
 - [ ] Native math.
 - [ ] Localization
 - [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
+- [ ] Texture viewer.
+- [ ] Tilemap assets and tilemap editor.
 - [ ] if selected multiple entities show shared components and change values together.
 - [ ] Hierarchy set parent of multiple entities. 
 - [ ] Hierarchy entity search and sorting
-- [ ] Texture viewer / metadata inspector
 
 ## Runtime
 
 ## Renderer
+- [ ] 2D animations.
 - [ ] Saturation / Brightness / Temprature post processing effects.
 - [ ] Physics collider bounds rendering.
 - [ ] Gizmo texture rendering.
-- [ ] Texture atlasses.
-- [ ] Animations
 
 ## Scripting
 - [ ] Multiple scripts for one entity.

@@ -3,16 +3,16 @@
 ## v1.0
 
 - [ ] Rendering engine.
-	- [ ] 2D sprites
-		- [ ] Texture atlasses
-	- [ ] Text rendering
+	- [x] 2D sprites
+	- [ ] Texture atlasses
+	- [x] Text rendering
 		- [ ] Text aligning
 	- [ ] 2D Lighting
 	- [ ] Custom shaders
 		- [ ] Runtime shader compiling
 	- [ ] GPU particle system
 	- [x] Post process effects
-- [ ] 2D Physics engine
+- [x] 2D Physics engine
 	- [x] Transformations
 	- [x] Forces
 	- [x] Collisions
@@ -27,13 +27,13 @@
 	- [x] Binding/retrieving components
 	- [ ] Simple plugin system.
 - [ ] ECS
-	- [ ] Scene graph and relations.
+	- [x] Scene graph and relations.
 		- [ ] Entity ordering
 		- [x] Child/parent relations
 	- [x] Component creation / retrivation
 	- [x] Id based entity system
 - [ ] 2D Animation system
-- [ ] Asset system
+- [x] Asset system
 	- [x] Id based asset registry
 	- [x] Loading/unloading scene resources
 	- [ ] Compile assets for production use
@@ -44,13 +44,13 @@
 	- [ ] Text input
 	- [ ] Styling
 	- [ ] Aligning
-- [ ] Editor
-	- [ ] Viewport
+- [x] Editor
+	- [x] Viewport
 		- [ ] Transformation gizmos
 		- [ ] Camera/light gizmos
 	- [x] Content browser
 		- [ ] Asset metadata manuplation 
-	- [ ] Console panel
+	- [x] Console panel
 		- [x] Logging
 		- [ ] Commmands
 			- [ ] Python interface
@@ -62,16 +62,19 @@
 	- [ ] Generic project exporting
 		- [ ] Compile assets
 		- [ ] Create executable
-- [ ] Runtime
+- [x] Runtime
 	- [ ] Display/engine settings serialization
 	- [ ] Custom icons
 - [ ] Platforms
 	- [ ] Windows
-	- [ ] Linux
+	- [x] Linux
 
 ## v2.0
 
 - [ ] Renderer
+	- [ ] 3D models
+	- [ ] 3D phong lighting
+	- [ ] Materials
 	- [ ] Vulkan
 - [ ] Networking
 - [ ] Platforms

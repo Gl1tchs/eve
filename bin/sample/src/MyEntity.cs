@@ -1,5 +1,4 @@
 using EveEngine;
-using System;
 
 namespace Sample
 {
@@ -13,6 +12,10 @@ namespace Sample
 		protected override void OnCreate()
 		{
 			_rb2d = GetComponent<Rigidbody2D>();
+
+			var sprite = GetComponent<SpriteRenderer>();
+
+			sprite.Index += 1;
 
 			var col2d = GetComponent<BoxCollider2D>();
 			col2d.OnTrigger = OnTrigger;

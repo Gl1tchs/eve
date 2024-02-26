@@ -1,0 +1,12 @@
+{
+  "uid": 5232060269874217425,
+  "path": "res://atlas.png",
+  "type": "texture",
+  "metadata": {
+    "min_filter": "nearest",
+    "mag_filter": "nearest",
+    "wrap_s": "repeat",
+    "wrap_t": "repeat",
+    "generate_mipmaps": false
+  }
+}

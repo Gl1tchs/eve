@@ -28,7 +28,7 @@ public:
 
 protected:
 	inline void _on_start() override {
-		ScriptEngine::init();
+		ScriptEngine::init(true);
 
 		// load the first scene
 		EVE_ASSERT(

@@ -1,0 +1,12 @@
+{
+  "uid": 2869726355803295369,
+  "path": "res://fx/Poison Cloud-SpriteSheet.png",
+  "type": "texture",
+  "metadata": {
+    "min_filter": "linear",
+    "mag_filter": "linear",
+    "wrap_s": "clamp_to_edge",
+    "wrap_t": "clamp_to_edge",
+    "generate_mipmaps": true
+  }
+}

@@ -4,6 +4,7 @@
 #include "core/color.h"
 #include "renderer/frame_buffer.h"
 #include "renderer/post_processor.h"
+#include "renderer/primitives/quad.h"
 #include "renderer/render_command.h"
 #include "renderer/renderer.h"
 #include "renderer/texture.h"
@@ -170,8 +171,45 @@ void SceneRenderer::_render_scene(const CameraData& camera_data) {
 								scene->get_asset_registry()
 										.get_asset<Texture2D>(sprite.texture);
 
-						renderer::draw_quad(transform, texture, sprite.color,
-								sprite.tex_tiling, (uint32_t)entity_id);
+						if (!sprite.is_atlas) {
+							renderer::draw_quad(transform, texture,
+									sprite.color, sprite.tex_tiling,
+									(uint32_t)entity_id);
+						} else if (texture) {
+							const glm::vec2 tex_size = texture->get_size();
+
+							if (sprite.block_size.x == 0 ||
+									sprite.block_size.y == 0 ||
+									tex_size.x == 0 | tex_size.y == 0) {
+								return;
+							}
+
+							const glm::vec2 block_size =
+									sprite.block_size / tex_size;
+
+							const uint32_t v_columns =
+									tex_size.x / sprite.block_size.x;
+
+							const uint32_t x_index = sprite.index % v_columns;
+							const uint32_t y_index =
+									std::ceil(sprite.index / v_columns);
+
+							const glm::vec2 min = { x_index * block_size.x,
+								1.0f - (y_index + 1) * block_size.y };
+
+							const glm::vec2 max = min + block_size;
+
+							glm::vec2 tex_coords[QUAD_VERTEX_COUNT] = {
+								min,
+								{ min.x, max.y },
+								max,
+								{ max.x, min.y },
+							};
+
+							renderer::draw_quad(transform, texture, tex_coords,
+									sprite.color, sprite.tex_tiling,
+									(uint32_t)entity_id);
+						}
 					});
 
 			scene->view<Transform, TextRenderer>().each(

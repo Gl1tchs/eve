@@ -9,21 +9,20 @@
 #include "scene/scene_manager.h"
 #include "scene/transform.h"
 #include "scripting/script_engine.h"
+#include "utils/modify_info.h"
 
 #include <imgui.h>
 #include <misc/cpp/imgui_stdlib.h>
 
 static void draw_script_field(const std::string& name,
-		ScriptFieldInstance& script_field,
-		bool use_default = false);
+		ScriptFieldInstance& script_field, bool use_default = false);
 
 static void draw_script_field_runtime(const std::string& name,
-		const ScriptField& field,
-		Ref<ScriptInstance>& script_instance);
+		const ScriptField& field, Ref<ScriptInstance>& script_instance);
 
 template <typename T>
-inline static void display_add_component_entry(Entity& selected_entity,
-		const std::string& component_name) {
+inline static void display_add_component_entry(
+		Entity& selected_entity, const std::string& component_name) {
 	if (!selected_entity.has_component<T>()) {
 		if (ImGui::MenuItem(component_name.c_str())) {
 			selected_entity.add_component<T>();
@@ -36,14 +35,15 @@ inline static void display_add_component_entry(Entity& selected_entity,
 }
 
 template <typename T, typename UIFunction>
-inline static void draw_component(const std::string& name, Entity entity,
-		UIFunction ui_function) {
+inline static void draw_component(
+		const std::string& name, Entity entity, UIFunction ui_function) {
 	if (!entity.has_component<T>()) {
 		return;
 	}
 
 	constexpr ImGuiTreeNodeFlags tree_node_flags =
-			ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_AllowOverlap;
+			ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
+			ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_AllowOverlap;
 
 	const ImVec2 avail_region_before = ImGui::GetContentRegionAvail();
 
@@ -55,8 +55,8 @@ inline static void draw_component(const std::string& name, Entity entity,
 	const float line_height =
 			ImGui::GetIO().FontDefault->FontSize + frame_padding.y * 2.0f;
 
-	bool open = ImGui::TreeNodeEx("##ComponentTreeNode", tree_node_flags, "%s",
-			name.c_str());
+	bool open = ImGui::TreeNodeEx(
+			"##ComponentTreeNode", tree_node_flags, "%s", name.c_str());
 
 	ImGui::PopStyleVar();
 
@@ -65,8 +65,7 @@ inline static void draw_component(const std::string& name, Entity entity,
 	{
 		static const char* button_label = ICON_FA_COG;
 
-		ImGui::SameLine(
-				avail_region_before.x -
+		ImGui::SameLine(avail_region_before.x -
 				(ImGui::CalcTextSize(button_label).x + 2 * frame_padding.x));
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -131,7 +130,8 @@ void InspectorPanel::_draw() {
 
 	const uint32_t plus_button_width = ImGui::CalcTextSize(ICON_FA_PLUS).x;
 
-	ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - (plus_button_width + 3 * padding));
+	ImGui::PushItemWidth(
+			ImGui::GetContentRegionMax().x - (plus_button_width + 3 * padding));
 
 	if (ImGui::InputText("##tag", &id_comp.tag)) {
 		g_modify_info.set_modified();
@@ -148,13 +148,18 @@ void InspectorPanel::_draw() {
 
 	if (ImGui::BeginPopup("AddComponentPopup")) {
 		display_add_component_entry<CameraComponent>(selected_entity, "Camera");
-		display_add_component_entry<SpriteRenderer>(selected_entity,
-				"Sprite Renderer");
-		display_add_component_entry<TextRenderer>(selected_entity, "TextRenderer");
-		display_add_component_entry<Rigidbody2D>(selected_entity, "Rigidbody2D");
-		display_add_component_entry<BoxCollider2D>(selected_entity, "BoxCollider2D");
-		display_add_component_entry<CircleCollider2D>(selected_entity, "CircleCollider2D");
-		display_add_component_entry<PostProcessVolume>(selected_entity, "PostProcessVolume");
+		display_add_component_entry<SpriteRenderer>(
+				selected_entity, "Sprite Renderer");
+		display_add_component_entry<TextRenderer>(
+				selected_entity, "TextRenderer");
+		display_add_component_entry<Rigidbody2D>(
+				selected_entity, "Rigidbody2D");
+		display_add_component_entry<BoxCollider2D>(
+				selected_entity, "BoxCollider2D");
+		display_add_component_entry<CircleCollider2D>(
+				selected_entity, "CircleCollider2D");
+		display_add_component_entry<PostProcessVolume>(
+				selected_entity, "PostProcessVolume");
 		display_add_component_entry<ScriptComponent>(selected_entity, "Script");
 
 		ImGui::EndPopup();
@@ -162,26 +167,27 @@ void InspectorPanel::_draw() {
 
 	// draw component controls
 
-#define BEGIN_FIELD(name)                                           \
-	{                                                               \
-		ImGui::Columns(2, nullptr, false);                          \
-		ImGui::SetColumnWidth(0, 75);                               \
-		const float field_width = ImGui::GetColumnWidth(1) - 10.0f; \
-		ImGui::TextUnformatted(name);                               \
-		ImGui::NextColumn();                                        \
+#define BEGIN_FIELD(name)                                                      \
+	{                                                                          \
+		ImGui::Columns(2, nullptr, false);                                     \
+		ImGui::SetColumnWidth(0, 75);                                          \
+		const float field_width = ImGui::GetColumnWidth(1) - 10.0f;            \
+		ImGui::TextUnformatted(name);                                          \
+		ImGui::NextColumn();                                                   \
 		ImGui::PushItemWidth(field_width);
 
-#define END_FIELD()        \
-	ImGui::PopItemWidth(); \
-	ImGui::Columns();      \
+#define END_FIELD()                                                            \
+	ImGui::PopItemWidth();                                                     \
+	ImGui::Columns();                                                          \
 	}
 
-	draw_component<Transform>("Transform", selected_entity,
-			[](Transform& transform) {
+	draw_component<Transform>(
+			"Transform", selected_entity, [](Transform& transform) {
 				BEGIN_FIELD("Position");
 				{
 					if (ImGui::DragFloat3("##PositionControl",
-								glm::value_ptr(transform.local_position), 0.1f)) {
+								glm::value_ptr(transform.local_position),
+								0.1f)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -190,7 +196,8 @@ void InspectorPanel::_draw() {
 				BEGIN_FIELD("Rotation");
 				{
 					if (ImGui::DragFloat3("##RotationControl",
-								glm::value_ptr(transform.local_rotation), 0.1f)) {
+								glm::value_ptr(transform.local_rotation),
+								0.1f)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -198,8 +205,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Scale");
 				{
-					if (ImGui::DragFloat3("##ScaleControl", glm::value_ptr(transform.local_scale),
-								0.1f)) {
+					if (ImGui::DragFloat3("##ScaleControl",
+								glm::value_ptr(transform.local_scale), 0.1f)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -207,13 +214,13 @@ void InspectorPanel::_draw() {
 			});
 
 	draw_component<CameraComponent>(
-			"Camera", selected_entity,
-			[](CameraComponent& camera_comp) {
+			"Camera", selected_entity, [](CameraComponent& camera_comp) {
 				auto& camera = camera_comp.camera;
 
 				BEGIN_FIELD("Zoom Level");
 				{
-					if (ImGui::DragFloat("##ZoomLevelControl", &camera.zoom_level)) {
+					if (ImGui::DragFloat(
+								"##ZoomLevelControl", &camera.zoom_level)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -221,7 +228,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Near Clip");
 				{
-					if (ImGui::DragFloat("##NearClipControl", &camera.near_clip)) {
+					if (ImGui::DragFloat(
+								"##NearClipControl", &camera.near_clip)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -229,7 +237,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Far Clip");
 				{
-					if (ImGui::DragFloat("##FarClipControl", &camera.far_clip)) {
+					if (ImGui::DragFloat(
+								"##FarClipControl", &camera.far_clip)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -237,7 +246,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Is Primary");
 				{
-					if (ImGui::Checkbox("##IsPrimaryControl", &camera_comp.is_primary)) {
+					if (ImGui::Checkbox("##IsPrimaryControl",
+								&camera_comp.is_primary)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -245,7 +255,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Is Fixed");
 				{
-					if (ImGui::Checkbox("##IsFixedControl", &camera_comp.is_fixed_aspect_ratio)) {
+					if (ImGui::Checkbox("##IsFixedControl",
+								&camera_comp.is_fixed_aspect_ratio)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -254,7 +265,8 @@ void InspectorPanel::_draw() {
 				if (camera_comp.is_fixed_aspect_ratio) {
 					BEGIN_FIELD("Aspect Ratio");
 					{
-						if (ImGui::DragFloat("##AspectRatioControl", &camera_comp.camera.aspect_ratio, 0.05f)) {
+						if (ImGui::DragFloat("##AspectRatioControl",
+									&camera_comp.camera.aspect_ratio, 0.05f)) {
 							g_modify_info.set_modified();
 						}
 					}
@@ -262,27 +274,30 @@ void InspectorPanel::_draw() {
 				}
 			});
 
-	draw_component<SpriteRenderer>(
-			"Sprite Renderer", selected_entity,
+	draw_component<SpriteRenderer>("Sprite Renderer", selected_entity,
 			[&](SpriteRenderer& sprite_comp) {
-				Ref<Texture2D> texture =
-						sprite_comp.texture != 0
-						? scene->get_asset_registry().get_asset<Texture2D>(sprite_comp.texture)
+				Ref<Texture2D> texture = sprite_comp.texture != 0
+						? scene->get_asset_registry().get_asset<Texture2D>(
+								  sprite_comp.texture)
 						: nullptr;
 
 				if (!texture) {
 					BEGIN_FIELD("Texture");
 					{
 						std::string placeholder = "Drag Texture Here";
-						ImGui::InputText("##TextureControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
+						ImGui::InputText("##TextureControl", &placeholder,
+								ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
 
 					if (ImGui::BeginDragDropTarget()) {
 						if (const ImGuiPayload* payload =
-										ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
-							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (scene->get_asset_registry().is_asset_loaded(handle)) {
+										ImGui::AcceptDragDropPayload(
+												"DND_PAYLOAD_TEXTURE")) {
+							const AssetHandle handle =
+									*(const AssetHandle*)payload->Data;
+							if (scene->get_asset_registry().is_asset_loaded(
+										handle)) {
 								sprite_comp.texture = handle;
 
 								g_modify_info.set_modified();
@@ -298,9 +313,12 @@ void InspectorPanel::_draw() {
 
 						if (ImGui::BeginDragDropTarget()) {
 							if (const ImGuiPayload* payload =
-											ImGui::AcceptDragDropPayload("DND_PAYLOAD_TEXTURE")) {
-								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (scene->get_asset_registry().is_asset_loaded(handle)) {
+											ImGui::AcceptDragDropPayload(
+													"DND_PAYLOAD_TEXTURE")) {
+								const AssetHandle handle =
+										*(const AssetHandle*)payload->Data;
+								if (scene->get_asset_registry().is_asset_loaded(
+											handle)) {
 									sprite_comp.texture = handle;
 
 									g_modify_info.set_modified();
@@ -309,7 +327,8 @@ void InspectorPanel::_draw() {
 							ImGui::EndDragDropTarget();
 						}
 
-						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
+						if (ImGui::Button(
+									ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							sprite_comp.texture = 0;
 
 							g_modify_info.set_modified();
@@ -320,7 +339,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Color");
 				{
-					if (ImGui::ColorEdit4("##ColorControl", &sprite_comp.color.r)) {
+					if (ImGui::ColorEdit4(
+								"##ColorControl", &sprite_comp.color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -328,42 +348,76 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Tiling");
 				{
-					if (ImGui::DragFloat2("##TilingControl", &sprite_comp.tex_tiling.x)) {
+					if (ImGui::DragFloat2(
+								"##TilingControl", &sprite_comp.tex_tiling.x)) {
 						g_modify_info.set_modified();
 					}
 				}
 				END_FIELD();
+
+				BEGIN_FIELD("Is Atlas");
+				{
+					if (ImGui::Checkbox(
+								"##SpriteIsAtlas", &sprite_comp.is_atlas)) {
+						g_modify_info.set_modified();
+					}
+				}
+				END_FIELD();
+
+				if (sprite_comp.is_atlas) {
+					BEGIN_FIELD("Block Size");
+					{
+						if (ImGui::InputFloat2("##SpriteBlockSize",
+									glm::value_ptr(sprite_comp.block_size))) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Index");
+					{
+						if (ImGui::InputScalar("##SpriteIndex",
+									ImGuiDataType_U32, &sprite_comp.index)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+				}
 			});
 
 	draw_component<TextRenderer>(
-			"Text Renderer", selected_entity,
-			[&](TextRenderer& text_comp) {
+			"Text Renderer", selected_entity, [&](TextRenderer& text_comp) {
 				BEGIN_FIELD("Text");
 				{
-					if (ImGui::InputTextMultiline("##TextControl", &text_comp.text)) {
+					if (ImGui::InputTextMultiline(
+								"##TextControl", &text_comp.text)) {
 						g_modify_info.set_modified();
 					}
 				}
 				END_FIELD();
 
-				Ref<Font> font =
-						text_comp.font != 0
-						? scene->get_asset_registry().get_asset<Font>(text_comp.font)
+				Ref<Font> font = text_comp.font != 0
+						? scene->get_asset_registry().get_asset<Font>(
+								  text_comp.font)
 						: nullptr;
 
 				if (!font) {
 					BEGIN_FIELD("Font");
 					{
 						std::string placeholder = "Default Font";
-						ImGui::InputText("##FontControl", &placeholder, ImGuiInputTextFlags_ReadOnly);
+						ImGui::InputText("##FontControl", &placeholder,
+								ImGuiInputTextFlags_ReadOnly);
 					}
 					END_FIELD();
 
 					if (ImGui::BeginDragDropTarget()) {
 						if (const ImGuiPayload* payload =
-										ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
-							const AssetHandle handle = *(const AssetHandle*)payload->Data;
-							if (scene->get_asset_registry().is_asset_loaded(handle)) {
+										ImGui::AcceptDragDropPayload(
+												"DND_PAYLOAD_FONT")) {
+							const AssetHandle handle =
+									*(const AssetHandle*)payload->Data;
+							if (scene->get_asset_registry().is_asset_loaded(
+										handle)) {
 								text_comp.font = handle;
 
 								g_modify_info.set_modified();
@@ -379,9 +433,12 @@ void InspectorPanel::_draw() {
 
 						if (ImGui::BeginDragDropTarget()) {
 							if (const ImGuiPayload* payload =
-											ImGui::AcceptDragDropPayload("DND_PAYLOAD_FONT")) {
-								const AssetHandle handle = *(const AssetHandle*)payload->Data;
-								if (scene->get_asset_registry().is_asset_loaded(handle)) {
+											ImGui::AcceptDragDropPayload(
+													"DND_PAYLOAD_FONT")) {
+								const AssetHandle handle =
+										*(const AssetHandle*)payload->Data;
+								if (scene->get_asset_registry().is_asset_loaded(
+											handle)) {
 									text_comp.font = handle;
 
 									g_modify_info.set_modified();
@@ -390,7 +447,8 @@ void InspectorPanel::_draw() {
 							ImGui::EndDragDropTarget();
 						}
 
-						if (ImGui::Button(ICON_FA_MINUS, ImVec2(field_width, 0))) {
+						if (ImGui::Button(
+									ICON_FA_MINUS, ImVec2(field_width, 0))) {
 							text_comp.font = 0;
 
 							g_modify_info.set_modified();
@@ -401,7 +459,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Foreground Color");
 				{
-					if (ImGui::ColorEdit4("##ForegroundColorControl", &text_comp.fg_color.r)) {
+					if (ImGui::ColorEdit4("##ForegroundColorControl",
+								&text_comp.fg_color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -409,7 +468,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Background Color");
 				{
-					if (ImGui::ColorEdit4("##BackgroundColorControl", &text_comp.bg_color.r)) {
+					if (ImGui::ColorEdit4("##BackgroundColorControl",
+								&text_comp.bg_color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -417,7 +477,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Kerning");
 				{
-					if (ImGui::DragFloat("##KerningControl", &text_comp.kerning)) {
+					if (ImGui::DragFloat(
+								"##KerningControl", &text_comp.kerning)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -425,7 +486,8 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Line Spacing");
 				{
-					if (ImGui::DragFloat("##LineSpacingControl", &text_comp.line_spacing)) {
+					if (ImGui::DragFloat("##LineSpacingControl",
+								&text_comp.line_spacing)) {
 						g_modify_info.set_modified();
 					}
 				}
@@ -433,19 +495,17 @@ void InspectorPanel::_draw() {
 
 				BEGIN_FIELD("Screen Space");
 				{
-					if (ImGui::Checkbox("##ScreenSpaceControl", &text_comp.is_screen_space)) {
+					if (ImGui::Checkbox("##ScreenSpaceControl",
+								&text_comp.is_screen_space)) {
 						g_modify_info.set_modified();
 					}
 				}
 				END_FIELD();
 			});
 
-	draw_component<Rigidbody2D>("Rigidbody2D", selected_entity, [](Rigidbody2D& rb2d) {
-		static const char* items[] = {
-			"Static",
-			"Dynamic",
-			"Kinematic"
-		};
+	draw_component<
+			Rigidbody2D>("Rigidbody2D", selected_entity, [](Rigidbody2D& rb2d) {
+		static const char* items[] = { "Static", "Dynamic", "Kinematic" };
 
 		static const Rigidbody2D::BodyType body_types[] = {
 			Rigidbody2D::BodyType::STATIC,
@@ -484,262 +544,294 @@ void InspectorPanel::_draw() {
 		END_FIELD();
 	});
 
-	draw_component<BoxCollider2D>("BoxCollider2D", selected_entity, [](BoxCollider2D& box_collider) {
-		BEGIN_FIELD("Offset");
-		{
-			if (ImGui::DragFloat2("##BoxColliderOffset", glm::value_ptr(box_collider.offset))) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Size");
-		{
-			if (ImGui::DragFloat2("##BoxColliderSize", glm::value_ptr(box_collider.size))) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("IsTrigger");
-		{
-			if (ImGui::Checkbox("##BoxColliderIsTrigger", &box_collider.is_trigger)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Density");
-		{
-			if (ImGui::DragFloat("##BoxColliderDensity", &box_collider.density)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Friction");
-		{
-			if (ImGui::DragFloat("##BoxColliderFriciton", &box_collider.friction)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Restitution");
-		{
-			if (ImGui::DragFloat("##BoxColliderRestitution", &box_collider.restitution)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Threshold");
-		{
-			if (ImGui::DragFloat("##BoxColliderRestitutionThreshold", &box_collider.restitution_threshold)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-	});
-
-	draw_component<CircleCollider2D>("CircleCollider2D", selected_entity, [](CircleCollider2D& circle_collider) {
-		BEGIN_FIELD("Offset");
-		{
-			if (ImGui::DragFloat2("##CircleColliderOffset", glm::value_ptr(circle_collider.offset))) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Size");
-		{
-			if (ImGui::DragFloat("##CircleColliderSize", &circle_collider.radius)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("IsTrigger");
-		{
-			if (ImGui::Checkbox("##BoxColliderIsTrigger", &circle_collider.is_trigger)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Density");
-		{
-			if (ImGui::DragFloat("##CircleColliderDensity", &circle_collider.density)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Friction");
-		{
-			if (ImGui::DragFloat("##CircleColliderFriciton", &circle_collider.friction)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Restitution");
-		{
-			if (ImGui::DragFloat("##CircleColliderRestitution", &circle_collider.restitution)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-
-		BEGIN_FIELD("Threshold");
-		{
-			if (ImGui::DragFloat("##CircleColliderRestitutionThreshold", &circle_collider.restitution_threshold)) {
-				g_modify_info.set_modified();
-			}
-		}
-		END_FIELD();
-	});
-
-	draw_component<PostProcessVolume>("Post Processing Volume", selected_entity, [](PostProcessVolume& volume) {
-		ImGui::Columns();
-		if (ImGui::TreeNode("Gray Scale")) {
-			BEGIN_FIELD("Enabled");
-			{
-				if (ImGui::Checkbox("##GrayScaleEnabled", &volume.gray_scale.enabled)) {
-					g_modify_info.set_modified();
+	draw_component<BoxCollider2D>(
+			"BoxCollider2D", selected_entity, [](BoxCollider2D& box_collider) {
+				BEGIN_FIELD("Offset");
+				{
+					if (ImGui::DragFloat2("##BoxColliderOffset",
+								glm::value_ptr(box_collider.offset))) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Chromatic Aberration")) {
-			BEGIN_FIELD("Enabled");
-			{
-				if (ImGui::Checkbox("##ChromaticAberrationEnabled", &volume.chromatic_aberration.enabled)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Size");
+				{
+					if (ImGui::DragFloat2("##BoxColliderSize",
+								glm::value_ptr(box_collider.size))) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Offset");
-			{
-				if (ImGui::DragFloat3("##ChromaticAberrationOffset", glm::value_ptr(volume.chromatic_aberration.offset), 0.001f, -1.0f, 1.0f)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("IsTrigger");
+				{
+					if (ImGui::Checkbox("##BoxColliderIsTrigger",
+								&box_collider.is_trigger)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Blur")) {
-			BEGIN_FIELD("Enabled");
-			{
-				if (ImGui::Checkbox("##BlurEnabled", &volume.blur.enabled)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Density");
+				{
+					if (ImGui::DragFloat("##BoxColliderDensity",
+								&box_collider.density)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Size");
-			{
-				if (ImGui::DragScalar("##BlurSize", ImGuiDataType_U32, &volume.blur.size)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Friction");
+				{
+					if (ImGui::DragFloat("##BoxColliderFriciton",
+								&box_collider.friction)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Seperation");
-			{
-				if (ImGui::DragFloat("##BlurSeperation",
-							&volume.blur.seperation, 0.1f, 1.0f, std::numeric_limits<float>::max())) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Restitution");
+				{
+					if (ImGui::DragFloat("##BoxColliderRestitution",
+								&box_collider.restitution)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Sharpen")) {
-			BEGIN_FIELD("Enabled");
-			{
-				if (ImGui::Checkbox("##SharpenEnabled", &volume.sharpen.enabled)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Threshold");
+				{
+					if (ImGui::DragFloat("##BoxColliderRestitutionThreshold",
+								&box_collider.restitution_threshold)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
+			});
 
-			BEGIN_FIELD("Amount");
-			{
-				if (ImGui::DragFloat("##SharpenAmount", &volume.sharpen.amount, 0.01f)) {
-					g_modify_info.set_modified();
+	draw_component<CircleCollider2D>("CircleCollider2D", selected_entity,
+			[](CircleCollider2D& circle_collider) {
+				BEGIN_FIELD("Offset");
+				{
+					if (ImGui::DragFloat2("##CircleColliderOffset",
+								glm::value_ptr(circle_collider.offset))) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("Vignette")) {
-			BEGIN_FIELD("Enabled");
-			{
-				if (ImGui::Checkbox("##VignetteEnabled", &volume.vignette.enabled)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Size");
+				{
+					if (ImGui::DragFloat("##CircleColliderSize",
+								&circle_collider.radius)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Inner");
-			{
-				if (ImGui::DragFloat("##VignetteInner", &volume.vignette.inner, 0.01f)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("IsTrigger");
+				{
+					if (ImGui::Checkbox("##BoxColliderIsTrigger",
+								&circle_collider.is_trigger)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Outer");
-			{
-				if (ImGui::DragFloat("##VignetteOuter", &volume.vignette.outer, 0.01f)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Density");
+				{
+					if (ImGui::DragFloat("##CircleColliderDensity",
+								&circle_collider.density)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Strengh");
-			{
-				if (ImGui::DragFloat("##VignetteStrengh", &volume.vignette.strength, 0.01f)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Friction");
+				{
+					if (ImGui::DragFloat("##CircleColliderFriciton",
+								&circle_collider.friction)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			BEGIN_FIELD("Curvature");
-			{
-				if (ImGui::DragFloat("##VignetteCurvature", &volume.vignette.curvature, 0.01f)) {
-					g_modify_info.set_modified();
+				BEGIN_FIELD("Restitution");
+				{
+					if (ImGui::DragFloat("##CircleColliderRestitution",
+								&circle_collider.restitution)) {
+						g_modify_info.set_modified();
+					}
 				}
-			}
-			END_FIELD();
+				END_FIELD();
 
-			ImGui::TreePop();
-		}
-	});
+				BEGIN_FIELD("Threshold");
+				{
+					if (ImGui::DragFloat("##CircleColliderRestitutionThreshold",
+								&circle_collider.restitution_threshold)) {
+						g_modify_info.set_modified();
+					}
+				}
+				END_FIELD();
+			});
 
-	draw_component<ScriptComponent>(
-			"Script", selected_entity,
+	draw_component<PostProcessVolume>("Post Processing Volume", selected_entity,
+			[](PostProcessVolume& volume) {
+				ImGui::Columns();
+				if (ImGui::TreeNode("Gray Scale")) {
+					BEGIN_FIELD("Enabled");
+					{
+						if (ImGui::Checkbox("##GrayScaleEnabled",
+									&volume.gray_scale.enabled)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Chromatic Aberration")) {
+					BEGIN_FIELD("Enabled");
+					{
+						if (ImGui::Checkbox("##ChromaticAberrationEnabled",
+									&volume.chromatic_aberration.enabled)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Offset");
+					{
+						if (ImGui::DragFloat3("##ChromaticAberrationOffset",
+									glm::value_ptr(
+											volume.chromatic_aberration.offset),
+									0.001f, -1.0f, 1.0f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Blur")) {
+					BEGIN_FIELD("Enabled");
+					{
+						if (ImGui::Checkbox(
+									"##BlurEnabled", &volume.blur.enabled)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Size");
+					{
+						if (ImGui::DragScalar("##BlurSize", ImGuiDataType_U32,
+									&volume.blur.size)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Seperation");
+					{
+						if (ImGui::DragFloat("##BlurSeperation",
+									&volume.blur.seperation, 0.1f, 1.0f,
+									std::numeric_limits<float>::max())) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Sharpen")) {
+					BEGIN_FIELD("Enabled");
+					{
+						if (ImGui::Checkbox("##SharpenEnabled",
+									&volume.sharpen.enabled)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Amount");
+					{
+						if (ImGui::DragFloat("##SharpenAmount",
+									&volume.sharpen.amount, 0.01f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNode("Vignette")) {
+					BEGIN_FIELD("Enabled");
+					{
+						if (ImGui::Checkbox("##VignetteEnabled",
+									&volume.vignette.enabled)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Inner");
+					{
+						if (ImGui::DragFloat("##VignetteInner",
+									&volume.vignette.inner, 0.01f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Outer");
+					{
+						if (ImGui::DragFloat("##VignetteOuter",
+									&volume.vignette.outer, 0.01f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Strengh");
+					{
+						if (ImGui::DragFloat("##VignetteStrengh",
+									&volume.vignette.strength, 0.01f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					BEGIN_FIELD("Curvature");
+					{
+						if (ImGui::DragFloat("##VignetteCurvature",
+									&volume.vignette.curvature, 0.01f)) {
+							g_modify_info.set_modified();
+						}
+					}
+					END_FIELD();
+
+					ImGui::TreePop();
+				}
+			});
+
+	draw_component<ScriptComponent>("Script", selected_entity,
 			[selected_entity, scene](auto& component) {
 				bool script_class_exists =
-						ScriptEngine::does_entity_class_exists(component.class_name);
+						ScriptEngine::does_entity_class_exists(
+								component.class_name);
 
 				BEGIN_FIELD("Class Name");
 				{
 					// if script class doesn't exists make the color red
 					if (!script_class_exists) {
-						ImGui::PushStyleColor(ImGuiCol_Text,
-								ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
+						ImGui::PushStyleColor(
+								ImGuiCol_Text, ImVec4(0.9f, 0.2f, 0.3f, 1.0f));
 					}
 
 					std::string class_name = component.class_name;
@@ -760,7 +852,8 @@ void InspectorPanel::_draw() {
 				}
 
 				// Fields
-				if (ImGui::TreeNodeEx("Script Fields", ImGuiTreeNodeFlags_DefaultOpen)) {
+				if (ImGui::TreeNodeEx(
+							"Script Fields", ImGuiTreeNodeFlags_DefaultOpen)) {
 					bool is_scene_running = scene->is_running();
 					if (is_scene_running) {
 						Ref<ScriptInstance> script_instance =
@@ -768,25 +861,32 @@ void InspectorPanel::_draw() {
 										selected_entity.get_uid());
 						if (script_instance) {
 							const auto& fields =
-									script_instance->get_script_class()->get_fields();
+									script_instance->get_script_class()
+											->get_fields();
 							for (const auto& [name, field] : fields) {
-								draw_script_field_runtime(name, field, script_instance);
+								draw_script_field_runtime(
+										name, field, script_instance);
 							}
 						}
 					} else if (!is_scene_running && script_class_exists) {
 						Ref<ScriptClass> entity_class =
-								ScriptEngine::get_entity_class(component.class_name);
+								ScriptEngine::get_entity_class(
+										component.class_name);
 						const auto& fields = entity_class->get_fields();
 
 						auto& entity_fields =
-								ScriptEngine::get_script_field_map(selected_entity);
+								ScriptEngine::get_script_field_map(
+										selected_entity);
 						for (const auto& [name, field] : fields) {
 							// Field has been set in editor
-							if (entity_fields.find(name) != entity_fields.end()) {
-								ScriptFieldInstance& script_field = entity_fields.at(name);
+							if (entity_fields.find(name) !=
+									entity_fields.end()) {
+								ScriptFieldInstance& script_field =
+										entity_fields.at(name);
 								draw_script_field(name, script_field);
 							} else {
-								ScriptFieldInstance& script_field = entity_fields[name];
+								ScriptFieldInstance& script_field =
+										entity_fields[name];
 								script_field.field = field;
 
 								draw_script_field(name, script_field, true);
@@ -801,7 +901,8 @@ void InspectorPanel::_draw() {
 	ImGui::PopID();
 }
 
-void draw_script_field(const std::string& name, ScriptFieldInstance& script_field, bool use_default) {
+void draw_script_field(const std::string& name,
+		ScriptFieldInstance& script_field, bool use_default) {
 	switch (script_field.field.type) {
 		case ScriptFieldType::FLOAT: {
 			float data = !use_default ? script_field.get_value<float>() : 0.0f;
@@ -889,7 +990,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::USHORT: {
-			uint16_t data = !use_default ? script_field.get_value<uint16_t>() : 0;
+			uint16_t data =
+					!use_default ? script_field.get_value<uint16_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
 						std::numeric_limits<uint16_t>::min(),
 						std::numeric_limits<uint16_t>::max())) {
@@ -900,7 +1002,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::UINT: {
-			uint32_t data = !use_default ? script_field.get_value<uint32_t>() : 0;
+			uint32_t data =
+					!use_default ? script_field.get_value<uint32_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
 						std::numeric_limits<uint32_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
@@ -911,7 +1014,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::ULONG: {
-			uint64_t data = !use_default ? script_field.get_value<uint64_t>() : 0;
+			uint64_t data =
+					!use_default ? script_field.get_value<uint64_t>() : 0;
 			if (ImGui::DragInt(name.c_str(), (int*)&data, 1.0f,
 						std::numeric_limits<uint32_t>::min(),
 						std::numeric_limits<uint32_t>::max())) {
@@ -922,8 +1026,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::VECTOR2: {
-			glm::vec2 data =
-					!use_default ? script_field.get_value<glm::vec2>() : glm::vec2(0.0f);
+			glm::vec2 data = !use_default ? script_field.get_value<glm::vec2>()
+										  : glm::vec2(0.0f);
 			if (ImGui::DragFloat2(name.c_str(), &data[0])) {
 				script_field.set_value(data);
 
@@ -932,8 +1036,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::VECTOR3: {
-			glm::vec3 data =
-					!use_default ? script_field.get_value<glm::vec3>() : glm::vec3(0.0f);
+			glm::vec3 data = !use_default ? script_field.get_value<glm::vec3>()
+										  : glm::vec3(0.0f);
 			if (ImGui::DragFloat3(name.c_str(), &data[0])) {
 				script_field.set_value(data);
 
@@ -942,8 +1046,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::VECTOR4: {
-			glm::vec4 data =
-					!use_default ? script_field.get_value<glm::vec4>() : glm::vec4(0.0f);
+			glm::vec4 data = !use_default ? script_field.get_value<glm::vec4>()
+										  : glm::vec4(0.0f);
 			if (ImGui::DragFloat4(name.c_str(), &data[0])) {
 				script_field.set_value(data);
 
@@ -952,7 +1056,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			break;
 		}
 		case ScriptFieldType::COLOR: {
-			Color color = !use_default ? script_field.get_value<Color>() : Color(0.0f);
+			Color color = !use_default ? script_field.get_value<Color>()
+									   : Color(0.0f);
 			if (ImGui::ColorEdit4(name.c_str(), &color.r)) {
 				script_field.set_value(color);
 
@@ -965,15 +1070,16 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 			Entity entity = SceneManager::get_active()->find_by_id(uuid);
 
 			{
-				std::string name_string =
-						(!use_default && entity) ? entity.get_name() : "Invalid Entity";
+				std::string name_string = (!use_default && entity)
+						? entity.get_name()
+						: "Invalid Entity";
 				ImGui::InputText(name.c_str(), &name_string,
 						ImGuiInputTextFlags_ReadOnly);
 			}
 
 			if (ImGui::BeginDragDropTarget()) {
-				if (const ImGuiPayload* payload =
-								ImGui::AcceptDragDropPayload("DND_PAYLOAD_ENTITY")) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(
+							"DND_PAYLOAD_ENTITY")) {
 					UID recv_id = *(const UID*)payload->Data;
 					script_field.set_value(recv_id);
 
@@ -988,7 +1094,8 @@ void draw_script_field(const std::string& name, ScriptFieldInstance& script_fiel
 	}
 }
 
-void draw_script_field_runtime(const std::string& name, const ScriptField& field, Ref<ScriptInstance>& script_instance) {
+void draw_script_field_runtime(const std::string& name,
+		const ScriptField& field, Ref<ScriptInstance>& script_instance) {
 	switch (field.type) {
 		case ScriptFieldType::FLOAT: {
 			float data = script_instance->get_field_value<float>(name);
@@ -1149,14 +1256,15 @@ void draw_script_field_runtime(const std::string& name, const ScriptField& field
 			Entity entity = SceneManager::get_active()->find_by_id(uuid);
 
 			{
-				std::string name_string = entity ? entity.get_name() : "Invalid Entity";
+				std::string name_string =
+						entity ? entity.get_name() : "Invalid Entity";
 				ImGui::InputText(name.c_str(), &name_string,
 						ImGuiInputTextFlags_ReadOnly);
 			}
 
 			if (ImGui::BeginDragDropTarget()) {
-				if (const ImGuiPayload* payload =
-								ImGui::AcceptDragDropPayload("DND_PAYLOAD_ENTITY")) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(
+							"DND_PAYLOAD_ENTITY")) {
 					UID recv_id = *(const UID*)payload->Data;
 					script_instance->set_field_value(name, recv_id);
 

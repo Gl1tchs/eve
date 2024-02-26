@@ -1,0 +1,12 @@
+{
+  "uid": 18004424882285837071,
+  "path": "res://fx/Fire+Sparks-SpriteSheet.png",
+  "type": "texture",
+  "metadata": {
+    "min_filter": "nearest",
+    "mag_filter": "nearest",
+    "wrap_s": "clamp_to_edge",
+    "wrap_t": "clamp_to_edge",
+    "generate_mipmaps": false
+  }
+}

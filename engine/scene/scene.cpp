@@ -354,21 +354,32 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 	if (entity.has_component<CameraComponent>()) {
 		const CameraComponent& cc = entity.get_component<CameraComponent>();
 
-		out["camera_component"] =
-				Json{ { "camera",
-							  { { "aspect_ratio", cc.camera.aspect_ratio },
-									  { "zoom_level", cc.camera.zoom_level },
-									  { "near_clip", cc.camera.near_clip },
-									  { "far_clip", cc.camera.far_clip } } },
-					{ "is_primary", cc.is_primary },
-					{ "is_fixed_aspect_ratio", cc.is_fixed_aspect_ratio } };
+		out["camera_component"] = Json{
+			{
+					"camera",
+					{
+							{ "aspect_ratio", cc.camera.aspect_ratio },
+							{ "zoom_level", cc.camera.zoom_level },
+							{ "near_clip", cc.camera.near_clip },
+							{ "far_clip", cc.camera.far_clip },
+					},
+			},
+			{ "is_primary", cc.is_primary },
+			{ "is_fixed_aspect_ratio", cc.is_fixed_aspect_ratio },
+		};
 	}
 
 	if (entity.has_component<SpriteRenderer>()) {
 		const SpriteRenderer& sc = entity.get_component<SpriteRenderer>();
 
-		out["sprite_renderer_component"] = Json{ { "texture", sc.texture },
-			{ "color", sc.color }, { "tex_tiling", sc.tex_tiling } };
+		out["sprite_renderer_component"] = Json{
+			{ "texture", sc.texture },
+			{ "color", sc.color },
+			{ "tex_tiling", sc.tex_tiling },
+			{ "is_atlas", sc.is_atlas },
+			{ "block_size", sc.block_size },
+			{ "index", sc.index },
+		};
 	}
 
 	if (entity.has_component<TextRenderer>()) {
@@ -512,7 +523,8 @@ static Json serialize_entity(Ref<Scene>& scene, Entity& entity) {
 }
 
 void Scene::serialize(Ref<Scene> scene, std::string path) {
-	EVE_LOG_VERBOSE_TRACE("Serializing scene \"{}\" to path \"{}\".", scene->name, path);
+	EVE_LOG_VERBOSE_TRACE(
+			"Serializing scene \"{}\" to path \"{}\".", scene->name, path);
 
 	path = Project::get_asset_path(path).string();
 
@@ -542,17 +554,20 @@ void Scene::serialize(Ref<Scene> scene, std::string path) {
 
 	json_utils::write_file(path, scene_json);
 
-	EVE_LOG_VERBOSE_TRACE("Scene \"{}\" successfully serialized to path \"{}\".", scene->name, path);
+	EVE_LOG_VERBOSE_TRACE(
+			"Scene \"{}\" successfully serialized to path \"{}\".", scene->name,
+			path);
 }
 
 bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
-	EVE_LOG_VERBOSE_TRACE("Deserializing scene \"{}\" to path \"{}\".", scene->name, path);
+	EVE_LOG_VERBOSE_TRACE(
+			"Deserializing scene \"{}\" to path \"{}\".", scene->name, path);
 
 	path = Project::get_asset_path(path).string();
 
 	if (!scene->entity_map.empty()) {
 		EVE_LOG_WARNING("Given scene to deserialize is not "
-							   "empty.\nClearing the data...");
+						"empty.\nClearing the data...");
 		scene->entity_map.clear();
 		scene->registry.clear();
 	}
@@ -648,6 +663,11 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 			sprite_component.color = sprite_comp_json["color"].get<Color>();
 			sprite_component.tex_tiling =
 					sprite_comp_json["tex_tiling"].get<glm::vec2>();
+			sprite_component.is_atlas =
+					sprite_comp_json["is_atlas"].get<bool>();
+			sprite_component.block_size =
+					sprite_comp_json["block_size"].get<glm::vec2>();
+			sprite_component.index = sprite_comp_json["index"].get<uint32_t>();
 		}
 
 		if (const auto& text_comp_json = entity_json["text_renderer_component"];
@@ -832,7 +852,9 @@ bool Scene::deserialize(Ref<Scene>& scene, std::string path) {
 		}
 	}
 
-	EVE_LOG_VERBOSE_TRACE("Scene \"{}\" successfully deserialized to path \"{}\".", scene->name, path);
+	EVE_LOG_VERBOSE_TRACE(
+			"Scene \"{}\" successfully deserialized to path \"{}\".",
+			scene->name, path);
 
 	return true;
 }

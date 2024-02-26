@@ -27,5 +27,27 @@ namespace EveEngine
 			}
 			set => Interop.sprite_renderer_component_set_tex_tiling(Entity.Id, ref value);
 		}
+
+		public bool IsAtlas
+		{
+			get => Interop.sprite_renderer_component_get_is_atlas(Entity.Id);
+			set => Interop.sprite_renderer_component_set_is_atlas(Entity.Id, value);
+		}
+
+		public Vector2 BlockSize
+		{
+			get
+			{
+				Interop.sprite_renderer_component_get_block_size(Entity.Id, out Vector2 blockSize);
+				return blockSize;
+			}
+			set => Interop.sprite_renderer_component_set_block_size(Entity.Id, ref value);
+		}
+
+		public uint Index
+		{
+			get => Interop.sprite_renderer_component_get_index(Entity.Id);
+			set => Interop.sprite_renderer_component_set_index(Entity.Id, value);
+		}
 	}
 }

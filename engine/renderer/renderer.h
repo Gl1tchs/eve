@@ -4,6 +4,7 @@
 #include "core/color.h"
 #include "renderer/camera.h"
 #include "renderer/font.h"
+#include "renderer/primitives/quad.h"
 #include "renderer/texture.h"
 #include "scene/transform.h"
 
@@ -26,32 +27,33 @@ void begin_pass(const CameraData& camera_data);
 
 void end_pass();
 
-void draw_quad(const Transform& transform, const Color& color, uint32_t entity_id = -1);
+void draw_quad(const Transform& transform, Ref<Texture2D> texture,
+		const Color& color, const glm::vec2& tex_tiling,
+		uint32_t entity_id = -1);
 
 void draw_quad(const Transform& transform, Ref<Texture2D> texture,
-		const glm::vec2& tex_tiling, uint32_t entity_id = -1);
-
-void draw_quad(const Transform& transform,
-		Ref<Texture2D> texture, const Color& color,
+		const glm::vec2 tex_coords[QUAD_VERTEX_COUNT], const Color& color,
 		const glm::vec2& tex_tiling, uint32_t entity_id = -1);
 
 void draw_text(const std::string& text, const Transform& transform,
-		const Color& fg_color, const Color& bg_color,
-		float kerning, float line_spacing,
-		bool is_screen_space = false, uint32_t entity_id = -1);
-
-// TODO If camera zooms out characters are breaking down.
-void draw_text(const std::string& text, Ref<Font> font,
-		Transform transform, const Color& fg_color,
-		const Color& bg_color, float kerning,
+		const Color& fg_color, const Color& bg_color, float kerning,
 		float line_spacing, bool is_screen_space = false,
 		uint32_t entity_id = -1);
 
-void draw_line(const glm::vec2& p0, const glm::vec2& p1, const Color& color = COLOR_WHITE);
+// TODO If camera zooms out characters are breaking down.
+void draw_text(const std::string& text, Ref<Font> font, Transform transform,
+		const Color& fg_color, const Color& bg_color, float kerning,
+		float line_spacing, bool is_screen_space = false,
+		uint32_t entity_id = -1);
 
-void draw_line(const glm::vec3& p0, const glm::vec3& p1, const Color& color = COLOR_WHITE);
+void draw_line(const glm::vec2& p0, const glm::vec2& p1,
+		const Color& color = COLOR_WHITE);
 
-void draw_box(const glm::vec2& min, const glm::vec2& max, const Color& color = COLOR_WHITE);
+void draw_line(const glm::vec3& p0, const glm::vec3& p1,
+		const Color& color = COLOR_WHITE);
+
+void draw_box(const glm::vec2& min, const glm::vec2& max,
+		const Color& color = COLOR_WHITE);
 
 void draw_box(const Transform& transform, const Color& color = COLOR_WHITE);
 
