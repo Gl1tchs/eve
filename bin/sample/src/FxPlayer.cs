@@ -4,7 +4,7 @@ namespace Sample
 {
 	class FxPlayer : Entity
 	{
-		public uint FrameCount;
+		public uint FrameCount = 0;
 
 		private SpriteRenderer _sprite;
 		private float _animIndex = 0.0f;

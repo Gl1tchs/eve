@@ -254,6 +254,8 @@ void ScriptEngine::reload_assembly() {
 
 	// Retrieve and instantiate class
 	s_data->entity_class = ScriptClass("EveEngine", "Entity", true);
+
+	EVE_LOG_INFO("Scipt assembly reloaded.");
 }
 
 bool ScriptEngine::does_entity_class_exists(const std::string& fullClassName) {

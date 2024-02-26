@@ -5,6 +5,7 @@
 - [ ] UI Gizmos
 
 ## Bugs
+- [ ] Tiling with texture atlasses are not repeating itself.
 - [ ] other computers give msvc140.dll not found error.
 - [ ] BoxCollider2D for Texts not working properly due to its transform. 
 - [ ] Physics velocity setting from script breaks gravity.
