@@ -387,23 +387,23 @@ void ContentBrowserPanel::_draw_asset_modal(
 
 				ImGui::Columns();
 
-				if (ImGui::Button("Save", ImVec2(-1, 0))) {
-					json_utils::write_file(meta_path, json);
-
-					scene->get_asset_registry().load_asset(
-							json["path"].get<std::string>(), type);
-
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::Button("Close", ImVec2(-1, 0))) {
-					ImGui::CloseCurrentPopup();
-				}
-
 				break;
 			}
 			default:
 				break;
+		}
+
+		if (ImGui::Button("Save", ImVec2(-1, 0))) {
+			json_utils::write_file(meta_path, json);
+
+			scene->get_asset_registry().load_asset(
+					json["path"].get<std::string>(), type);
+
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::Button("Close", ImVec2(-1, 0))) {
+			ImGui::CloseCurrentPopup();
 		}
 
 		ImGui::EndPopup();

@@ -11,6 +11,9 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Scene renderer settings.
+- [ ] Scene settings.
+- [ ] Project settings.
 - [ ] Change bundling to accept more general use
 - [ ] Sound system.
 - [ ] Console commands.
