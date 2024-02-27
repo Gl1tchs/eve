@@ -226,6 +226,36 @@ void ContentBrowserPanel::_draw_asset_modal(
 
 		switch (type) {
 			case AssetType::TEXTURE: {
+				// display the texture if loaded
+				if (Ref<Texture2D> texture =
+								scene->get_asset_registry()
+										.get_asset<Texture2D>(handle);
+						texture) {
+					const glm::ivec2& tex_size = texture->get_size();
+					if (tex_size.x != 0 || tex_size.y != 0) {
+						const float texture_ratio =
+								static_cast<float>(texture->get_size().x) /
+								texture->get_size().y;
+						const float tex_width = ImGui::GetWindowWidth() / 2.0f;
+						const float image_width = tex_width * texture_ratio;
+
+						float padding =
+								(ImGui::GetWindowWidth() - image_width) / 2.0f;
+						if (padding < 0) {
+							padding = 0;
+						}
+
+						ImGui::SetCursorPosX(padding);
+
+						ImGui::Image(reinterpret_cast<ImTextureID>(
+											 texture->get_renderer_id()),
+								ImVec2(image_width, tex_width), ImVec2(0, 1),
+								ImVec2(1, 0));
+
+						ImGui::Dummy(ImVec2(0, 10));
+					}
+				}
+
 				ImGui::Columns(2, nullptr, false);
 
 				static const char* filtering_modes[] = { "nearest", "linear" };

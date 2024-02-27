@@ -20,7 +20,6 @@
 - [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
-- [ ] Texture viewer.
 - [ ] Tilemap assets and tilemap editor.
 - [ ] if selected multiple entities show shared components and change values together.
 - [ ] Hierarchy set parent of multiple entities. 
