@@ -20,11 +20,21 @@ const fs::path& ContentBrowserPanel::get_selected() const {
 
 // get unique new scene path
 inline static std::string get_new_file_path(
-		const char* file_name, const char* extension = "") {
+		const char* file_name, std::string extension = "") {
+	// TODO refactor this function
 	static uint32_t iteration = 0;
 
-	std::string path = std::format("res://{}{}.{}", file_name,
-			iteration > 0 ? std::to_string(iteration) : "", extension);
+	const std::string iter_string =
+			iteration > 0 ? std::to_string(iteration) : "";
+
+	const std::string path = [&]() -> std::string {
+		if (!extension.empty()) {
+			return std::format(
+					"res://{}{}.{}", file_name, iter_string, extension);
+		} else {
+			return std::format("res://{}{}", file_name, iter_string);
+		}
+	}();
 
 	const fs::path fs_path = Project::get_asset_path(path);
 	if (fs::exists(fs_path)) {
@@ -128,10 +138,6 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 				selected_path = path;
 			}
 
-			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
-				ImGui::OpenPopup("AssetSettingsModal");
-			}
-
 			_draw_popup_context(path);
 		} else {
 			_draw_rename_file_dialog(path);
@@ -167,9 +173,20 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 		}
 	} else {
 		if (!is_renaming) {
-			bool open = ImGui::TreeNodeEx(filename.c_str(),
-					ImGuiTreeNodeFlags_OpenOnArrow |
-							(is_selected ? ImGuiTreeNodeFlags_Selected : 0));
+			ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
+
+			const std::string label =
+					(fs::is_empty(path) ? ICON_FA_FOLDER_O "  "
+										: ICON_FA_FOLDER "  ") +
+					filename;
+			const bool open = ImGui::TreeNodeEx(label.c_str(),
+					(is_selected ? ImGuiTreeNodeFlags_Selected : 0));
+
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
+				selected_idx = is_selected ? idx : -1;
+			}
+
+			ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
 
 			_draw_popup_context(path);
 

@@ -4,7 +4,7 @@
 
 - [ ] Rendering engine.
 	- [x] 2D sprites
-	- [ ] Texture atlasses
+	- [x] Texture atlasses
 	- [x] Text rendering
 		- [ ] Text aligning
 	- [ ] 2D Lighting
