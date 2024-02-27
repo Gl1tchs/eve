@@ -1,9 +1,7 @@
 #include "panels/content_browser.h"
 
-#include "core/json_utils.h"
 #include "data/fonts/font_awesome.h"
 #include "project/project.h"
-#include "renderer/texture.h"
 #include "scene/scene_manager.h"
 #include "utils/platform_utils.h"
 
@@ -15,6 +13,10 @@ ContentBrowserPanel::ContentBrowserPanel() {
 }
 
 ContentBrowserPanel::~ContentBrowserPanel() {}
+
+const fs::path& ContentBrowserPanel::get_selected() const {
+	return selected_path;
+}
 
 // get unique new scene path
 inline static std::string get_new_file_path(
@@ -36,10 +38,6 @@ inline static std::string get_new_file_path(
 }
 
 void ContentBrowserPanel::_draw() {
-	if (!Project::get_active()) {
-		return;
-	}
-
 	const fs::path asset_directory = Project::get_asset_directory();
 	if (asset_directory.empty()) {
 		return;
@@ -127,9 +125,8 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 					(is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
 			if (ImGui::Selectable(label.c_str(), is_selected)) {
 				selected_idx = idx;
+				selected_path = path;
 			}
-
-			_draw_asset_modal(scene, handle, path);
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
 				ImGui::OpenPopup("AssetSettingsModal");
@@ -196,226 +193,6 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 	ImGui::PopID();
 
 	idx++;
-}
-
-void ContentBrowserPanel::_draw_asset_modal(
-		Ref<Scene> scene, AssetHandle handle, const fs::path& path) {
-	if (!handle) {
-		return;
-	}
-
-	if (ImGui::BeginPopupModal("AssetSettingsModal", nullptr)) {
-		fs::path meta_path = Project::get_asset_path(path);
-		meta_path = meta_path.replace_extension(
-				meta_path.extension().string() + ".meta");
-
-		const auto cache_it = asset_cache_map.find(meta_path);
-		if (cache_it == asset_cache_map.end()) {
-			Json json{};
-			if (!json_utils::read_file(meta_path, json)) {
-				ImGui::EndPopup();
-				return;
-			}
-
-			asset_cache_map[meta_path] = json;
-		}
-
-		Json& json = asset_cache_map.at(meta_path);
-
-		const AssetType type = json["type"].get<AssetType>();
-
-		switch (type) {
-			case AssetType::TEXTURE: {
-				// display the texture if loaded
-				if (Ref<Texture2D> texture =
-								scene->get_asset_registry()
-										.get_asset<Texture2D>(handle);
-						texture) {
-					const glm::ivec2& tex_size = texture->get_size();
-					if (tex_size.x != 0 || tex_size.y != 0) {
-						const float texture_ratio =
-								static_cast<float>(texture->get_size().x) /
-								texture->get_size().y;
-						const float tex_width = ImGui::GetWindowWidth() / 2.0f;
-						const float image_width = tex_width * texture_ratio;
-
-						float padding =
-								(ImGui::GetWindowWidth() - image_width) / 2.0f;
-						if (padding < 0) {
-							padding = 0;
-						}
-
-						ImGui::Text("%s, %dx%d",
-								json["path"].get<std::string>().c_str(),
-								tex_size.x, tex_size.y);
-
-						ImGui::Separator();
-
-						ImGui::Dummy(ImVec2(0, 10));
-
-						ImGui::SetCursorPosX(padding);
-
-						ImGui::Image(reinterpret_cast<ImTextureID>(
-											 texture->get_renderer_id()),
-								ImVec2(image_width, tex_width), ImVec2(0, 1),
-								ImVec2(1, 0));
-
-						ImGui::Dummy(ImVec2(0, 10));
-					}
-				}
-
-				ImGui::Columns(2, nullptr, false);
-
-				static const char* filtering_modes[] = { "nearest", "linear" };
-
-				static const char* wrapping_modes[] = {
-					"repeat",
-					"mirrored_repeat",
-					"clamp_to_edge",
-					"clamp_to_border",
-				};
-
-				std::string selected_min_filter = json["metadata"]["min_filter"]
-														  .get<std::string>()
-														  .c_str();
-
-				std::string selected_mag_filter = json["metadata"]["mag_filter"]
-														  .get<std::string>()
-														  .c_str();
-
-				ImGui::TextUnformatted("Min Filter");
-				ImGui::NextColumn();
-				if (ImGui::BeginCombo(
-							"##min_filter", selected_min_filter.c_str())) {
-					for (int i = 0; i < IM_ARRAYSIZE(filtering_modes); i++) {
-						bool is_selected =
-								(selected_min_filter == filtering_modes[i]);
-
-						if (ImGui::Selectable(
-									filtering_modes[i], is_selected)) {
-							selected_min_filter = filtering_modes[i];
-
-							if (is_texture_filtering_mode_valid(
-										selected_min_filter.c_str())) {
-								json["metadata"]["min_filter"] =
-										selected_min_filter;
-							}
-						}
-
-						if (is_selected) {
-							ImGui::SetItemDefaultFocus();
-						}
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::NextColumn();
-
-				ImGui::TextUnformatted("Mag Filter");
-				ImGui::NextColumn();
-				if (ImGui::BeginCombo(
-							"##mag_filter", selected_mag_filter.c_str())) {
-					for (int i = 0; i < IM_ARRAYSIZE(filtering_modes); i++) {
-						bool is_selected =
-								(selected_mag_filter == filtering_modes[i]);
-
-						if (ImGui::Selectable(
-									filtering_modes[i], is_selected)) {
-							selected_mag_filter = filtering_modes[i];
-
-							if (is_texture_filtering_mode_valid(
-										selected_mag_filter.c_str())) {
-								json["metadata"]["mag_filter"] =
-										selected_mag_filter;
-							}
-						}
-
-						if (is_selected) {
-							ImGui::SetItemDefaultFocus();
-						}
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::NextColumn();
-
-				// Texture Wrapping Modes
-				std::string selected_wrap_s =
-						json["metadata"]["wrap_s"].get<std::string>();
-
-				std::string selected_wrap_t =
-						json["metadata"]["wrap_t"].get<std::string>();
-
-				ImGui::TextUnformatted("Wrap S");
-				ImGui::NextColumn();
-				if (ImGui::BeginCombo("##wrap_s", selected_wrap_s.c_str())) {
-					for (int i = 0; i < IM_ARRAYSIZE(wrapping_modes); i++) {
-						bool is_selected =
-								(selected_wrap_s == wrapping_modes[i]);
-
-						if (ImGui::Selectable(wrapping_modes[i], is_selected)) {
-							selected_wrap_s = wrapping_modes[i];
-
-							if (is_texture_wrapping_mode_valid(
-										selected_wrap_s.c_str())) {
-								json["metadata"]["wrap_s"] = selected_wrap_s;
-							}
-						}
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::NextColumn();
-
-				ImGui::TextUnformatted("Wrap T");
-				ImGui::NextColumn();
-				if (ImGui::BeginCombo("##wrap_t", selected_wrap_t.c_str())) {
-					for (int i = 0; i < IM_ARRAYSIZE(wrapping_modes); i++) {
-						bool is_selected =
-								(selected_wrap_t == wrapping_modes[i]);
-
-						if (ImGui::Selectable(wrapping_modes[i], is_selected)) {
-							selected_wrap_t = wrapping_modes[i];
-
-							if (is_texture_wrapping_mode_valid(
-										selected_wrap_t.c_str())) {
-								json["metadata"]["wrap_t"] = selected_wrap_t;
-							}
-						}
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::NextColumn();
-
-				bool selected_mipmaps =
-						json["metadata"]["generate_mipmaps"].get<bool>();
-
-				ImGui::TextUnformatted("Generate Mipmaps");
-				ImGui::NextColumn();
-				if (ImGui::Checkbox("##generate_mipmaps", &selected_mipmaps)) {
-					json["metadata"]["generate_mipmaps"] = selected_mipmaps;
-				}
-
-				ImGui::Columns();
-
-				break;
-			}
-			default:
-				break;
-		}
-
-		if (ImGui::Button("Save", ImVec2(-1, 0))) {
-			json_utils::write_file(meta_path, json);
-
-			scene->get_asset_registry().load_asset(
-					json["path"].get<std::string>(), type);
-
-			ImGui::CloseCurrentPopup();
-		}
-
-		if (ImGui::Button("Close", ImVec2(-1, 0))) {
-			ImGui::CloseCurrentPopup();
-		}
-
-		ImGui::EndPopup();
-	}
 }
 
 void ContentBrowserPanel::_draw_rename_file_dialog(const fs::path& path) {

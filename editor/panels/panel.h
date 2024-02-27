@@ -1,10 +1,8 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#define EVE_IMPL_PANEL(name)           \
-	std::string _get_name() override { \
-		return name;                   \
-	}
+#define EVE_IMPL_PANEL(name)                                                   \
+	std::string _get_name() override { return name; }
 
 class Panel {
 public:
@@ -54,5 +52,19 @@ private:
 	glm::vec2 min_region{};
 	glm::vec2 max_region{};
 };
+
+#define EVE_BEGIN_FIELD(name)                                                  \
+	{                                                                          \
+		ImGui::Columns(2, nullptr, false);                                     \
+		ImGui::SetColumnWidth(0, 75);                                          \
+		const float field_width = ImGui::GetColumnWidth(1) - 10.0f;            \
+		ImGui::TextUnformatted(name);                                          \
+		ImGui::NextColumn();                                                   \
+		ImGui::PushItemWidth(field_width);
+
+#define EVE_END_FIELD()                                                        \
+	ImGui::PopItemWidth();                                                     \
+	ImGui::Columns();                                                          \
+	}
 
 #endif

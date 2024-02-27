@@ -1,4 +1,4 @@
-## eve Todo List
+## EVE Todo List
 
 ## Game Demo Improvements
 - [ ] Script engine wont work for the projects with names that has space in it.
@@ -11,7 +11,6 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
-- [ ] Make asset settings a panel.
 - [ ] Scene renderer settings.
 - [ ] Scene settings.
 - [ ] Project settings.
@@ -24,6 +23,7 @@
 - [ ] Physics settings serialization as well as other settings. 
 
 ## Editor
+- [ ] Content browser file/folder manuplation.
 - [ ] Tilemap assets and tilemap editor.
 - [ ] if selected multiple entities show shared components and change values together.
 - [ ] Hierarchy set parent of multiple entities. 

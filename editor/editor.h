@@ -1,6 +1,7 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#include "panels/asset_inspector.h"
 #include "panels/console_panel.h"
 #include "panels/content_browser.h"
 #include "panels/hierarchy_panel.h"
@@ -83,6 +84,7 @@ private:
 	HierarchyPanel hierarchy;
 	InspectorPanel inspector;
 	ContentBrowserPanel content_browser;
+	AssetInspectorPanel asset_inspector;
 	ConsolePanel console;
 	StatsPanel stats;
 

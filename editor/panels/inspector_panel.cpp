@@ -167,23 +167,9 @@ void InspectorPanel::_draw() {
 
 	// draw component controls
 
-#define BEGIN_FIELD(name)                                                      \
-	{                                                                          \
-		ImGui::Columns(2, nullptr, false);                                     \
-		ImGui::SetColumnWidth(0, 75);                                          \
-		const float field_width = ImGui::GetColumnWidth(1) - 10.0f;            \
-		ImGui::TextUnformatted(name);                                          \
-		ImGui::NextColumn();                                                   \
-		ImGui::PushItemWidth(field_width);
-
-#define END_FIELD()                                                            \
-	ImGui::PopItemWidth();                                                     \
-	ImGui::Columns();                                                          \
-	}
-
 	draw_component<Transform>(
 			"Transform", selected_entity, [](Transform& transform) {
-				BEGIN_FIELD("Position");
+				EVE_BEGIN_FIELD("Position");
 				{
 					if (ImGui::DragFloat3("##PositionControl",
 								glm::value_ptr(transform.local_position),
@@ -191,9 +177,9 @@ void InspectorPanel::_draw() {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Rotation");
+				EVE_BEGIN_FIELD("Rotation");
 				{
 					if (ImGui::DragFloat3("##RotationControl",
 								glm::value_ptr(transform.local_rotation),
@@ -201,76 +187,76 @@ void InspectorPanel::_draw() {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Scale");
+				EVE_BEGIN_FIELD("Scale");
 				{
 					if (ImGui::DragFloat3("##ScaleControl",
 								glm::value_ptr(transform.local_scale), 0.1f)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 			});
 
 	draw_component<CameraComponent>(
 			"Camera", selected_entity, [](CameraComponent& camera_comp) {
 				auto& camera = camera_comp.camera;
 
-				BEGIN_FIELD("Zoom Level");
+				EVE_BEGIN_FIELD("Zoom Level");
 				{
 					if (ImGui::DragFloat(
 								"##ZoomLevelControl", &camera.zoom_level)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Near Clip");
+				EVE_BEGIN_FIELD("Near Clip");
 				{
 					if (ImGui::DragFloat(
 								"##NearClipControl", &camera.near_clip)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Far Clip");
+				EVE_BEGIN_FIELD("Far Clip");
 				{
 					if (ImGui::DragFloat(
 								"##FarClipControl", &camera.far_clip)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Is Primary");
+				EVE_BEGIN_FIELD("Is Primary");
 				{
 					if (ImGui::Checkbox("##IsPrimaryControl",
 								&camera_comp.is_primary)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Is Fixed");
+				EVE_BEGIN_FIELD("Is Fixed");
 				{
 					if (ImGui::Checkbox("##IsFixedControl",
 								&camera_comp.is_fixed_aspect_ratio)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
 				if (camera_comp.is_fixed_aspect_ratio) {
-					BEGIN_FIELD("Aspect Ratio");
+					EVE_BEGIN_FIELD("Aspect Ratio");
 					{
 						if (ImGui::DragFloat("##AspectRatioControl",
 									&camera_comp.camera.aspect_ratio, 0.05f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 				}
 			});
 
@@ -282,13 +268,13 @@ void InspectorPanel::_draw() {
 						: nullptr;
 
 				if (!texture) {
-					BEGIN_FIELD("Texture");
+					EVE_BEGIN_FIELD("Texture");
 					{
 						std::string placeholder = "Drag Texture Here";
 						ImGui::InputText("##TextureControl", &placeholder,
 								ImGuiInputTextFlags_ReadOnly);
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					if (ImGui::BeginDragDropTarget()) {
 						if (const ImGuiPayload* payload =
@@ -306,7 +292,7 @@ void InspectorPanel::_draw() {
 						ImGui::EndDragDropTarget();
 					}
 				} else {
-					BEGIN_FIELD("Texture");
+					EVE_BEGIN_FIELD("Texture");
 					{
 						ImGui::InputText("##TextureControl", &texture->path,
 								ImGuiInputTextFlags_ReadOnly);
@@ -334,67 +320,67 @@ void InspectorPanel::_draw() {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 				}
 
-				BEGIN_FIELD("Color");
+				EVE_BEGIN_FIELD("Color");
 				{
 					if (ImGui::ColorEdit4(
 								"##ColorControl", &sprite_comp.color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Tiling");
+				EVE_BEGIN_FIELD("Tiling");
 				{
 					if (ImGui::DragFloat2(
 								"##TilingControl", &sprite_comp.tex_tiling.x)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Is Atlas");
+				EVE_BEGIN_FIELD("Is Atlas");
 				{
 					if (ImGui::Checkbox(
 								"##SpriteIsAtlas", &sprite_comp.is_atlas)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
 				if (sprite_comp.is_atlas) {
-					BEGIN_FIELD("Block Size");
+					EVE_BEGIN_FIELD("Block Size");
 					{
 						if (ImGui::InputFloat2("##SpriteBlockSize",
 									glm::value_ptr(sprite_comp.block_size))) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Index");
+					EVE_BEGIN_FIELD("Index");
 					{
 						if (ImGui::InputScalar("##SpriteIndex",
 									ImGuiDataType_U32, &sprite_comp.index)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 				}
 			});
 
 	draw_component<TextRenderer>(
 			"Text Renderer", selected_entity, [&](TextRenderer& text_comp) {
-				BEGIN_FIELD("Text");
+				EVE_BEGIN_FIELD("Text");
 				{
 					if (ImGui::InputTextMultiline(
 								"##TextControl", &text_comp.text)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
 				Ref<Font> font = text_comp.font != 0
 						? scene->get_asset_registry().get_asset<Font>(
@@ -402,13 +388,13 @@ void InspectorPanel::_draw() {
 						: nullptr;
 
 				if (!font) {
-					BEGIN_FIELD("Font");
+					EVE_BEGIN_FIELD("Font");
 					{
 						std::string placeholder = "Default Font";
 						ImGui::InputText("##FontControl", &placeholder,
 								ImGuiInputTextFlags_ReadOnly);
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					if (ImGui::BeginDragDropTarget()) {
 						if (const ImGuiPayload* payload =
@@ -426,7 +412,7 @@ void InspectorPanel::_draw() {
 						ImGui::EndDragDropTarget();
 					}
 				} else {
-					BEGIN_FIELD("Font");
+					EVE_BEGIN_FIELD("Font");
 					{
 						ImGui::InputText("##FontControl", &font->path,
 								ImGuiInputTextFlags_ReadOnly);
@@ -454,53 +440,53 @@ void InspectorPanel::_draw() {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 				}
 
-				BEGIN_FIELD("Foreground Color");
+				EVE_BEGIN_FIELD("Foreground Color");
 				{
 					if (ImGui::ColorEdit4("##ForegroundColorControl",
 								&text_comp.fg_color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Background Color");
+				EVE_BEGIN_FIELD("Background Color");
 				{
 					if (ImGui::ColorEdit4("##BackgroundColorControl",
 								&text_comp.bg_color.r)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Kerning");
+				EVE_BEGIN_FIELD("Kerning");
 				{
 					if (ImGui::DragFloat(
 								"##KerningControl", &text_comp.kerning)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Line Spacing");
+				EVE_BEGIN_FIELD("Line Spacing");
 				{
 					if (ImGui::DragFloat("##LineSpacingControl",
 								&text_comp.line_spacing)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Screen Space");
+				EVE_BEGIN_FIELD("Screen Space");
 				{
 					if (ImGui::Checkbox("##ScreenSpaceControl",
 								&text_comp.is_screen_space)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 			});
 
 	draw_component<
@@ -515,7 +501,7 @@ void InspectorPanel::_draw() {
 
 		const char* current_item = items[static_cast<int>(rb2d.type)];
 
-		BEGIN_FIELD("Body Type");
+		EVE_BEGIN_FIELD("Body Type");
 		{
 			if (ImGui::BeginCombo("##Rb2DBodyType", current_item)) {
 				for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
@@ -533,176 +519,176 @@ void InspectorPanel::_draw() {
 				ImGui::EndCombo();
 			}
 		}
-		END_FIELD();
+		EVE_END_FIELD();
 
-		BEGIN_FIELD("Fixed Rotation");
+		EVE_BEGIN_FIELD("Fixed Rotation");
 		{
 			if (ImGui::Checkbox("##Rb2DFixedRotation", &rb2d.fixed_rotation)) {
 				g_modify_info.set_modified();
 			}
 		}
-		END_FIELD();
+		EVE_END_FIELD();
 	});
 
 	draw_component<BoxCollider2D>(
 			"BoxCollider2D", selected_entity, [](BoxCollider2D& box_collider) {
-				BEGIN_FIELD("Offset");
+				EVE_BEGIN_FIELD("Offset");
 				{
 					if (ImGui::DragFloat2("##BoxColliderOffset",
 								glm::value_ptr(box_collider.offset))) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Size");
+				EVE_BEGIN_FIELD("Size");
 				{
 					if (ImGui::DragFloat2("##BoxColliderSize",
 								glm::value_ptr(box_collider.size))) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("IsTrigger");
+				EVE_BEGIN_FIELD("IsTrigger");
 				{
 					if (ImGui::Checkbox("##BoxColliderIsTrigger",
 								&box_collider.is_trigger)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Density");
+				EVE_BEGIN_FIELD("Density");
 				{
 					if (ImGui::DragFloat("##BoxColliderDensity",
 								&box_collider.density)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Friction");
+				EVE_BEGIN_FIELD("Friction");
 				{
 					if (ImGui::DragFloat("##BoxColliderFriciton",
 								&box_collider.friction)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Restitution");
+				EVE_BEGIN_FIELD("Restitution");
 				{
 					if (ImGui::DragFloat("##BoxColliderRestitution",
 								&box_collider.restitution)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Threshold");
+				EVE_BEGIN_FIELD("Threshold");
 				{
 					if (ImGui::DragFloat("##BoxColliderRestitutionThreshold",
 								&box_collider.restitution_threshold)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 			});
 
 	draw_component<CircleCollider2D>("CircleCollider2D", selected_entity,
 			[](CircleCollider2D& circle_collider) {
-				BEGIN_FIELD("Offset");
+				EVE_BEGIN_FIELD("Offset");
 				{
 					if (ImGui::DragFloat2("##CircleColliderOffset",
 								glm::value_ptr(circle_collider.offset))) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Size");
+				EVE_BEGIN_FIELD("Size");
 				{
 					if (ImGui::DragFloat("##CircleColliderSize",
 								&circle_collider.radius)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("IsTrigger");
+				EVE_BEGIN_FIELD("IsTrigger");
 				{
 					if (ImGui::Checkbox("##BoxColliderIsTrigger",
 								&circle_collider.is_trigger)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Density");
+				EVE_BEGIN_FIELD("Density");
 				{
 					if (ImGui::DragFloat("##CircleColliderDensity",
 								&circle_collider.density)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Friction");
+				EVE_BEGIN_FIELD("Friction");
 				{
 					if (ImGui::DragFloat("##CircleColliderFriciton",
 								&circle_collider.friction)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Restitution");
+				EVE_BEGIN_FIELD("Restitution");
 				{
 					if (ImGui::DragFloat("##CircleColliderRestitution",
 								&circle_collider.restitution)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
-				BEGIN_FIELD("Threshold");
+				EVE_BEGIN_FIELD("Threshold");
 				{
 					if (ImGui::DragFloat("##CircleColliderRestitutionThreshold",
 								&circle_collider.restitution_threshold)) {
 						g_modify_info.set_modified();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 			});
 
 	draw_component<PostProcessVolume>("Post Processing Volume", selected_entity,
 			[](PostProcessVolume& volume) {
 				ImGui::Columns();
 				if (ImGui::TreeNode("Gray Scale")) {
-					BEGIN_FIELD("Enabled");
+					EVE_BEGIN_FIELD("Enabled");
 					{
 						if (ImGui::Checkbox("##GrayScaleEnabled",
 									&volume.gray_scale.enabled)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					ImGui::TreePop();
 				}
 
 				if (ImGui::TreeNode("Chromatic Aberration")) {
-					BEGIN_FIELD("Enabled");
+					EVE_BEGIN_FIELD("Enabled");
 					{
 						if (ImGui::Checkbox("##ChromaticAberrationEnabled",
 									&volume.chromatic_aberration.enabled)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Offset");
+					EVE_BEGIN_FIELD("Offset");
 					{
 						if (ImGui::DragFloat3("##ChromaticAberrationOffset",
 									glm::value_ptr(
@@ -711,31 +697,31 @@ void InspectorPanel::_draw() {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					ImGui::TreePop();
 				}
 
 				if (ImGui::TreeNode("Blur")) {
-					BEGIN_FIELD("Enabled");
+					EVE_BEGIN_FIELD("Enabled");
 					{
 						if (ImGui::Checkbox(
 									"##BlurEnabled", &volume.blur.enabled)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Size");
+					EVE_BEGIN_FIELD("Size");
 					{
 						if (ImGui::DragScalar("##BlurSize", ImGuiDataType_U32,
 									&volume.blur.size)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Seperation");
+					EVE_BEGIN_FIELD("Seperation");
 					{
 						if (ImGui::DragFloat("##BlurSeperation",
 									&volume.blur.seperation, 0.1f, 1.0f,
@@ -743,78 +729,78 @@ void InspectorPanel::_draw() {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					ImGui::TreePop();
 				}
 
 				if (ImGui::TreeNode("Sharpen")) {
-					BEGIN_FIELD("Enabled");
+					EVE_BEGIN_FIELD("Enabled");
 					{
 						if (ImGui::Checkbox("##SharpenEnabled",
 									&volume.sharpen.enabled)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Amount");
+					EVE_BEGIN_FIELD("Amount");
 					{
 						if (ImGui::DragFloat("##SharpenAmount",
 									&volume.sharpen.amount, 0.01f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					ImGui::TreePop();
 				}
 
 				if (ImGui::TreeNode("Vignette")) {
-					BEGIN_FIELD("Enabled");
+					EVE_BEGIN_FIELD("Enabled");
 					{
 						if (ImGui::Checkbox("##VignetteEnabled",
 									&volume.vignette.enabled)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Inner");
+					EVE_BEGIN_FIELD("Inner");
 					{
 						if (ImGui::DragFloat("##VignetteInner",
 									&volume.vignette.inner, 0.01f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Outer");
+					EVE_BEGIN_FIELD("Outer");
 					{
 						if (ImGui::DragFloat("##VignetteOuter",
 									&volume.vignette.outer, 0.01f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Strengh");
+					EVE_BEGIN_FIELD("Strengh");
 					{
 						if (ImGui::DragFloat("##VignetteStrengh",
 									&volume.vignette.strength, 0.01f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
-					BEGIN_FIELD("Curvature");
+					EVE_BEGIN_FIELD("Curvature");
 					{
 						if (ImGui::DragFloat("##VignetteCurvature",
 									&volume.vignette.curvature, 0.01f)) {
 							g_modify_info.set_modified();
 						}
 					}
-					END_FIELD();
+					EVE_END_FIELD();
 
 					ImGui::TreePop();
 				}
@@ -826,7 +812,7 @@ void InspectorPanel::_draw() {
 						ScriptEngine::does_entity_class_exists(
 								component.class_name);
 
-				BEGIN_FIELD("Class Name");
+				EVE_BEGIN_FIELD("Class Name");
 				{
 					// if script class doesn't exists make the color red
 					if (!script_class_exists) {
@@ -845,7 +831,7 @@ void InspectorPanel::_draw() {
 						ImGui::PopStyleColor();
 					}
 				}
-				END_FIELD();
+				EVE_END_FIELD();
 
 				if (!script_class_exists) {
 					return;

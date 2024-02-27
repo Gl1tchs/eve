@@ -133,6 +133,9 @@ void EditorApplication::_on_imgui_update(float dt) {
 	hierarchy.render();
 	inspector.render();
 
+	asset_inspector.set_selected(content_browser.get_selected());
+	asset_inspector.render();
+
 	content_browser.render();
 	console.render();
 	stats.render();
