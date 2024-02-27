@@ -245,6 +245,14 @@ void ContentBrowserPanel::_draw_asset_modal(
 							padding = 0;
 						}
 
+						ImGui::Text("%s, %dx%d",
+								json["path"].get<std::string>().c_str(),
+								tex_size.x, tex_size.y);
+
+						ImGui::Separator();
+
+						ImGui::Dummy(ImVec2(0, 10));
+
 						ImGui::SetCursorPosX(padding);
 
 						ImGui::Image(reinterpret_cast<ImTextureID>(
