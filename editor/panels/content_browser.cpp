@@ -376,7 +376,7 @@ void ContentBrowserPanel::_draw_asset_modal(
 
 							if (is_texture_wrapping_mode_valid(
 										selected_wrap_t.c_str())) {
-								json["metadata"]["wrap_t"] = selected_wrap_s;
+								json["metadata"]["wrap_t"] = selected_wrap_t;
 							}
 						}
 					}

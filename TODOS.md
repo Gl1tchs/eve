@@ -11,6 +11,7 @@
 - [ ] Physics velocity setting from script breaks gravity.
 
 ## General
+- [ ] Make asset settings a panel.
 - [ ] Scene renderer settings.
 - [ ] Scene settings.
 - [ ] Project settings.
