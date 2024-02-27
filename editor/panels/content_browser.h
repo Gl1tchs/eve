@@ -5,6 +5,8 @@
 
 #include "panels/panel.h"
 
+class Scene;
+
 class ContentBrowserPanel : public Panel {
 	EVE_IMPL_PANEL("Content Browser");
 
@@ -24,6 +26,10 @@ private:
 	};
 
 	void _draw_file(const fs::path& path);
+
+	void _draw_asset(Ref<Scene> scene, const fs::path& path);
+
+	void _draw_folder(const fs::path& path);
 
 	void _draw_rename_file_dialog(const fs::path& path);
 

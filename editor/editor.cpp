@@ -146,7 +146,7 @@ void EditorApplication::_on_imgui_update(float dt) {
 void EditorApplication::_on_destroy() {}
 
 void EditorApplication::_setup_menubar() {
-	Menu file_menu{ "File",
+	const Menu file_menu{ "File",
 		{
 				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
 				{ "New Scene", "", BIND_FUNC(_create_scene) },
@@ -156,7 +156,7 @@ void EditorApplication::_setup_menubar() {
 		} };
 	menubar.push_menu(file_menu);
 
-	Menu view_menu{ "View",
+	const Menu view_menu{ "View",
 		{
 				{ "Viewport", [this]() { viewport.set_active(true); } },
 				{ "Toolbar", [this]() { toolbar.set_active(true); } },

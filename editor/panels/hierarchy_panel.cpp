@@ -15,7 +15,7 @@ HierarchyPanel::HierarchyPanel() {
 }
 
 const std::vector<Entity> HierarchyPanel::get_selected_entities() {
-	auto scene = SceneManager::get_active();
+	const auto scene = SceneManager::get_active();
 	if (!scene) {
 		return {};
 	}
@@ -114,8 +114,8 @@ void HierarchyPanel::_draw() {
 		ImGui::PopID();
 	}
 
-	ImGui::Dummy(
-			ImVec2(ImGui::GetWindowWidth(), std::max(ImGui::GetContentRegionAvail().y, 100.0f)));
+	ImGui::Dummy(ImVec2(ImGui::GetWindowWidth(),
+			std::max(ImGui::GetContentRegionAvail().y, 100.0f)));
 
 	// If an item dragged here it will set as top object.
 	_draw_entity_drag_drop_target(INVALID_ENTITY);
@@ -168,9 +168,10 @@ void HierarchyPanel::_draw_entity(Entity entity, bool is_child) {
 	} else {
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 1, 2 });
 
-		bool node_open = ImGui::TreeNodeEx(
-				hierarchy_name.c_str(),
-				ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick |
+		bool node_open = ImGui::TreeNodeEx(hierarchy_name.c_str(),
+				ImGuiTreeNodeFlags_FramePadding |
+						ImGuiTreeNodeFlags_OpenOnArrow |
+						ImGuiTreeNodeFlags_OpenOnDoubleClick |
 						(is_selected ? ImGuiTreeNodeFlags_Selected : 0));
 
 		ImGui::PopStyleVar();
@@ -226,7 +227,8 @@ void HierarchyPanel::_draw_entity_context_menu(Entity entity) {
 				// Handle logic to remove the entity
 				const auto selected_entities = scene->get_selected_entities();
 
-				entities_to_remove.insert(entities_to_remove.end(), selected_entities.begin(), selected_entities.end());
+				entities_to_remove.insert(entities_to_remove.end(),
+						selected_entities.begin(), selected_entities.end());
 
 				g_modify_info.set_modified();
 			}
@@ -238,8 +240,8 @@ void HierarchyPanel::_draw_entity_context_menu(Entity entity) {
 
 void HierarchyPanel::_draw_entity_drag_drop_src(Entity entity) {
 	if (ImGui::BeginDragDropSource()) {
-		ImGui::SetDragDropPayload("DND_PAYLOAD_ENTITY", &entity.get_uid(),
-				sizeof(UID));
+		ImGui::SetDragDropPayload(
+				"DND_PAYLOAD_ENTITY", &entity.get_uid(), sizeof(UID));
 
 		ImGui::SetTooltip("%s", entity.get_name().c_str());
 
@@ -251,7 +253,7 @@ void HierarchyPanel::_draw_entity_drag_drop_target(const Entity& new_parent) {
 	if (ImGui::BeginDragDropTarget()) {
 		if (const ImGuiPayload* payload =
 						ImGui::AcceptDragDropPayload("DND_PAYLOAD_ENTITY")) {
-			UID recv_id = *static_cast<UID*>(payload->Data);
+			const UID recv_id = *static_cast<UID*>(payload->Data);
 			if (Entity recv_entity =
 							SceneManager::get_active()->find_by_id(recv_id);
 					recv_entity) {

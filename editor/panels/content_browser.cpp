@@ -104,50 +104,63 @@ void ContentBrowserPanel::_draw() {
 }
 
 void ContentBrowserPanel::_draw_file(const fs::path& path) {
-	// hide .meta files
-	// TODO make this a filter and make user define other filters
 	auto scene = SceneManager::get_active();
 	if (!scene) {
 		return;
 	}
 
+	// hide .meta files
+	// TODO make this a filter and make user define other filters
 	if (path.extension() == ".meta") {
 		return;
 	}
 
-	const std::string filename = path.filename().string();
-
 	ImGui::PushID(idx);
-
-	const bool is_selected = (selected_idx == idx);
-	const bool is_renaming = (renaming_idx == idx);
-
-	// is file an asset or not
-	if (!fs::is_directory(path)) {
-		const AssetHandle handle =
-				scene->get_asset_registry().get_handle_from_path(path.string());
-
-		const bool is_loaded =
-				handle && scene->get_asset_registry().is_asset_loaded(handle);
-
-		if (!is_renaming) {
-			const std::string label = std::format("{1}  {0}", filename,
-					(is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
-			if (ImGui::Selectable(label.c_str(), is_selected)) {
-				selected_idx = idx;
-				selected_path = path;
-			}
-
-			_draw_popup_context(path);
+	{
+		// is file an asset or not
+		if (!fs::is_directory(path)) {
+			_draw_asset(scene, path);
 		} else {
-			_draw_rename_file_dialog(path);
+			_draw_folder(path);
 		}
 
-		const AssetType type =
-				get_asset_type_from_extension(path.extension().string());
+		// TODO another drag drop field to move files
+	}
+	ImGui::PopID();
 
-		// make scenes importable just by dragging into viewport
-		if (!is_loaded && type == AssetType::SCENE) {
+	idx++;
+}
+
+void ContentBrowserPanel::_draw_asset(Ref<Scene> scene, const fs::path& path) {
+	const AssetHandle handle =
+			scene->get_asset_registry().get_handle_from_path(path.string());
+	const AssetType type =
+			get_asset_type_from_extension(path.extension().string());
+
+	const bool is_loaded =
+			handle && scene->get_asset_registry().is_asset_loaded(handle);
+
+	if (renaming_idx != idx) {
+		const std::string label =
+				std::format("{1}  {0}", path.filename().string(),
+						(is_loaded ? ICON_FA_CIRCLE : ICON_FA_CIRCLE_O));
+		if (ImGui::Selectable(label.c_str(), selected_idx == idx)) {
+			selected_idx = idx;
+			selected_path = path;
+		}
+
+		_draw_popup_context(path);
+	} else {
+		_draw_rename_file_dialog(path);
+	}
+
+	switch (type) {
+		case AssetType::SCENE: {
+			if (is_loaded) {
+				break;
+			}
+
+			// make scenes importable just by dragging into viewport
 			if (ImGui::BeginDragDropSource()) {
 				const std::string path_str = path.string();
 
@@ -158,7 +171,12 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 
 				ImGui::EndDragDropSource();
 			}
-		} else if (is_loaded && type != AssetType::SCENE) {
+		}
+		default: {
+			if (!is_loaded) {
+				break;
+			}
+
 			if (ImGui::BeginDragDropSource()) {
 				const std::string payload_name =
 						"DND_PAYLOAD_" + serialize_asset_type(type);
@@ -171,45 +189,40 @@ void ContentBrowserPanel::_draw_file(const fs::path& path) {
 				ImGui::EndDragDropSource();
 			}
 		}
-	} else {
-		if (!is_renaming) {
-			ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
-
-			const std::string label =
-					(fs::is_empty(path) ? ICON_FA_FOLDER_O "  "
-										: ICON_FA_FOLDER "  ") +
-					filename;
-			const bool open = ImGui::TreeNodeEx(label.c_str(),
-					(is_selected ? ImGuiTreeNodeFlags_Selected : 0));
-
-			if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
-				selected_idx = is_selected ? idx : -1;
-			}
-
-			ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
-
-			_draw_popup_context(path);
-
-			if (open && fs::exists(path)) {
-				// iterate throught elements
-				for (const auto& subpath : fs::directory_iterator(path)) {
-					idx++;
-					_draw_file(subpath);
-				}
-
-				ImGui::TreePop();
-			}
-
-		} else {
-			_draw_rename_file_dialog(path);
-		}
 	}
+}
 
-	// TODO another drag drop field to move files
+void ContentBrowserPanel::_draw_folder(const fs::path& path) {
+	if (renaming_idx != idx) {
+		ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
 
-	ImGui::PopID();
+		const std::string label = (fs::is_empty(path) ? ICON_FA_FOLDER_O "  "
+													  : ICON_FA_FOLDER "  ") +
+				path.filename().string();
+		const bool open = ImGui::TreeNodeEx(label.c_str(),
+				(selected_idx == idx ? ImGuiTreeNodeFlags_Selected : 0));
 
-	idx++;
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
+			selected_idx = idx;
+		}
+
+		ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+
+		_draw_popup_context(path);
+
+		if (open && fs::exists(path)) {
+			// iterate throught elements
+			for (const auto& subpath : fs::directory_iterator(path)) {
+				idx++;
+				_draw_file(subpath);
+			}
+
+			ImGui::TreePop();
+		}
+
+	} else {
+		_draw_rename_file_dialog(path);
+	}
 }
 
 void ContentBrowserPanel::_draw_rename_file_dialog(const fs::path& path) {
