@@ -46,8 +46,10 @@ void EditorApplication::_on_update(float dt) {
 
 			if (Ref<Scene> scene = SceneManager::get_active(); scene) {
 				// bind entity selection beheaviour
-				scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER,
-						BIND_FUNC(_handle_entity_selection));
+				if (viewport.is_focused()) {
+					scene_renderer->submit(RenderFuncTickFormat::AFTER_RENDER,
+							BIND_FUNC(_handle_entity_selection));
+				}
 
 				// TODO this should not be affected by post processing
 				scene_renderer->submit(RenderFuncTickFormat::ON_RENDER,
@@ -140,23 +142,39 @@ void EditorApplication::_on_imgui_update(float dt) {
 	console.render();
 	stats.render();
 
+	project_settings.render();
+
 	DockSpace::end();
 }
 
 void EditorApplication::_on_destroy() {}
 
 void EditorApplication::_setup_menubar() {
-	const Menu file_menu{ "File",
+	const Menu file_menu{
+		"File",
 		{
 				{ "Open Project", "Ctrl+Shift+O", BIND_FUNC(_open_project) },
 				{ "New Scene", "", BIND_FUNC(_create_scene) },
 				{ "Save", "Ctrl+S", BIND_FUNC(_save_active_scene) },
 				{ "Save As", "Ctrl+Shift+S", BIND_FUNC(_save_active_scene_as) },
 				{ "Exit", "Ctrl+Shift+Q", BIND_FUNC(quit) },
-		} };
+		},
+	};
 	menubar.push_menu(file_menu);
 
-	const Menu view_menu{ "View",
+	const Menu edit_menu{
+		"Edit",
+		{
+				{
+						"Project Settings",
+						[this]() { project_settings.set_active(true); },
+				},
+		},
+	};
+	menubar.push_menu(edit_menu);
+
+	const Menu view_menu{
+		"View",
 		{
 				{ "Viewport", [this]() { viewport.set_active(true); } },
 				{ "Toolbar", [this]() { toolbar.set_active(true); } },
@@ -166,7 +184,8 @@ void EditorApplication::_setup_menubar() {
 						[this]() { content_browser.set_active(true); } },
 				{ "Console", [this]() { console.set_active(true); } },
 				{ "Stats", [this]() { stats.set_active(true); } },
-		} };
+		},
+	};
 	menubar.push_menu(view_menu);
 }
 
@@ -390,12 +409,12 @@ void EditorApplication::_render_entity_bounds(Entity entity) {
 		}
 
 		Transform text_transform = transform;
-		glm::vec2 scale = text_transform.get_scale();
+		const glm::vec2 scale = text_transform.get_scale();
 
 		Ref<Font> font = editor_scene->get_asset_registry().get_asset<Font>(
 				text_renderer.font);
 
-		glm::vec2 text_size =
+		const glm::vec2 text_size =
 				get_text_size(text_renderer.text, font, text_renderer.kerning) *
 				scale;
 

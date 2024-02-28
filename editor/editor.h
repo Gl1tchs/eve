@@ -6,6 +6,7 @@
 #include "panels/content_browser.h"
 #include "panels/hierarchy_panel.h"
 #include "panels/inspector_panel.h"
+#include "panels/project_settings.h"
 #include "panels/stats_panel.h"
 #include "panels/toolbar_panel.h"
 #include "panels/viewport_panel.h"
@@ -87,6 +88,8 @@ private:
 	AssetInspectorPanel asset_inspector;
 	ConsolePanel console;
 	StatsPanel stats;
+
+	ProjectSettingsPanel project_settings;
 
 	friend class ViewportPanel;
 };

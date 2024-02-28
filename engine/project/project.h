@@ -5,8 +5,8 @@
 
 struct ProjectConfig {
 	std::string name;
-	fs::path asset_directory;
-	fs::path script_dll;
+	std::string asset_directory;
+	std::string script_dll;
 	std::string starting_scene;
 
 	static void serialize(const ProjectConfig& config, const fs::path& path);
@@ -48,6 +48,8 @@ public:
 private:
 	fs::path path;
 	ProjectConfig config;
+
+	friend class ProjectSettingsPanel;
 };
 
 #endif

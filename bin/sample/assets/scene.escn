@@ -3,13 +3,13 @@
   "name": "scene",
   "entities": [
     {
-      "id": 11515867357699104833,
-      "tag": "fx player",
+      "id": 576348814685502556,
+      "tag": "environment",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
-          -3.0,
-          -3.0,
+          0.0,
+          0.0,
           0.0
         ],
         "local_rotation": [
@@ -18,13 +18,127 @@
           0.0
         ],
         "local_scale": [
-          3.0,
-          3.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "id": 16554862507967313981,
+      "tag": "bottom wall",
+      "parent_id": 576348814685502556,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          -5.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          21.0,
+          1.0,
           1.0
         ]
       },
       "sprite_renderer_component": {
-        "texture": 18004424882285837071,
+        "texture": 14309419123582907854,
+        "color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "tex_tiling": [
+          21.0,
+          1.0
+        ],
+        "is_atlas": false,
+        "block_size": [
+          16.0,
+          16.0
+        ],
+        "index": 1
+      },
+      "rigidbody2d_component": {
+        "type": "static",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "is_trigger": false,
+        "density": 1.0,
+        "friction": 0.5,
+        "restitution": 0.0,
+        "restitution_threshold": 0.5
+      }
+    },
+    {
+      "id": 8959252701979587220,
+      "tag": "camera",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "camera_component": {
+        "camera": {
+          "aspect_ratio": 1.7335164546966553,
+          "zoom_level": 10.0,
+          "near_clip": -1.0,
+          "far_clip": 1.0
+        },
+        "is_primary": true,
+        "is_fixed_aspect_ratio": false
+      }
+    },
+    {
+      "id": 7070123401178905868,
+      "tag": "physics box",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.20000000298023224,
+          0.0,
+          0.0
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          3.0999999046325684
+        ],
+        "local_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "sprite_renderer_component": {
+        "texture": 5232060269874217425,
         "color": [
           1.0,
           1.0,
@@ -37,29 +151,144 @@
         ],
         "is_atlas": true,
         "block_size": [
-          96.0,
-          96.0
+          16.0,
+          16.0
         ],
-        "index": 0
+        "index": 3
+      },
+      "rigidbody2d_component": {
+        "type": "dynamic",
+        "fixed_rotation": false
+      },
+      "box_collider": {
+        "offset": [
+          0.0,
+          0.0
+        ],
+        "size": [
+          0.5,
+          0.5
+        ],
+        "is_trigger": false,
+        "density": 0.10000000149011612,
+        "friction": 0.5,
+        "restitution": 0.25,
+        "restitution_threshold": 0.5
+      },
+      "post_process_volume": {
+        "is_global": true,
+        "gray_scale": {
+          "enabled": false
+        },
+        "chromatic_aberration": {
+          "enabled": false,
+          "offset": [
+            0.008999999612569809,
+            0.006000000052154064,
+            -0.006000000052154064
+          ]
+        },
+        "blur": {
+          "enabled": false,
+          "size": 2,
+          "seperation": 2.0
+        },
+        "sharpen": {
+          "enabled": false,
+          "amount": 0.800000011920929
+        },
+        "vignette": {
+          "enabled": false,
+          "inner": 0.5,
+          "outer": 1.2000000476837158,
+          "strength": 0.800000011920929,
+          "curvature": 0.5
+        }
       },
       "script_component": {
-        "class_name": "Sample.FxPlayer",
+        "class_name": "Sample.MyEntity",
         "script_fields": [
           {
-            "name": "FrameCount",
-            "type": "UInt",
-            "data": 19
+            "name": "Speed",
+            "type": "Float",
+            "data": 2.0
+          },
+          {
+            "name": "Camera",
+            "type": "Entity",
+            "data": 8959252701979587220
           }
         ]
       }
     },
     {
-      "id": 12207773597134581231,
-      "tag": "right wall",
+      "id": 12517815595370061652,
+      "tag": "text",
+      "parent_id": 0,
+      "transform_component": {
+        "local_position": [
+          0.0,
+          2.0,
+          -0.5
+        ],
+        "local_rotation": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "local_scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "text_renderer_component": {
+        "text": "Hello, World",
+        "font": 12235793978437062894,
+        "fg_color": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bg_color": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "kerning": 0.0,
+        "line_spacing": 0.0,
+        "is_screen_space": false
+      },
+      "script_component": {
+        "class_name": "Sample.Text",
+        "script_fields": [
+          {
+            "name": "color",
+            "type": "Color",
+            "data": [
+              0.0,
+              1.0,
+              0.22784805297851563,
+              1.0
+            ]
+          },
+          {
+            "name": "entity",
+            "type": "Entity",
+            "data": 7070123401178905868
+          }
+        ]
+      }
+    },
+    {
+      "id": 2038558295031678942,
+      "tag": "left wall",
       "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
-          10.0,
+          -10.0,
           0.0,
           0.0
         ],
@@ -174,12 +403,12 @@
       }
     },
     {
-      "id": 2038558295031678942,
-      "tag": "left wall",
+      "id": 12207773597134581231,
+      "tag": "right wall",
       "parent_id": 576348814685502556,
       "transform_component": {
         "local_position": [
-          -10.0,
+          10.0,
           0.0,
           0.0
         ],
@@ -234,14 +463,14 @@
       }
     },
     {
-      "id": 12517815595370061652,
-      "tag": "text",
+      "id": 11515867357699104833,
+      "tag": "fx player",
       "parent_id": 0,
       "transform_component": {
         "local_position": [
-          0.0,
-          2.0,
-          -0.5
+          -3.0,
+          -3.0,
+          0.0
         ],
         "local_rotation": [
           0.0,
@@ -249,74 +478,13 @@
           0.0
         ],
         "local_scale": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      },
-      "text_renderer_component": {
-        "text": "Hello, World",
-        "font": 12235793978437062894,
-        "fg_color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "bg_color": [
-          0.0,
-          0.0,
-          0.0,
-          0.0
-        ],
-        "kerning": 0.0,
-        "line_spacing": 0.0,
-        "is_screen_space": false
-      },
-      "script_component": {
-        "class_name": "Sample.Text",
-        "script_fields": [
-          {
-            "name": "color",
-            "type": "Color",
-            "data": [
-              0.0,
-              1.0,
-              0.22784805297851563,
-              1.0
-            ]
-          },
-          {
-            "name": "entity",
-            "type": "Entity",
-            "data": 7070123401178905868
-          }
-        ]
-      }
-    },
-    {
-      "id": 7070123401178905868,
-      "tag": "physics box",
-      "parent_id": 0,
-      "transform_component": {
-        "local_position": [
-          0.20000000298023224,
-          0.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          3.0999999046325684
-        ],
-        "local_scale": [
-          1.0,
-          1.0,
+          3.0,
+          3.0,
           1.0
         ]
       },
       "sprite_renderer_component": {
-        "texture": 5232060269874217425,
+        "texture": 18004424882285837071,
         "color": [
           1.0,
           1.0,
@@ -329,200 +497,27 @@
         ],
         "is_atlas": true,
         "block_size": [
-          16.0,
-          16.0
+          96.0,
+          96.0
         ],
-        "index": 3
-      },
-      "rigidbody2d_component": {
-        "type": "dynamic",
-        "fixed_rotation": false
-      },
-      "box_collider": {
-        "offset": [
-          0.0,
-          0.0
-        ],
-        "size": [
-          0.5,
-          0.5
-        ],
-        "is_trigger": false,
-        "density": 0.10000000149011612,
-        "friction": 0.5,
-        "restitution": 0.25,
-        "restitution_threshold": 0.5
-      },
-      "post_process_volume": {
-        "is_global": true,
-        "gray_scale": {
-          "enabled": false
-        },
-        "chromatic_aberration": {
-          "enabled": false,
-          "offset": [
-            0.008999999612569809,
-            0.006000000052154064,
-            -0.006000000052154064
-          ]
-        },
-        "blur": {
-          "enabled": false,
-          "size": 2,
-          "seperation": 2.0
-        },
-        "sharpen": {
-          "enabled": false,
-          "amount": 0.800000011920929
-        },
-        "vignette": {
-          "enabled": false,
-          "inner": 0.5,
-          "outer": 1.2000000476837158,
-          "strength": 0.800000011920929,
-          "curvature": 0.5
-        }
+        "index": 0
       },
       "script_component": {
-        "class_name": "Sample.MyEntity",
+        "class_name": "Sample.FxPlayer",
         "script_fields": [
           {
-            "name": "Speed",
-            "type": "Float",
-            "data": 2.0
-          },
-          {
-            "name": "Camera",
-            "type": "Entity",
-            "data": 8959252701979587220
+            "name": "FrameCount",
+            "type": "UInt",
+            "data": 19
           }
-        ]
-      }
-    },
-    {
-      "id": 8959252701979587220,
-      "tag": "camera",
-      "parent_id": 0,
-      "transform_component": {
-        "local_position": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          1.0,
-          1.0,
-          1.0
-        ]
-      },
-      "camera_component": {
-        "camera": {
-          "aspect_ratio": 1.8200548887252808,
-          "zoom_level": 10.0,
-          "near_clip": -1.0,
-          "far_clip": 1.0
-        },
-        "is_primary": true,
-        "is_fixed_aspect_ratio": false
-      }
-    },
-    {
-      "id": 16554862507967313981,
-      "tag": "bottom wall",
-      "parent_id": 576348814685502556,
-      "transform_component": {
-        "local_position": [
-          0.0,
-          -5.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          21.0,
-          1.0,
-          1.0
-        ]
-      },
-      "sprite_renderer_component": {
-        "texture": 14309419123582907854,
-        "color": [
-          1.0,
-          1.0,
-          1.0,
-          1.0
-        ],
-        "tex_tiling": [
-          21.0,
-          1.0
-        ],
-        "is_atlas": false,
-        "block_size": [
-          16.0,
-          16.0
-        ],
-        "index": 1
-      },
-      "rigidbody2d_component": {
-        "type": "static",
-        "fixed_rotation": false
-      },
-      "box_collider": {
-        "offset": [
-          0.0,
-          0.0
-        ],
-        "size": [
-          0.5,
-          0.5
-        ],
-        "is_trigger": false,
-        "density": 1.0,
-        "friction": 0.5,
-        "restitution": 0.0,
-        "restitution_threshold": 0.5
-      }
-    },
-    {
-      "id": 576348814685502556,
-      "tag": "environment",
-      "parent_id": 0,
-      "transform_component": {
-        "local_position": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_rotation": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "local_scale": [
-          1.0,
-          1.0,
-          1.0
         ]
       }
     }
   ],
   "assets": [
     {
-      "handle": 12235793978437062894,
-      "path": "res://Workbench.ttf",
-      "type": "font"
-    },
-    {
-      "handle": 5232060269874217425,
-      "path": "res://atlas.png",
+      "handle": 18004424882285837071,
+      "path": "res://fx/Fire+Sparks-SpriteSheet.png",
       "type": "texture"
     },
     {
@@ -531,9 +526,14 @@
       "type": "texture"
     },
     {
-      "handle": 18004424882285837071,
-      "path": "res://fx/Fire+Sparks-SpriteSheet.png",
+      "handle": 5232060269874217425,
+      "path": "res://atlas.png",
       "type": "texture"
+    },
+    {
+      "handle": 12235793978437062894,
+      "path": "res://Workbench.ttf",
+      "type": "font"
     }
   ]
 }

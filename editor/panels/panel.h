@@ -56,9 +56,14 @@ private:
 #define EVE_BEGIN_FIELD(name)                                                  \
 	{                                                                          \
 		ImGui::Columns(2, nullptr, false);                                     \
-		ImGui::SetColumnWidth(0, 75);                                          \
+		float window_width = ImGui::GetWindowWidth();                          \
+		float column_width = window_width * 0.2f;                              \
+		ImGui::SetColumnWidth(0, column_width);                                \
 		const float field_width = ImGui::GetColumnWidth(1) - 10.0f;            \
 		ImGui::TextUnformatted(name);                                          \
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {       \
+			ImGui::SetTooltip(name);                                           \
+		}                                                                      \
 		ImGui::NextColumn();                                                   \
 		ImGui::PushItemWidth(field_width);
 
