@@ -58,6 +58,7 @@ bin/*
 # Mono dll and build files
 !vendor/mono/bin/*.dll
 !vendor/mono/bin/*.a
+!vendor/mono/bin/*.so
 !vendor/mono/bin/*.dylib
 !vendor/mono/bin/*.pdb
 !vendor/mono/lib/*.lib
